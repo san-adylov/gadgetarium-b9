@@ -9,5 +9,4 @@ public class GadgetariumB9Application {
     public static void main(String[] args) {
         SpringApplication.run(GadgetariumB9Application.class, args);
     }
-
 }
