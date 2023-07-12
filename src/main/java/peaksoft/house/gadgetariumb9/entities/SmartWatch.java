@@ -1,11 +1,9 @@
-package peaksoft.house.gadgetariumb9.model;
+package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import peaksoft.house.gadgetariumb9.enums.*;
-
 import static jakarta.persistence.CascadeType.*;
-
 @Entity
 @Table(name = "smartWatches")
 @Setter

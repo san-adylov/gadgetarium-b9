@@ -1,13 +1,10 @@
-package peaksoft.house.gadgetariumb9.model;
+package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
-
 @Entity
 @Table(name = "subProducts")
 @Setter

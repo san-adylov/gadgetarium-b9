@@ -1,11 +1,9 @@
-package peaksoft.house.gadgetariumb9.model;
+package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
-
 @Entity
 @Table(name = "phones")
 @Setter

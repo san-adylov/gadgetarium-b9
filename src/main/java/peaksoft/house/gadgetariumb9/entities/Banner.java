@@ -1,10 +1,8 @@
-package peaksoft.house.gadgetariumb9.model;
+package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
-
 @Entity
 @Table(name = "banners")
 @Setter

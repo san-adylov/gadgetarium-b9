@@ -1,12 +1,9 @@
-package peaksoft.house.gadgetariumb9.model;
+package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 import peaksoft.house.gadgetariumb9.enums.Processor;
 import peaksoft.house.gadgetariumb9.enums.Purpose;
-
-import javax.xml.crypto.KeySelector;
-
 @Entity
 @Table(name = "laptops")
 @Setter
@@ -19,9 +16,9 @@ public class Laptop {
     @GeneratedValue(generator = "laptop_gen",strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "laptop_gen",sequenceName = "laptop_seq",allocationSize = 1, initialValue = 5)
     private Long id;
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Processor processor;
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Purpose purpose;
     private int videoMemory;
     private double screenSize;
