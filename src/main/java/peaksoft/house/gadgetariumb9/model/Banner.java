@@ -15,7 +15,7 @@ import java.util.List;
 public class Banner {
     @Id
     @GeneratedValue(generator = "banner_gen",strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "banner_gen",sequenceName = "banner_seq",allocationSize = 1)
+    @SequenceGenerator(name = "banner_gen",sequenceName = "banner_seq",allocationSize = 1, initialValue = 5)
     private Long id;
     @Lob
     private List<String> images;

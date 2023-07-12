@@ -17,10 +17,10 @@ import static jakarta.persistence.CascadeType.*;
 public class Brand {
     @Id
     @GeneratedValue(generator = "brand_gen",strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "brand_gen",sequenceName = "brand_seq",allocationSize = 1)
+    @SequenceGenerator(name = "brand_gen",sequenceName = "brand_seq",allocationSize = 1, initialValue = 5)
     private Long id;
     private String name;
     private String image;
-    @OneToMany(mappedBy = "brand",cascade = {MERGE,DETACH,REFRESH})
+    @OneToMany(mappedBy = "brand",cascade = {MERGE,DETACH,REFRESH,PERSIST,REMOVE})
     private List<Product>products;
 }

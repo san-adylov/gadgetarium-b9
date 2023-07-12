@@ -2,9 +2,16 @@ package peaksoft.house.gadgetariumb9.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import peaksoft.house.gadgetariumb9.enums.Status;
+import peaksoft.house.gadgetariumb9.enums.TypeDelivery;
+import peaksoft.house.gadgetariumb9.enums.TypePayment;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.CascadeType.PERSIST;
 
 @Entity
 @Table(name = "orders")
@@ -16,15 +23,21 @@ import java.time.ZonedDateTime;
 public class Order {
     @Id
     @GeneratedValue(generator = "order_gen",strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "order_gen",sequenceName = "order_seq",allocationSize = 1)
+    @SequenceGenerator(name = "order_gen",sequenceName = "order_seq",allocationSize = 1, initialValue = 5)
     private Long id;
     private int quantity;
     private int totalDiscount;
     private BigDecimal totalPrice;
     private BigDecimal orderNumber;
+    @Enumerated(value = EnumType.STRING)
     private TypeDelivery typeDelivery;
+    @Enumerated(value = EnumType.STRING)
     private TypePayment typePayment;
     private ZonedDateTime dateOfOrder;
+    @Enumerated(value = EnumType.STRING)
     private Status status;
-
+    @ManyToMany(cascade = {MERGE,DETACH,REFRESH,PERSIST})
+    private List<SubProduct>subProducts;
+    @ManyToOne(cascade = {MERGE,DETACH,REFRESH,PERSIST})
+    private User user;
 }
