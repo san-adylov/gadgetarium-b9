@@ -1,9 +1,17 @@
 insert into users(is_subscription, role, id, address, email, first_name, image, last_name, password, phone_number)
-values (false,'USER',1,'Asia 7','davran@gmail.com','Davran','img','Joldoshabev','davran2005','0995665528'),
-       (true,'USER',2,'Красный речка','salymbek@gmail.com','Salymbek','img',' Khadzhakeldyev','salymbek2006','0700020206'),
-       (false,'USER',3,'Ибраимова 3','gulira@gmail.com','Gulira','img',' Abdukerim kyzy','gulira2002','0700020206'),
-       (true,'USER',4,'Арча бешик ','sanzhar@gmail.com','Sanzhar','img','  Abdymomunov','sanzhar2003','0700020206'),
-       (false,'USER',5,'Аламидин-1','erjan@gmail.com','Erjan','img','  Taalaibekov','erjan2004','0700020206');
+values (false, 'USER', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldoshabev',
+        '$2a$12$rfe2c6WJHa3aq4DDIq0eBO/z9oKNiqcW.lrkSHRd7qPQ9updpsJzy', '0995665528'), --davran2005
+       (true, 'USER', 2, 'Красный речка', 'salymbek@gmail.com', 'Salymbek', 'img', ' Khadzhakeldyev',
+        '$2a$12$obECYf/JcKcxdFVc4w57we64ZSiU9.RfZ/uV/l3D/.oa72NerEj7y',
+        '0700020206'),                                                                 --salymbek2006
+       (false, 'USER', 3, 'Ибраимова 3', 'gulira@gmail.com', 'Gulira', 'img', ' Abdukerim kyzy',
+        '$2a$12$KMfRpt80J70ZllO4C4thouR/NV.1QIVrEvY74VqMCS/yTZeMQgQJW',
+        '0700020206'),                                                                 --gulira2002
+       (true, 'USER', 4, 'Арча бешик ', 'sanzhar@gmail.com', 'Sanzhar', 'img', '  Abdymomunov',
+        '$2a$12$pBVBShiP3FroQBWzcZxedun38JGBzpStTDLaenL1BnGhWYANXzH.G',
+        '0700020206'),                                                                 --sanzhar2003
+       (false, 'USER', 5, 'Аламидин-1', 'erjan@gmail.com', 'Erjan', 'img', '  Taalaibekov',
+        '$2a$12$XhWrZB5uMZcfsw8n5kZ58emB5Z6nkF3Ix94D5QaYB4ikkfyimUO66', '0700020206'); --erjan2004
 
 insert into categories (id, title)
 values (1, 'Smartphone'),
@@ -12,10 +20,10 @@ values (1, 'Smartphone'),
        (4, 'Smart watch');
 
 insert into sub_categories (category_id, id, title)
-values (1, 1, 'Iphone12'),
-       (2, 2, 'Iphone11'),
-       (3, 3, 'Iphone XS'),
-       (4, 4, 'Iphone 14');
+values (1, 1, 'Apple'),
+       (2, 2, 'Asus'),
+       (3, 3, 'Honor'),
+       (4, 4, 'Apple Watch');
 
 insert into brands (id, image, name)
 values (1, 'img', 'Apple'),
@@ -27,9 +35,9 @@ values (1, 'img', 'Apple'),
 insert into products(guarantee, brand_id, created_at, data_of_issue, id, sub_category_id, description, name, pdf,
                      video_link)
 values (3, 1, now(), now(), 1, 1, 'The beast', 'Iphone 14', 'img', 'link'),
-       (4, 2, now(), now(), 2, 2, 'The beast', 'Iphone 11 pro', 'img', 'link'),
-       (5, 3, now(), now(), 3, 3, 'The beast', 'Iphone 12 pro', 'img', 'link'),
-       (6, 4, now(), now(), 4, 4, 'The beast', 'Iphone 14 pro', 'img', 'link'),
+       (4, 2, now(), now(), 2, 2, 'The beast', 'ThinkPad X1 Carbon Gen 11.', 'img', 'link'),
+       (5, 3, now(), now(), 3, 3, 'The beast', 'xiaoxin pad 2022', 'img', 'link'),
+       (6, 4, now(), now(), 4, 4, 'The beast', 'apple watch series 8', 'img', 'link'),
        (7, 5, now(), now(), 5, 1, 'The beast', 'Iphone 13 pro', 'img', 'link');
 
 insert into banners(id)
@@ -55,11 +63,11 @@ values (1, 1),
 
 insert into sub_products (article_number, price, quantity, ram, rom, id, product_id, additional_features, code_color,
                           screen_resolution)
-values (322323, 78000, 1, 4, 5, 1, 1, 'asc', 'red', 'wrer'),
-       (123454, 74000, 1, 4, 5, 2, 2, 'rte', 'red', 'vfdv'),
-       (987665, 79000, 1, 4, 5, 3, 3, 'bvcb', 'red', 'dsf'),
-       (878787, 71000, 1, 4, 5, 4, 4, 'dfsdf', 'red', 'dsdf'),
-       (343434, 75000, 1, 4, 5, 5, 5, 'gtbgf', 'red', 'fdvdf');
+values (322323, 78000, 1, 4, 5, 1, 1, 'asc', 'red', '2532×1170'),
+       (123454, 74000, 1, 4, 5, 2, 2, 'rte', 'red', '1920x1200'),
+       (987665, 79000, 1, 4, 5, 3, 3, 'bvcb', 'red', '2000x1200 '),
+       (878787, 71000, 1, 4, 5, 4, 4, 'dfsdf', 'red', '352х430'),
+       (343434, 75000, 1, 4, 5, 5, 5, 'gtbgf', 'red', '2532х1170');
 
 insert into baskets_sub_products (baskets_id, sub_products_id)
 values (1, 1),
@@ -75,12 +83,12 @@ values (1, 10, now(), now(), 1),
        (4, 15, now(), now(), 4),
        (5, 50, now(), now(), 5);
 
-insert into laptops (screen_size, video_memory, id, processor, purpose,sub_product_id)
-values (2.0, 8, 1, 'INTEL_CORE_I3', 'FOR_WORK',1),
-       (3.0, 10, 2, 'INTEL_CORE_I3', 'FOR_WORK',2),
-       (4.0, 15, 3, 'INTEL_CORE_I3', 'FOR_WORK',3),
-       (5.0, 20, 4, 'INTEL_CORE_I3', 'FOR_WORK',4),
-       (6.0, 30, 5, 'INTEL_CORE_I3', 'FOR_WORK',5);
+insert into laptops (screen_size, video_memory, id, processor, purpose, sub_product_id)
+values (2.0, 8, 1, 'INTEL_CORE_I3', 'FOR_WORK', 1),
+       (3.0, 10, 2, 'INTEL_CORE_I3', 'FOR_WORK', 2),
+       (4.0, 15, 3, 'INTEL_CORE_I3', 'FOR_WORK', 3),
+       (5.0, 20, 4, 'INTEL_CORE_I3', 'FOR_WORK', 4),
+       (6.0, 30, 5, 'INTEL_CORE_I3', 'FOR_WORK', 5);
 
 insert into mailings(finish_date, id, start_date, description, image, title)
 values (now(), 1, now(), 'The beast', 'img', 'mailings'),
@@ -134,18 +142,18 @@ values (1, 'img'),
        (5, 'img');
 
 insert into user_comparison (comparison, user_id)
-values (1,1),
-       (2,2),
-       (3,3),
-       (4,4),
-       (5,5);
+values (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 4),
+       (5, 5);
 
 insert into user_favorite (favorite, user_id)
-values (1,1),
-       (2,2),
-       (3,3),
-       (4,4),
-       (5,5);
+values (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 4),
+       (5, 5);
 
 
 
