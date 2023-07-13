@@ -1,0 +1,153 @@
+insert into users(is_subscription, role, id, address, email, first_name, image, last_name, password, phone_number)
+values (false,'USER',1,'Asia 7','davran@gmail.com','Davran','img','Joldoshabev','davran2005','0995665528'),
+       (true,'USER',2,'Красный речка','salymbek@gmail.com','Salymbek','img',' Khadzhakeldyev','salymbek2006','0700020206'),
+       (false,'USER',3,'Ибраимова 3','gulira@gmail.com','Gulira','img',' Abdukerim kyzy','gulira2002','0700020206'),
+       (true,'USER',4,'Арча бешик ','sanzhar@gmail.com','Sanzhar','img','  Abdymomunov','sanzhar2003','0700020206'),
+       (false,'USER',5,'Аламидин-1','erjan@gmail.com','Erjan','img','  Taalaibekov','erjan2004','0700020206');
+
+insert into categories (id, title)
+values (1, 'Smartphone'),
+       (2, 'Laptop'),
+       (3, 'Tablet'),
+       (4, 'Smart watch');
+
+insert into sub_categories (category_id, id, title)
+values (1, 1, 'Iphone12'),
+       (2, 2, 'Iphone11'),
+       (3, 3, 'Iphone XS'),
+       (4, 4, 'Iphone 14');
+
+insert into brands (id, image, name)
+values (1, 'img', 'Apple'),
+       (2, 'img', 'Xiaomi'),
+       (3, 'img', 'Samsung'),
+       (4, 'img', 'Sony'),
+       (5, 'img', 'htc');
+
+insert into products(guarantee, brand_id, created_at, data_of_issue, id, sub_category_id, description, name, pdf,
+                     video_link)
+values (3, 1, now(), now(), 1, 1, 'The beast', 'Iphone 14', 'img', 'link'),
+       (4, 2, now(), now(), 2, 2, 'The beast', 'Iphone 11 pro', 'img', 'link'),
+       (5, 3, now(), now(), 3, 3, 'The beast', 'Iphone 12 pro', 'img', 'link'),
+       (6, 4, now(), now(), 4, 4, 'The beast', 'Iphone 14 pro', 'img', 'link'),
+       (7, 5, now(), now(), 5, 1, 'The beast', 'Iphone 13 pro', 'img', 'link');
+
+insert into banners(id)
+values (1),
+       (2),
+       (3),
+       (4),
+       (5);
+
+insert into banner_images (banner_id, images)
+values (1, 'img'),
+       (2, 'img'),
+       (3, 'img'),
+       (4, 'img'),
+       (5, 'img');
+
+insert into baskets (id, user_id)
+values (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 4),
+       (5, 5);
+
+insert into sub_products (article_number, price, quantity, ram, rom, id, product_id, additional_features, code_color,
+                          screen_resolution)
+values (322323, 78000, 1, 4, 5, 1, 1, 'asc', 'red', 'wrer'),
+       (123454, 74000, 1, 4, 5, 2, 2, 'rte', 'red', 'vfdv'),
+       (987665, 79000, 1, 4, 5, 3, 3, 'bvcb', 'red', 'dsf'),
+       (878787, 71000, 1, 4, 5, 4, 4, 'dfsdf', 'red', 'dsdf'),
+       (343434, 75000, 1, 4, 5, 5, 5, 'gtbgf', 'red', 'fdvdf');
+
+insert into baskets_sub_products (baskets_id, sub_products_id)
+values (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 4),
+       (5, 5);
+
+insert into discounts (id, sale, start_date, finish_date, sub_product_id)
+values (1, 10, now(), now(), 1),
+       (2, 5, now(), now(), 2),
+       (3, 3, now(), now(), 3),
+       (4, 15, now(), now(), 4),
+       (5, 50, now(), now(), 5);
+
+insert into laptops (screen_size, video_memory, id, processor, purpose,sub_product_id)
+values (2.0, 8, 1, 'INTEL_CORE_I3', 'FOR_WORK',1),
+       (3.0, 10, 2, 'INTEL_CORE_I3', 'FOR_WORK',2),
+       (4.0, 15, 3, 'INTEL_CORE_I3', 'FOR_WORK',3),
+       (5.0, 20, 4, 'INTEL_CORE_I3', 'FOR_WORK',4),
+       (6.0, 30, 5, 'INTEL_CORE_I3', 'FOR_WORK',5);
+
+insert into mailings(finish_date, id, start_date, description, image, title)
+values (now(), 1, now(), 'The beast', 'img', 'mailings'),
+       (now(), 2, now(), 'The Beast', 'img', 'mel'),
+       (now(), 3, now(), 'The Beast', 'img', 'asd'),
+       (now(), 4, now(), 'The Beast', 'img', 'lkj'),
+       (now(), 5, now(), 'The Beast', 'img', 'wer');
+
+insert into orders(order_number, quantity, total_discount, total_price, date_of_order, id, user_id, status,
+                   type_delivery, type_payment)
+values (1, 1, 12, 23, now(), 1, 1, 'EXPECTATION', 'PICKUP', 'CASH'),
+       (2, 1, 13, 23, now(), 2, 2, 'PROCESSING', 'PICKUP', 'CASH'),
+       (3, 1, 14, 23, now(), 3, 3, 'COURIER_ON_THE_WAY', 'PICKUP', 'CASH'),
+       (4, 1, 15, 23, now(), 4, 4, 'DELIVERED', 'PICKUP', 'CASH'),
+       (5, 1, 16, 23, now(), 5, 5, 'CANCELED', 'PICKUP', 'CASH');
+
+insert into orders_sub_products (orders_id, sub_products_id)
+values (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 4),
+       (5, 5);
+
+insert into phones(screen_size, sim, id, sub_product_id, battery_capacity, diagonal_screen)
+values (1.0, 2, 1, 1, '2400-4799mah', '0-2'),
+       (2.0, 1, 2, 2, '4800-7199mah', '3-5'),
+       (3.0, 1, 3, 3, '7200-9599mah', '6-8'),
+       (4.0, 1, 4, 4, '9600-12000mah', '9-11'),
+       (5.0, 1, 5, 5, '0-2399mah', '12-15');
+
+insert into reviews (rating, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment)
+values (4, now(), 1, 1, 1, 'comm', 'ok'),
+       (2, now(), 2, 2, 2, 'comm', 'ok'),
+       (1, now(), 3, 3, 3, 'comm', 'ok'),
+       (4, now(), 4, 4, 4, 'comm', 'ok'),
+       (3, now(), 5, 5, 5, 'comm', 'ok');
+
+insert into smart_watches (display_discount, waterproof, id, sub_product_id, an_interface, gender, h_ull_shape,
+                           housing_material, material_bracelet)
+values (2.0, false, 1, 1, 'BLUETOOTH', 'FEMALE', 'SQUARE', 'ACRYLIC', 'RUBBER'),
+       (3.0, true, 2, 2, 'WIFI', 'MALE', 'ROUND', 'CERAMIC', 'IMITATION_LEATHER'),
+       (4.0, false, 3, 3, 'GPS', 'FEMALE', 'OVAL', 'GLASS', 'RUBBER'),
+       (5.0, true, 4, 4, 'NFC', 'MALE', 'RECTANGULAR', 'ALUMINIUM', 'CERAMIC_IMITATION'),
+       (6.0, false, 5, 5, 'GPS', 'FEMALE', 'OVAL', 'GLASS', 'RUBBER');
+
+insert into sub_product_images (sub_product_id, images)
+values (1, 'img'),
+       (2, 'img'),
+       (3, 'img'),
+       (4, 'img'),
+       (5, 'img');
+
+insert into user_comparison (comparison, user_id)
+values (1,1),
+       (2,2),
+       (3,3),
+       (4,4),
+       (5,5);
+
+insert into user_favorite (favorite, user_id)
+values (1,1),
+       (2,2),
+       (3,3),
+       (4,4),
+       (5,5);
+
+
+
+
+
