@@ -18,9 +18,13 @@ public class Phone {
   @GeneratedValue(generator = "phone_gen", strategy = GenerationType.SEQUENCE)
   @SequenceGenerator(name = "phone_gen", sequenceName = "phone_seq", allocationSize = 1)
   private Long id;
+
   private int sim;
+
   private String diagonalScreen;
+
   private String batteryCapacity;
+
   private double screenSize;
 
   @OneToOne(

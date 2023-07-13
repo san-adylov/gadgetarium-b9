@@ -18,9 +18,13 @@ public class Review {
   @GeneratedValue(generator = "review_gen", strategy = GenerationType.SEQUENCE)
   @SequenceGenerator(name = "review_gen", sequenceName = "review_seq", allocationSize = 1)
   private Long id;
+
   private ZonedDateTime dateCreatAd;
+
   private String comment;
+
   private String replyToComment;
+
   private int rating;
 
   @ManyToOne(

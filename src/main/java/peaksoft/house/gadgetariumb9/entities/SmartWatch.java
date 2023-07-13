@@ -18,17 +18,24 @@ public class SmartWatch {
   @GeneratedValue(generator = "smart_watch_gen", strategy = GenerationType.SEQUENCE)
   @SequenceGenerator(name = "smart_watch_gen", sequenceName = "smart_watch_seq", allocationSize = 1)
   private Long id;
+
   @Enumerated(EnumType.STRING)
   private Interface anInterface;
+
   @Enumerated(EnumType.STRING)
   private HullShape hUllShape;
+
   @Enumerated(EnumType.STRING)
   private MaterialBracelet materialBracelet;
+
   @Enumerated(EnumType.STRING)
   private HousingMaterial housingMaterial;
+
   @Enumerated(EnumType.STRING)
   private Gender gender;
+
   private boolean waterproof;
+
   private double displayDiscount;
 
   @OneToOne(

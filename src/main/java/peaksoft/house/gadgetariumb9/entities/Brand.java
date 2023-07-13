@@ -18,7 +18,9 @@ public class Brand {
   @GeneratedValue(generator = "brand_gen", strategy = GenerationType.SEQUENCE)
   @SequenceGenerator(name = "brand_gen", sequenceName = "brand_seq", allocationSize = 1)
   private Long id;
+
   private String name;
+
   private String image;
 
   @OneToMany(

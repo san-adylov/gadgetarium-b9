@@ -20,17 +20,28 @@ public class User {
   @GeneratedValue(generator = "user_gen", strategy = GenerationType.SEQUENCE)
   @SequenceGenerator(name = "user_gen", sequenceName = "user_seq", allocationSize = 1)
   private Long id;
+
   private String firstName;
+
   private String lastName;
+
   private String phoneNumber;
+
   private String email;
+
   private String password;
+
   private Role role;
+
   private String address;
+
   private boolean isSubscription;
+
   private String image;
+
   @ElementCollection
   private List<Long> comparison;
+
   @ElementCollection
   private List<Long> favorite;
 

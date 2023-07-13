@@ -19,15 +19,24 @@ public class SubProduct {
   @GeneratedValue(generator = "sub_product_gen", strategy = GenerationType.SEQUENCE)
   @SequenceGenerator(name = "sub_product_gen", sequenceName = "sub_product_seq", allocationSize = 1)
   private Long id;
+
   private int ram;
+
   private String screenResolution;
+
   private int rom;
+
   private String additionalFeatures;
+
   private BigDecimal price;
+
   private int quantity;
+
   private String codeColor;
+
   @ElementCollection
   private List<String> images;
+
   private int articleNumber;
 
   @OneToOne(
