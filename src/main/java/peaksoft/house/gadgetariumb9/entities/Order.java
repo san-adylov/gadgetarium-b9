@@ -8,7 +8,6 @@ import peaksoft.house.gadgetariumb9.enums.TypePayment;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
 
@@ -36,8 +35,12 @@ public class Order {
   private ZonedDateTime dateOfOrder;
   @Enumerated(EnumType.STRING)
   private Status status;
-  @ManyToMany(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @ManyToMany(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<SubProduct> subProducts;
-  @ManyToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @ManyToOne(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private User user;
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.ZonedDateTime;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -27,10 +26,17 @@ public class Product {
   private String description;
   private String pdf;
   private String videoLink;
-  @ManyToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @ManyToOne(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private Brand brand;
-  @ManyToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @ManyToOne(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private SubCategory subCategory;
-  @OneToMany(mappedBy = "product", cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+
+  @OneToMany(
+      mappedBy = "product",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
   private List<SubProduct> subProducts;
 }

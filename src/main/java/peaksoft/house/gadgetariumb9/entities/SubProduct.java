@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -30,20 +29,43 @@ public class SubProduct {
   @ElementCollection
   private List<String> images;
   private int articleNumber;
-  @OneToOne(mappedBy = "subProduct", cascade = {MERGE, DETACH, REFRESH})
+
+  @OneToOne(
+      mappedBy = "subProduct",
+      cascade = {MERGE, DETACH, REFRESH})
   private Discount discount;
-  @OneToOne(mappedBy = "subProduct", cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToOne(
+      mappedBy = "subProduct",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private Laptop laptop;
-  @OneToOne(mappedBy = "subProduct", cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToOne(
+      mappedBy = "subProduct",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private Phone phone;
-  @OneToOne(mappedBy = "subProduct", cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToOne(
+      mappedBy = "subProduct",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private SmartWatch smartWatch;
-  @ManyToMany(mappedBy = "subProducts", cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @ManyToMany(
+      mappedBy = "subProducts",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<Order> orders;
-  @OneToMany(mappedBy = "subProduct", cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToMany(
+      mappedBy = "subProduct",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<Review> reviews;
-  @ManyToMany(mappedBy = "subProducts", cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @ManyToMany(
+      mappedBy = "subProducts",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<Basket> baskets;
-  @ManyToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @ManyToOne(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private Product product;
 }

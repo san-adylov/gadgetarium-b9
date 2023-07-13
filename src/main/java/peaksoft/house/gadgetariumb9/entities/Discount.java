@@ -3,7 +3,6 @@ package peaksoft.house.gadgetariumb9.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.ZonedDateTime;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -22,6 +21,8 @@ public class Discount {
   private int sale;
   private ZonedDateTime startDate;
   private ZonedDateTime finishDate;
-  @OneToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToOne(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private SubProduct subProduct;
 }

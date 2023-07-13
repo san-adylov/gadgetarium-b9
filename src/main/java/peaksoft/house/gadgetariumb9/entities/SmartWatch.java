@@ -3,7 +3,6 @@ package peaksoft.house.gadgetariumb9.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import peaksoft.house.gadgetariumb9.enums.*;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -31,6 +30,8 @@ public class SmartWatch {
   private Gender gender;
   private boolean waterproof;
   private double displayDiscount;
-  @OneToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToOne(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private SubProduct subProduct;
 }

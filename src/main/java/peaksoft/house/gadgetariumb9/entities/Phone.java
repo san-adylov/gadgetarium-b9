@@ -2,7 +2,6 @@ package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
 
@@ -23,6 +22,8 @@ public class Phone {
   private String diagonalScreen;
   private String batteryCapacity;
   private double screenSize;
-  @OneToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToOne(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private SubProduct subProduct;
 }

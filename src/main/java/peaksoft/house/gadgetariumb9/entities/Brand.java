@@ -3,7 +3,6 @@ package peaksoft.house.gadgetariumb9.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -21,6 +20,9 @@ public class Brand {
   private Long id;
   private String name;
   private String image;
-  @OneToMany(mappedBy = "brand", cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+
+  @OneToMany(
+      mappedBy = "brand",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
   private List<Product> products;
 }

@@ -1,7 +1,6 @@
 package peaksoft.house.gadgetariumb9.entities;
 
 import static jakarta.persistence.CascadeType.*;
-
 import jakarta.persistence.*;
 import lombok.*;
 import peaksoft.house.gadgetariumb9.enums.Processor;
@@ -26,6 +25,8 @@ public class Laptop {
   private Purpose purpose;
   private int videoMemory;
   private double screenSize;
-  @OneToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToOne(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private SubProduct subProduct;
 }

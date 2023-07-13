@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import peaksoft.house.gadgetariumb9.enums.Role;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
 
@@ -34,10 +33,19 @@ public class User {
   private List<Long> comparison;
   @ElementCollection
   private List<Long> favorite;
-  @OneToMany(mappedBy = "user", cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+
+  @OneToMany(
+      mappedBy = "user",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
   private List<Order> orders;
-  @OneToMany(mappedBy = "user", cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToMany(
+      mappedBy = "user",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<Review> reviews;
-  @OneToMany(mappedBy = "user", cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+
+  @OneToMany(
+      mappedBy = "user",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
   private List<Basket> baskets;
 }

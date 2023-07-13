@@ -3,7 +3,6 @@ package peaksoft.house.gadgetariumb9.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
 
@@ -21,8 +20,13 @@ public class SubCategory {
   @SequenceGenerator(name = "sub_category_gen", sequenceName = "sub_category_seq", allocationSize = 1)
   private Long id;
   private String title;
-  @ManyToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @ManyToOne(
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private Category category;
-  @OneToMany(mappedBy = "subCategory", cascade = {MERGE, DETACH, REFRESH, PERSIST})
+
+  @OneToMany(
+      mappedBy = "subCategory",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<Product> products;
 }
