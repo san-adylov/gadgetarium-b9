@@ -32,11 +32,11 @@ public class SubProduct {
   private int articleNumber;
   @OneToOne(mappedBy = "subProduct", cascade = {MERGE, DETACH, REFRESH})
   private Discount discount;
-  @OneToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+  @OneToOne(mappedBy = "subProduct", cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private Laptop laptop;
-  @OneToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+  @OneToOne(mappedBy = "subProduct", cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private Phone phone;
-  @OneToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
+  @OneToOne(mappedBy = "subProduct", cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private SmartWatch smartWatch;
   @ManyToMany(mappedBy = "subProducts", cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<Order> orders;

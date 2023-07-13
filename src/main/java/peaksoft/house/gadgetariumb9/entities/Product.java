@@ -31,6 +31,6 @@ public class Product {
   private Brand brand;
   @ManyToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private SubCategory subCategory;
-  @OneToMany(cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+  @OneToMany(mappedBy = "product", cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
   private List<SubProduct> subProducts;
 }

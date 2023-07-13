@@ -26,6 +26,6 @@ public class Laptop {
   private Purpose purpose;
   private int videoMemory;
   private double screenSize;
-  @OneToOne(mappedBy = "laptop",cascade = {MERGE, DETACH, REFRESH, PERSIST})
+  @OneToOne(cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private SubProduct subProduct;
 }
