@@ -33,7 +33,6 @@ public class S3FileService {
     return "File uploaded : " + fileName;
   }
 
-
   public byte[] downloadFile(String fileName) {
     S3Object s3Object = s3Client.getObject(bucketName, fileName);
     S3ObjectInputStream inputStream = s3Object.getObjectContent();
@@ -45,12 +44,10 @@ public class S3FileService {
     return new byte[0];
   }
 
-
   public String deleteFile(String fileName) {
     s3Client.deleteObject(bucketName, fileName);
     return fileName + " removed....";
   }
-
 
   private File convertMultiPartFileToFile(MultipartFile file) {
     File convertedFile = new File(file.getOriginalFilename());

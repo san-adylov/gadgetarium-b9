@@ -19,28 +19,28 @@ import peaksoft.house.gadgetariumb9.s3file.service.S3FileService;
 @RequiredArgsConstructor
 public class S3FileController {
 
-    private final S3FileService s3FileService;
+  private final S3FileService s3FileService;
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
-      return new ResponseEntity<>(s3FileService.uploadFile(file), HttpStatus.OK);
-    }
+  @PostMapping("/upload")
+  public ResponseEntity<String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
+    return new ResponseEntity<>(s3FileService.uploadFile(file), HttpStatus.OK);
+  }
 
-    @GetMapping("/download/{fileName}")
-    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {
-      byte[] data = s3FileService.downloadFile(fileName);
-      ByteArrayResource resource = new ByteArrayResource(data);
-      return ResponseEntity
-          .ok()
-          .contentLength(data.length)
-          .header("Content-type", "application/octet-stream")
-          .header("Content-disposition", "attachment; filename=\"" + fileName + "\"")
-          .body(resource);
-    }
+  @GetMapping("/download/{fileName}")
+  public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {
+    byte[] data = s3FileService.downloadFile(fileName);
+    ByteArrayResource resource = new ByteArrayResource(data);
+    return ResponseEntity
+        .ok()
+        .contentLength(data.length)
+        .header("Content-type", "application/octet-stream")
+        .header("Content-disposition", "attachment; filename=\"" + fileName + "\"")
+        .body(resource);
+  }
 
-    @DeleteMapping("/delete/{fileName}")
-    public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
-      return new ResponseEntity<>(s3FileService.deleteFile(fileName), HttpStatus.OK);
-    }
+  @DeleteMapping("/delete/{fileName}")
+  public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
+    return new ResponseEntity<>(s3FileService.deleteFile(fileName), HttpStatus.OK);
+  }
 
 }
