@@ -18,7 +18,7 @@ public class Product {
 
   @Id
   @GeneratedValue(generator = "product_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "product_gen", sequenceName = "product_seq", allocationSize = 1, initialValue = 5)
+  @SequenceGenerator(name = "product_gen", sequenceName = "product_seq", allocationSize = 1)
   private Long id;
   private String name;
   private ZonedDateTime dataOfIssue;

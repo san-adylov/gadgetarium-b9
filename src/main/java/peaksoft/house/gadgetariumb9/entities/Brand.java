@@ -17,7 +17,7 @@ public class Brand {
 
   @Id
   @GeneratedValue(generator = "brand_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "brand_gen", sequenceName = "brand_seq", allocationSize = 1, initialValue = 5)
+  @SequenceGenerator(name = "brand_gen", sequenceName = "brand_seq", allocationSize = 1)
   private Long id;
   private String name;
   private String image;

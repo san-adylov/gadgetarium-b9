@@ -15,7 +15,7 @@ public class Banner {
 
   @Id
   @GeneratedValue(generator = "banner_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "banner_gen", sequenceName = "banner_seq", allocationSize = 1, initialValue = 5)
+  @SequenceGenerator(name = "banner_gen", sequenceName = "banner_seq", allocationSize = 1)
   private Long id;
   @ElementCollection
   private List<String> images;

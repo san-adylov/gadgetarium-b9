@@ -15,7 +15,7 @@ public class Mailing {
 
   @Id
   @GeneratedValue(generator = "mailing_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "mailing_gen", sequenceName = "mailing_seq", allocationSize = 1, initialValue = 5)
+  @SequenceGenerator(name = "mailing_gen", sequenceName = "mailing_seq", allocationSize = 1)
   private Long id;
   private String title;
   private String description;

@@ -23,7 +23,7 @@ public class Order {
 
   @Id
   @GeneratedValue(generator = "order_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "order_gen", sequenceName = "order_seq", allocationSize = 1, initialValue = 5)
+  @SequenceGenerator(name = "order_gen", sequenceName = "order_seq", allocationSize = 1)
   private Long id;
   private int quantity;
   private int totalDiscount;

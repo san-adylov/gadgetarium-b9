@@ -18,7 +18,7 @@ public class Laptop {
 
   @Id
   @GeneratedValue(generator = "laptop_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "laptop_gen", sequenceName = "laptop_seq", allocationSize = 1, initialValue = 5)
+  @SequenceGenerator(name = "laptop_gen", sequenceName = "laptop_seq", allocationSize = 1)
   private Long id;
   @Enumerated(EnumType.STRING)
   private Processor processor;

@@ -18,7 +18,7 @@ public class SubProduct {
 
   @Id
   @GeneratedValue(generator = "sub_product_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "sub_product_gen", sequenceName = "sub_product_seq", allocationSize = 1, initialValue = 5)
+  @SequenceGenerator(name = "sub_product_gen", sequenceName = "sub_product_seq", allocationSize = 1)
   private Long id;
   private int ram;
   private String screenResolution;
