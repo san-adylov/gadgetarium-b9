@@ -8,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import peaksoft.house.gadgetariumb9.enums.Role;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
 
@@ -36,6 +35,7 @@ public class User implements UserDetails {
 
   private String password;
 
+  @Enumerated(EnumType.STRING)
   private Role role;
 
   private String address;

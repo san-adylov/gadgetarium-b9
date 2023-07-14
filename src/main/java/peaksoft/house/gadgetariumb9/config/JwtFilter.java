@@ -21,7 +21,7 @@ import peaksoft.house.gadgetariumb9.repository.UserRepository;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter  {
+public class JwtFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
   private final UserRepository userRepository;
@@ -38,11 +38,9 @@ public class JwtFilter extends OncePerRequestFilter  {
       if (StringUtils.hasText(token)) {
         try {
           String username = jwtService.validateToken(token);
-          User user = userRepository.getUserByEmail(username).orElseThrow(
-              () -> {
-                log.error("User with email: %s not found".formatted(username));
-                return new NotFoundException("User with email: %s not found".formatted(username));
-              });
+          User user = userRepository.getUserByEmail(username)
+              .orElseThrow(() ->
+                  new NotFoundException("User with email: %s not found".formatted(username)));
           SecurityContextHolder.getContext()
               .setAuthentication(
                   new UsernamePasswordAuthenticationToken(
@@ -50,13 +48,13 @@ public class JwtFilter extends OncePerRequestFilter  {
                       null,
                       user.getAuthorities()
                   ));
+
         } catch (JWTVerificationException e) {
-          response.sendError(
-              HttpServletResponse.SC_BAD_REQUEST,
+          response.sendError(HttpServletResponse.SC_BAD_REQUEST,
               "Invalid token");
         }
       }
     }
-    filterChain.doFilter(request,response);
+    filterChain.doFilter(request, response);
   }
 }

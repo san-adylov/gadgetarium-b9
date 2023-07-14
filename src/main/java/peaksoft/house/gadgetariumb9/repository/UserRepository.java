@@ -6,5 +6,6 @@ import peaksoft.house.gadgetariumb9.entities.User;
 
 public interface UserRepository extends JpaRepository<User,Long> {
   Optional<User> getUserByEmail(String username);
+  boolean existsByEmail(String username);
 
 }
