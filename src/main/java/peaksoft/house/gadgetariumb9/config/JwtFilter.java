@@ -48,7 +48,6 @@ public class JwtFilter extends OncePerRequestFilter {
                       null,
                       user.getAuthorities()
                   ));
-
         } catch (JWTVerificationException e) {
           response.sendError(HttpServletResponse.SC_BAD_REQUEST,
               "Invalid token");
