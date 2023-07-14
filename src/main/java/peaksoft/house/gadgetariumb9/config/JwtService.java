@@ -13,25 +13,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtService {
 
-  @Value("${spring.jwt.secret_key}")
-  private String SECRET_KEY;
+//  @Value("${spring.jwt.secret_key}")
+  String secretKey = System.getenv("SECRET_KEY");
 
   public String generateToken(UserDetails userDetails) {
     return JWT.create()
         .withClaim("username", userDetails.getUsername())
         .withIssuedAt(new Date())
         .withExpiresAt(Date.from(ZonedDateTime.now().plusHours(24).toInstant()))
-        .sign(Algorithm.HMAC512(SECRET_KEY));
+        .sign(Algorithm.HMAC512(secretKey));
   }
 
   public String validateToken(String token) {
     JWTVerifier jwtVerifier =
         JWT
-            .require(Algorithm.HMAC512(SECRET_KEY))
+            .require(Algorithm.HMAC512(secretKey))
             .build();
     DecodedJWT jwt = jwtVerifier.verify(token);
 
     return jwt.getClaim("username").asString();
   }
-
 }
