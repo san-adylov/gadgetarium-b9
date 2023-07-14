@@ -6,12 +6,22 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.time.ZonedDateTime;
 import java.util.Date;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import peaksoft.house.gadgetariumb9.entities.User;
+import peaksoft.house.gadgetariumb9.exception.NotFoundException;
+import peaksoft.house.gadgetariumb9.repository.UserRepository;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class JwtService {
+
+  private final UserRepository userRepository;
 
   @Value("${spring.jwt.secret_key}")
   String SECRET_KEY;
@@ -32,5 +42,15 @@ public class JwtService {
     DecodedJWT jwt = jwtVerifier.verify(token);
 
     return jwt.getClaim("username").asString();
+  }
+
+  public User getAuthentication() {
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    return userRepository.getUserByEmail(email)
+        .orElseThrow(() ->
+        {
+          log.error("User with email: %s not found".formatted(email));
+          return new NotFoundException("User with email: %s not found".formatted(email));
+        });
   }
 }
