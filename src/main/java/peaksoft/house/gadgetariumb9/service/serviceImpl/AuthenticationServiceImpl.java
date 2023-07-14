@@ -66,10 +66,8 @@ AuthenticationServiceImpl implements AuthenticationService {
       throw new BadCredentialException("Wrong password!");
     }
     String token = jwtService.generateToken(user);
-    jwtService.extractUsername()
     return AuthenticationResponse
         .builder()
-        .email()
         .token(token)
         .build();
   }
