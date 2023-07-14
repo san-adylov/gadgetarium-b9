@@ -7,7 +7,6 @@ import peaksoft.house.gadgetariumb9.validation.phoneNumber.PhoneNumber;
 
 @Builder
 public record SignUpRequest(
-
     String firstName,
     String lastName,
     @PhoneNumber(message = "Wrong format phone number")
