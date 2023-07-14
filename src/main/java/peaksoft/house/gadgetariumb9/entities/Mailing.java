@@ -2,6 +2,7 @@ package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.ZonedDateTime;
 
 @Entity
@@ -13,18 +14,18 @@ import java.time.ZonedDateTime;
 @Builder
 public class Mailing {
 
-  @Id
-  @GeneratedValue(generator = "mailing_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "mailing_gen", sequenceName = "mailing_seq", allocationSize = 1)
-  private Long id;
+    @Id
+    @GeneratedValue(generator = "mailing_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "mailing_gen", sequenceName = "mailing_seq", allocationSize = 1, initialValue = 6)
+    private Long id;
 
-  private String title;
+    private String title;
 
-  private String description;
+    private String description;
 
-  private ZonedDateTime startDate;
+    private ZonedDateTime startDate;
 
-  private ZonedDateTime finishDate;
+    private ZonedDateTime finishDate;
 
-  private String image;
+    private String image;
 }

@@ -2,7 +2,9 @@ package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.ZonedDateTime;
+
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -14,24 +16,24 @@ import static jakarta.persistence.CascadeType.*;
 @Builder
 public class Review {
 
-  @Id
-  @GeneratedValue(generator = "review_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "review_gen", sequenceName = "review_seq", allocationSize = 1)
-  private Long id;
+    @Id
+    @GeneratedValue(generator = "review_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "review_gen", sequenceName = "review_seq", allocationSize = 1, initialValue = 6)
+    private Long id;
 
-  private ZonedDateTime dateCreatAd;
+    private ZonedDateTime dateCreatAd;
 
-  private String comment;
+    private String comment;
 
-  private String replyToComment;
+    private String replyToComment;
 
-  private int rating;
+    private int rating;
 
-  @ManyToOne(
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private User user;
+    @ManyToOne(
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private User user;
 
-  @ManyToOne(
-      cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
-  private SubProduct subProduct;
+    @ManyToOne(
+            cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+    private SubProduct subProduct;
 }
