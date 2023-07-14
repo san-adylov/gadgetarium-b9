@@ -34,11 +34,15 @@ values (1, 'img', 'Apple'),
 
 insert into products(guarantee, brand_id, created_at, data_of_issue, id, sub_category_id, description, name, pdf,
                      video_link)
-values (3, 1, now(), now(), 1, 1, 'The beast', 'Iphone 14', 'img', 'link'),
-       (4, 2, now(), now(), 2, 2, 'The beast', 'ThinkPad X1 Carbon Gen 11.', 'img', 'link'),
-       (5, 3, now(), now(), 3, 3, 'The beast', 'xiaoxin pad 2022', 'img', 'link'),
-       (6, 4, now(), now(), 4, 4, 'The beast', 'apple watch series 8', 'img', 'link'),
-       (7, 5, now(), now(), 5, 1, 'The beast', 'Iphone 13 pro', 'img', 'link');
+values (3, 1, '2023-07-14T12:59:00+00:00', '2023-08-14T00:00:00+00:00', 1, 1, 'The beast', 'Iphone 14', 'img', 'link'),
+       (4, 2, '2023-07-14T12:59:00+00:00', '2023-07-24T00:00:00+00:00', 2, 2, 'The beast', 'ThinkPad X1 Carbon Gen 11.',
+        'img', 'link'),
+       (5, 3, '2023-07-14T12:59:00+00:00', '2023-07-30T00:00:00+00:00', 3, 3, 'The beast', 'xiaoxin pad 2022', 'img',
+        'link'),
+       (6, 4, '2023-07-14T12:59:00+00:00', '2023-09-30T00:00:00+00:00', 4, 4, 'The beast', 'apple watch series 8',
+        'img', 'link'),
+       (7, 5, '2023-07-14T12:59:00+00:00', '2023-09-30T00:00:00+00:00', 5, 1, 'The beast', 'Iphone 13 pro', 'img',
+        'link');
 
 insert into banners(id)
 values (1),
@@ -77,11 +81,11 @@ values (1, 1),
        (5, 5);
 
 insert into discounts (id, sale, start_date, finish_date, sub_product_id)
-values (1, 10, now(), now(), 1),
-       (2, 5, now(), now(), 2),
-       (3, 3, now(), now(), 3),
-       (4, 15, now(), now(), 4),
-       (5, 50, now(), now(), 5);
+values (1, 10, '2023-07-14T12:59:00+00:00', '2023-08-14T00:00:00+00:00', 1),
+       (2, 5, '2023-07-14T12:59:00+00:00', '2023-07-24T00:00:00+00:00', 2),
+       (3, 3, '2023-07-14T12:59:00+00:00', '2023-07-30T00:00:00+00:00', 3),
+       (4, 15, '2023-07-14T12:59:00+00:00', '2023-07-30T00:00:00+00:00', 4),
+       (5, 50, '2023-07-14T12:59:00+00:00', '2023-07-30T00:00:00+00:00', 5);
 
 insert into laptops (screen_size, video_memory, id, processor, purpose, sub_product_id)
 values (2.0, 8, 1, 'INTEL_CORE_I3', 'FOR_WORK', 1),
@@ -91,19 +95,19 @@ values (2.0, 8, 1, 'INTEL_CORE_I3', 'FOR_WORK', 1),
        (6.0, 30, 5, 'INTEL_CORE_I3', 'FOR_WORK', 5);
 
 insert into mailings(finish_date, id, start_date, description, image, title)
-values (now(), 1, now(), 'The beast', 'img', 'mailings'),
-       (now(), 2, now(), 'The Beast', 'img', 'mel'),
-       (now(), 3, now(), 'The Beast', 'img', 'asd'),
-       (now(), 4, now(), 'The Beast', 'img', 'lkj'),
-       (now(), 5, now(), 'The Beast', 'img', 'wer');
+values ('2023-08-14T00:00:00+00:00', 1, '2023-07-14T12:59:00+00:00', 'The beast', 'img', 'mailings'),
+       ('2023-07-24T00:00:00+00:00', 2, '2023-07-14T12:59:00+00:00', 'The Beast', 'img', 'mel'),
+       ('2023-07-30T00:00:00+00:00', 3, '2023-07-14T12:59:00+00:00', 'The Beast', 'img', 'asd'),
+       ('2023-07-30T00:00:00+00:00', 4, '2023-07-14T12:59:00+00:00', 'The Beast', 'img', 'lkj'),
+       ('2023-07-30T00:00:00+00:00', 5, '2023-07-14T12:59:00+00:00', 'The Beast', 'img', 'wer');
 
 insert into orders(order_number, quantity, total_discount, total_price, date_of_order, id, user_id, status,
                    type_delivery, type_payment)
-values (1, 1, 12, 23, now(), 1, 1, 'EXPECTATION', 'PICKUP', 'CASH'),
-       (2, 1, 13, 23, now(), 2, 2, 'PROCESSING', 'PICKUP', 'CASH'),
-       (3, 1, 14, 23, now(), 3, 3, 'COURIER_ON_THE_WAY', 'PICKUP', 'CASH'),
-       (4, 1, 15, 23, now(), 4, 4, 'DELIVERED', 'PICKUP', 'CASH'),
-       (5, 1, 16, 23, now(), 5, 5, 'CANCELED', 'PICKUP', 'CASH');
+values (1, 1, 12, 23, '2023-07-14T12:59:00+00:00', 1, 1, 'EXPECTATION', 'PICKUP', 'CASH'),
+       (2, 1, 13, 23, '2023-07-14T12:59:00+00:00', 2, 2, 'PROCESSING', 'PICKUP', 'CASH'),
+       (3, 1, 14, 23, '2023-07-14T12:59:00+00:00', 3, 3, 'COURIER_ON_THE_WAY', 'PICKUP', 'CASH'),
+       (4, 1, 15, 23, '2023-07-14T12:59:00+00:00', 4, 4, 'DELIVERED', 'PICKUP', 'CASH'),
+       (5, 1, 16, 23, '2023-07-14T12:59:00+00:00', 5, 5, 'CANCELED', 'PICKUP', 'CASH');
 
 insert into orders_sub_products (orders_id, sub_products_id)
 values (1, 1),
@@ -120,11 +124,11 @@ values (1.0, 2, 1, 1, '2400-4799mah', '0-2'),
        (5.0, 1, 5, 5, '0-2399mah', '12-15');
 
 insert into reviews (rating, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment)
-values (4, now(), 1, 1, 1, 'comm', 'ok'),
-       (2, now(), 2, 2, 2, 'comm', 'ok'),
-       (1, now(), 3, 3, 3, 'comm', 'ok'),
-       (4, now(), 4, 4, 4, 'comm', 'ok'),
-       (3, now(), 5, 5, 5, 'comm', 'ok');
+values (4, '2023-07-14T12:59:00+00:00', 1, 1, 1, 'comm', 'ok'),
+       (2, '2023-07-14T12:59:00+00:00', 2, 2, 2, 'comm', 'ok'),
+       (1, '2023-07-14T12:59:00+00:00', 3, 3, 3, 'comm', 'ok'),
+       (4, '2023-07-14T12:59:00+00:00', 4, 4, 4, 'comm', 'ok'),
+       (3, '2023-07-14T12:59:00+00:00', 5, 5, 5, 'comm', 'ok');
 
 insert into smart_watches (display_discount, waterproof, id, sub_product_id, an_interface, gender, h_ull_shape,
                            housing_material, material_bracelet)
