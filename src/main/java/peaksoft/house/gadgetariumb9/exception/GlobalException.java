@@ -61,5 +61,15 @@ public class GlobalException {
         .className(e.getClass().getSimpleName())
         .build();
   }
+  @ExceptionHandler(BadRequestException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionResponse handleBadCredential(BadRequestException e) {
+    return ExceptionResponse
+        .builder()
+        .message(e.getMessage())
+        .status(HttpStatus.BAD_REQUEST)
+        .className(e.getClass().getSimpleName())
+        .build();
+  }
 
 }

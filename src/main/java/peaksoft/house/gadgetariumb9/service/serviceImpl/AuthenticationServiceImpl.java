@@ -19,8 +19,7 @@ import peaksoft.house.gadgetariumb9.service.AuthenticationService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class
-AuthenticationServiceImpl implements AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
