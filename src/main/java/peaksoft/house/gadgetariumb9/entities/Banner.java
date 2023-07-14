@@ -2,6 +2,7 @@ package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 @Entity
@@ -13,11 +14,11 @@ import java.util.List;
 @Builder
 public class Banner {
 
-  @Id
-  @GeneratedValue(generator = "banner_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "banner_gen", sequenceName = "banner_seq", allocationSize = 1)
-  private Long id;
+    @Id
+    @GeneratedValue(generator = "banner_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "banner_gen", sequenceName = "banner_seq", allocationSize = 1,  initialValue = 6)
+    private Long id;
 
-  @ElementCollection
-  private List<String> images;
+    @ElementCollection
+    private List<String> images;
 }

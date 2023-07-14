@@ -2,8 +2,10 @@ package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.ZonedDateTime;
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -15,35 +17,35 @@ import static jakarta.persistence.CascadeType.*;
 @Builder
 public class Product {
 
-  @Id
-  @GeneratedValue(generator = "product_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "product_gen", sequenceName = "product_seq", allocationSize = 1)
-  private Long id;
+    @Id
+    @GeneratedValue(generator = "product_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "product_gen", sequenceName = "product_seq", allocationSize = 1, initialValue = 6)
+    private Long id;
 
-  private String name;
+    private String name;
 
-  private ZonedDateTime dataOfIssue;
+    private ZonedDateTime dataOfIssue;
 
-  private int guarantee;
+    private int guarantee;
 
-  private ZonedDateTime createdAt;
+    private ZonedDateTime createdAt;
 
-  private String description;
+    private String description;
 
-  private String pdf;
+    private String pdf;
 
-  private String videoLink;
+    private String videoLink;
 
-  @ManyToOne(
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private Brand brand;
+    @ManyToOne(
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private Brand brand;
 
-  @ManyToOne(
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private SubCategory subCategory;
+    @ManyToOne(
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private SubCategory subCategory;
 
-  @OneToMany(
-      mappedBy = "product",
-      cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
-  private List<SubProduct> subProducts;
+    @OneToMany(
+            mappedBy = "product",
+            cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+    private List<SubProduct> subProducts;
 }
