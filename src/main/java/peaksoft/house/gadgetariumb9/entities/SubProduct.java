@@ -2,8 +2,10 @@ package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -15,66 +17,66 @@ import static jakarta.persistence.CascadeType.*;
 @Builder
 public class SubProduct {
 
-  @Id
-  @GeneratedValue(generator = "sub_product_gen", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "sub_product_gen", sequenceName = "sub_product_seq", allocationSize = 1)
-  private Long id;
+    @Id
+    @GeneratedValue(generator = "sub_product_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "sub_product_gen", sequenceName = "sub_product_seq", allocationSize = 1, initialValue = 6)
+    private Long id;
 
-  private int ram;
+    private int ram;
 
-  private String screenResolution;
+    private String screenResolution;
 
-  private int rom;
+    private int rom;
 
-  private String additionalFeatures;
+    private String additionalFeatures;
 
-  private BigDecimal price;
+    private BigDecimal price;
 
-  private int quantity;
+    private int quantity;
 
-  private String codeColor;
+    private String codeColor;
 
-  @ElementCollection
-  private List<String> images;
+    @ElementCollection
+    private List<String> images;
 
-  private int articleNumber;
+    private int articleNumber;
 
-  @OneToOne(
-      mappedBy = "subProduct",
-      cascade = {MERGE, DETACH, REFRESH})
-  private Discount discount;
+    @OneToOne(
+            mappedBy = "subProduct",
+            cascade = {MERGE, DETACH, REFRESH})
+    private Discount discount;
 
-  @OneToOne(
-      mappedBy = "subProduct",
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private Laptop laptop;
+    @OneToOne(
+            mappedBy = "subProduct",
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private Laptop laptop;
 
-  @OneToOne(
-      mappedBy = "subProduct",
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private Phone phone;
+    @OneToOne(
+            mappedBy = "subProduct",
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private Phone phone;
 
-  @OneToOne(
-      mappedBy = "subProduct",
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private SmartWatch smartWatch;
+    @OneToOne(
+            mappedBy = "subProduct",
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private SmartWatch smartWatch;
 
-  @ManyToMany(
-      mappedBy = "subProducts",
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private List<Order> orders;
+    @ManyToMany(
+            mappedBy = "subProducts",
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private List<Order> orders;
 
-  @OneToMany(
-      mappedBy = "subProduct",
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private List<Review> reviews;
+    @OneToMany(
+            mappedBy = "subProduct",
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private List<Review> reviews;
 
-  @ManyToMany(
-      mappedBy = "subProducts",
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private List<Basket> baskets;
+    @ManyToMany(
+            mappedBy = "subProducts",
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private List<Basket> baskets;
 
-  @ManyToOne(
-      cascade = {MERGE, DETACH, REFRESH, PERSIST})
-  private Product product;
+    @ManyToOne(
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private Product product;
 }
