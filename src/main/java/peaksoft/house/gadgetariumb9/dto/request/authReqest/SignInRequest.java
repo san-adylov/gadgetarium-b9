@@ -4,9 +4,10 @@ import jakarta.validation.constraints.Email;
 import lombok.Builder;
 
 @Builder
-public record SignInRequest
-    (
+public record SignInRequest(
+
         @Email(message = "Wrong format email")
         String email,
+
         String password
     ) {}

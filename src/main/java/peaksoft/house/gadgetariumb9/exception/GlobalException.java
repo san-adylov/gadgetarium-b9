@@ -41,12 +41,12 @@ public class GlobalException {
   }
 
   @ExceptionHandler(AlreadyExistException.class)
-  @ResponseStatus(HttpStatus.CONFLICT)
+  @ResponseStatus(HttpStatus.FOUND)
   public ExceptionResponse handleAlreadyExist(AlreadyExistException e) {
     return ExceptionResponse
         .builder()
         .message(e.getMessage())
-        .status(HttpStatus.NOT_FOUND)
+        .status(HttpStatus.FOUND)
         .className(e.getClass().getSimpleName())
         .build();
   }

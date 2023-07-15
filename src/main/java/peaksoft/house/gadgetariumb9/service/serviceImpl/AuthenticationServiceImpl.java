@@ -1,15 +1,11 @@
 package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignUpRequest;
-import peaksoft.house.gadgetariumb9.dto.response.simpleResponse.AuthenticationResponse;
 import peaksoft.house.gadgetariumb9.entities.User;
 import peaksoft.house.gadgetariumb9.enums.Role;
 import peaksoft.house.gadgetariumb9.exception.AlreadyExistException;
@@ -25,10 +21,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
-  private final JavaMailSender javaMailSender;
 
   @Override
-  public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
+  public String signUp(SignUpRequest signUpRequest) {
     if (userRepository.existsByEmail(signUpRequest.email())) {
       throw new AlreadyExistException(
           "User with email: %s already exist".formatted(signUpRequest.email()));
@@ -44,14 +39,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         .isSubscription(false)
         .build();
     userRepository.save(user);
-    return AuthenticationResponse
-        .builder()
-        .token(jwtService.generateToken(user))
-        .build();
+    return jwtService.generateToken(user);
   }
 
   @Override
-  public AuthenticationResponse signIn(SignInRequest signInRequest) {
+  public String signIn(SignInRequest signInRequest) {
     User user = userRepository.getUserByEmail(signInRequest.email())
         .orElseThrow(() -> new NotFoundException(
             "User with email: %s not found".formatted(signInRequest.email())));
@@ -61,11 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     if (!passwordEncoder.matches(signInRequest.password(), user.getPassword())) {
       throw new BadCredentialException("Wrong password!");
     }
-    String token = jwtService.generateToken(user);
-    return AuthenticationResponse
-        .builder()
-        .token(token)
-        .build();
+    return jwtService.generateToken(user);
   }
 
   @Override

@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import peaksoft.house.gadgetariumb9.entities.User;
 
 public interface UserRepository extends JpaRepository<User,Long> {
+
   Optional<User> getUserByEmail(String username);
+
   boolean existsByEmail(String username);
 
   Optional<User> getUserByEmailAndResetToken(String email,String token);
