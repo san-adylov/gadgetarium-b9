@@ -54,7 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   public AuthenticationResponse signIn(SignInRequest signInRequest) {
     User user = userRepository.getUserByEmail(signInRequest.email())
         .orElseThrow(() -> new NotFoundException(
-              "User with email: %s not found".formatted(signInRequest.email())));
+            "User with email: %s not found".formatted(signInRequest.email())));
     if (signInRequest.password().isBlank()) {
       throw new BadCredentialException("Password is blank!");
     }
@@ -69,23 +69,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   }
 
   @Override
-  public void forgotPassword(String email) {
+  public String forgotPassword(String email) {
     User user = userRepository.getUserByEmail(email)
         .orElseThrow(() -> new NotFoundException("fdjs"));
     String resetToken = generateResetToken();
     user.setResetToken(resetToken);
     userRepository.save(user);
-    String resetLink = "http://localhost:9090/swagger-ui/index.html#/?token=" + resetToken;
+    String resetLink =
+        "http://localhost:9090/swagger-ui/index.html#/authentication-api/resetPassword/?token="
+            + resetToken;
     String emailBody = "Для сброса перейдите по ссылке: " + resetLink;
-    sendEmail(user.getEmail(), "Reset password", emailBody);
+    sendEmail(user.getEmail(), emailBody);
+    return "Message has been sent to your Email";
   }
 
   @Override
   public String resetPassword(String email, String token) {
-    User user = userRepository.getUserByEmailAndResetToken(email, token).orElseThrow(() ->
-    {
-      return new NotFoundException("fsd");
-    });
+    User user = userRepository.getUserByEmailAndResetToken(email, token)
+        .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
     return user.getEmail();
   }
 
@@ -94,13 +95,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     return uuid.toString();
   }
 
-  private void sendEmail(String to, String subject, String body) {
+  private void sendEmail(String to, String body) {
     SimpleMailMessage message = new SimpleMailMessage();
     message.setFrom("sanadylov@gmail.com");
     message.setTo(to);
     message.setText(body);
-    message.setSubject(subject);
+    message.setSubject("Reset password");
     javaMailSender.send(message);
+
   }
 
 
