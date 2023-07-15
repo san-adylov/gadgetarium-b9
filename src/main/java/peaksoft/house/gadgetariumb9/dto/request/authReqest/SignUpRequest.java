@@ -19,4 +19,5 @@ public record SignUpRequest(
 
     @Password(message = "Wrong format password")
     String password
+)
 {}
