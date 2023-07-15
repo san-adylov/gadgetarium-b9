@@ -2,7 +2,6 @@ package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +18,6 @@ import peaksoft.house.gadgetariumb9.exception.NotFoundException;
 import peaksoft.house.gadgetariumb9.repository.UserRepository;
 import peaksoft.house.gadgetariumb9.service.AuthenticationService;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -29,11 +27,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final JwtService jwtService;
   private final JavaMailSender javaMailSender;
 
-
   @Override
   public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
     if (userRepository.existsByEmail(signUpRequest.email())) {
-      log.error("User with email: %s already exist!".formatted(signUpRequest.email()));
       throw new AlreadyExistException(
           "User with email: %s already exist".formatted(signUpRequest.email()));
     }
@@ -57,12 +53,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   public AuthenticationResponse signIn(SignInRequest signInRequest) {
     User user = userRepository.getUserByEmail(signInRequest.email())
-        .orElseThrow(() ->
-        {
-          log.error("User with email: %s not found".formatted(signInRequest.email()));
-          return new NotFoundException(
-              "User with email: %s not found".formatted(signInRequest.email()));
-        });
+        .orElseThrow(() -> new NotFoundException(
+              "User with email: %s not found".formatted(signInRequest.email())));
     if (signInRequest.password().isBlank()) {
       throw new BadCredentialException("Password is blank!");
     }
@@ -91,8 +83,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   public String resetPassword(String email, String token) {
     User user = userRepository.getUserByEmailAndResetToken(email, token).orElseThrow(() ->
-    {log.error("fsd");
-      return new NotFoundException("fsd");});
+    {
+      return new NotFoundException("fsd");
+    });
     return user.getEmail();
   }
 
@@ -108,9 +101,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     message.setText(body);
     message.setSubject(subject);
     javaMailSender.send(message);
-    log.info("ok");
   }
-
 
 
 }
