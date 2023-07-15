@@ -3,6 +3,7 @@ package peaksoft.house.gadgetariumb9.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,4 +22,9 @@ public class Banner {
 
     @ElementCollection
     private List<String> images;
+//   private String banner;
+
+
+    public Banner(String banner) {
+    }
 }
