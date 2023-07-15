@@ -10,4 +10,7 @@ public interface AuthenticationService {
 
   AuthenticationResponse signIn(SignInRequest signInRequest);
 
+  void forgotPassword(String email);
+  String resetPassword(String email,String token);
+
 }

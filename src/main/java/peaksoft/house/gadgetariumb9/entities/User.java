@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import peaksoft.house.gadgetariumb9.enums.Role;
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
 
@@ -20,45 +21,47 @@ import static jakarta.persistence.CascadeType.PERSIST;
 @Builder
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(generator = "user_gen", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "user_gen", sequenceName = "user_seq", allocationSize = 1, initialValue = 6)
-    private Long id;
+  @Id
+  @GeneratedValue(generator = "user_gen", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "user_gen", sequenceName = "user_seq", allocationSize = 1, initialValue = 6)
+  private Long id;
 
-    private String firstName;
+  private String firstName;
 
-    private String lastName;
+  private String lastName;
 
-    private String phoneNumber;
+  private String phoneNumber;
 
-    private String email;
+  private String email;
 
-    private String password;
-  
-    @Enumerated (EnumType.STRING)
-    private Role role;
+  private String password;
 
-    private String address;
+  @Enumerated(EnumType.STRING)
+  private Role role;
 
-    private boolean isSubscription;
+  private String address;
 
-    private String image;
+  private boolean isSubscription;
 
-    @ElementCollection
-    private List<Long> comparison;
+  private String image;
 
-    @ElementCollection
-    private List<Long> favorite;
+  private String resetToken;
 
-    @OneToMany(
-            mappedBy = "user",
-            cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
-    private List<Order> orders;
+  @ElementCollection
+  private List<Long> comparison;
 
-    @OneToMany(
-            mappedBy = "user",
-            cascade = {MERGE, DETACH, REFRESH, PERSIST})
-    private List<Review> reviews;
+  @ElementCollection
+  private List<Long> favorite;
+
+  @OneToMany(
+      mappedBy = "user",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+  private List<Order> orders;
+
+  @OneToMany(
+      mappedBy = "user",
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
+  private List<Review> reviews;
 
   @OneToMany(
       mappedBy = "user",

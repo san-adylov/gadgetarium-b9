@@ -1,7 +1,10 @@
 package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.JwtService;
@@ -24,6 +27,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
+  private final JavaMailSender javaMailSender;
+
 
   @Override
   public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
@@ -70,4 +75,42 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         .token(token)
         .build();
   }
+
+  @Override
+  public void forgotPassword(String email) {
+    User user = userRepository.getUserByEmail(email)
+        .orElseThrow(() -> new NotFoundException("fdjs"));
+    String resetToken = generateResetToken();
+    user.setResetToken(resetToken);
+    userRepository.save(user);
+    String resetLink = "http://localhost:9090/swagger-ui/index.html#/?token=" + resetToken;
+    String emailBody = "Для сброса перейдите по ссылке: " + resetLink;
+    sendEmail(user.getEmail(), "Reset password", emailBody);
+  }
+
+  @Override
+  public String resetPassword(String email, String token) {
+    User user = userRepository.getUserByEmailAndResetToken(email, token).orElseThrow(() ->
+    {log.error("fsd");
+      return new NotFoundException("fsd");});
+    return user.getEmail();
+  }
+
+  private String generateResetToken() {
+    UUID uuid = UUID.randomUUID();
+    return uuid.toString();
+  }
+
+  private void sendEmail(String to, String subject, String body) {
+    SimpleMailMessage message = new SimpleMailMessage();
+    message.setFrom("sanadylov@gmail.com");
+    message.setTo(to);
+    message.setText(body);
+    message.setSubject(subject);
+    javaMailSender.send(message);
+    log.info("ok");
+  }
+
+
+
 }
