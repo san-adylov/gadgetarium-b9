@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignUpRequest;
-import peaksoft.house.gadgetariumb9.dto.response.simpleResponse.AuthenticationResponse;
 import peaksoft.house.gadgetariumb9.service.AuthenticationService;
 
 @RestController
@@ -19,12 +18,12 @@ public class AuthenticationApi {
   private final AuthenticationService authenticationService;
 
   @PostMapping("/signUp")
-  public AuthenticationResponse signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
+  public String signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
     return authenticationService.signUp(signUpRequest);
   }
 
   @PostMapping("/signIn")
-  public AuthenticationResponse signIn(@RequestBody @Valid  SignInRequest signInRequest) {
+  public String signIn(@RequestBody @Valid SignInRequest signInRequest) {
     return authenticationService.signIn(signInRequest);
   }
 }

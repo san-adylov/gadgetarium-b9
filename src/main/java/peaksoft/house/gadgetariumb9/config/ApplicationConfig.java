@@ -1,7 +1,6 @@
 package peaksoft.house.gadgetariumb9.config;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import peaksoft.house.gadgetariumb9.exception.NotFoundException;
 import peaksoft.house.gadgetariumb9.repository.UserRepository;
 
-@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -26,11 +24,7 @@ public class ApplicationConfig {
   @Bean
   public UserDetailsService userDetailsService() {
     return username -> userRepository.getUserByEmail(username).orElseThrow(
-        () -> {
-          log.error("User with email: %s not found".formatted(username));
-          return new NotFoundException("User with email: %s not found".formatted(username));
-        }
-    );
+        () -> new NotFoundException("User with email: %s not found".formatted(username)));
   }
 
   @Bean
