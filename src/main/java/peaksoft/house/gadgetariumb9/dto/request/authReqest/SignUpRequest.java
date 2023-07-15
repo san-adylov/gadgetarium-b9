@@ -18,8 +18,5 @@ public record SignUpRequest(
     String email,
 
     @Password(message = "Wrong format password")
-    String password,
-
-    @Password(message = "Wrong format password")
-    String confirmPassword)
+    String password
 {}
