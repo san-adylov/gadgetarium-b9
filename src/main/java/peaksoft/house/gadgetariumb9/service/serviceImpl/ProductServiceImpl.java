@@ -14,6 +14,7 @@ import peaksoft.house.gadgetariumb9.service.ProductService;
 
 import java.time.ZonedDateTime;
 
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -38,15 +39,15 @@ public class ProductServiceImpl implements ProductService {
 
         Category category = categoryRepository.findById(productRequest.getCategoryId())
                 .orElseThrow(() -> new NotFoundException("Category with id: " + productRequest.getCategoryId() + "is not found"));
-
-        Product product = new Product();
-        product.setSubCategory(subCategory);
-        product.setBrand(brand);
-        product.getSubCategory().setCategory(category);
-        product.setName(productRequest.getName());
-        product.setGuarantee(productRequest.getGuarantee());
-        product.setCreatedAt(ZonedDateTime.now());
-        product.setDataOfIssue(productRequest.getDateOfIssue());
+        Product product = Product.builder()
+                .subCategory(subCategory)
+                .brand(brand)
+                .category(category)
+                .name(productRequest.getName())
+                .dataOfIssue(ZonedDateTime.now())
+                .createdAt(ZonedDateTime.now())
+                .guarantee(productRequest.getGuarantee())
+                .build();
         productRepository.save(product);
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
