@@ -61,6 +61,7 @@ public class GlobalException {
         .className(e.getClass().getSimpleName())
         .build();
   }
+
   @ExceptionHandler(BadRequestException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ExceptionResponse handleBadCredential(BadRequestException e) {
@@ -68,6 +69,17 @@ public class GlobalException {
         .builder()
         .message(e.getMessage())
         .status(HttpStatus.BAD_REQUEST)
+        .className(e.getClass().getSimpleName())
+        .build();
+  }
+
+  @ExceptionHandler(TokenExpiredException.class)
+  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+  public ExceptionResponse handleTokenExpired(TokenExpiredException e) {
+    return ExceptionResponse
+        .builder()
+        .message(e.getMessage())
+        .status(HttpStatus.UNAUTHORIZED)
         .className(e.getClass().getSimpleName())
         .build();
   }

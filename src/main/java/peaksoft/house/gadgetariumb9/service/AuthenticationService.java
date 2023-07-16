@@ -10,6 +10,6 @@ public interface AuthenticationService {
   String signIn(SignInRequest signInRequest);
 
   String forgotPassword(String email);
-  String resetPassword(String email,String token);
 
+  String resetPassword(String email,String token);
 }

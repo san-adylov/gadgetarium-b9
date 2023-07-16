@@ -1,9 +1,13 @@
 package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.JwtService;
+import peaksoft.house.gadgetariumb9.config.ResetTokenConfig;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignUpRequest;
 import peaksoft.house.gadgetariumb9.entities.User;
@@ -11,6 +15,7 @@ import peaksoft.house.gadgetariumb9.enums.Role;
 import peaksoft.house.gadgetariumb9.exception.AlreadyExistException;
 import peaksoft.house.gadgetariumb9.exception.BadCredentialException;
 import peaksoft.house.gadgetariumb9.exception.NotFoundException;
+import peaksoft.house.gadgetariumb9.exception.TokenExpiredException;
 import peaksoft.house.gadgetariumb9.repository.UserRepository;
 import peaksoft.house.gadgetariumb9.service.AuthenticationService;
 
@@ -21,6 +26,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
+  private final MailSender mailSender;
+  private final ResetTokenConfig resetTokenConfig;
+
+  @Value("${spring.admin_password}")
+  private String PASSWORD;
+
+  @Value("${spring.admin_email}")
+  private String EMAIL;
+
+  @Value("${spring.mail.username}")
+  private String EMAIL_FROM;
 
   @Override
   public String signUp(SignUpRequest signUpRequest) {
@@ -59,12 +75,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   public String forgotPassword(String email) {
     User user = userRepository.getUserByEmail(email)
-        .orElseThrow(() -> new NotFoundException("fdjs"));
-    String resetToken = generateResetToken();
+        .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
+    String resetToken = (resetTokenConfig.generateToken());
     user.setResetToken(resetToken);
     userRepository.save(user);
     String resetLink =
-        "http://localhost:9090/swagger-ui/index.html#/authentication-api/resetPassword/?token="
+        "http://localhost:9090/swagger-ui/index.html#/Authentication/resetPassword/?token="
             + resetToken;
     String emailBody = "Для сброса перейдите по ссылке: " + resetLink;
     sendEmail(user.getEmail(), emailBody);
@@ -72,26 +88,46 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   }
 
   @Override
-  public String resetPassword(String email, String token) {
-    User user = userRepository.getUserByEmailAndResetToken(email, token)
-        .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
-    return user.getEmail();
-  }
-
-  private String generateResetToken() {
-    UUID uuid = UUID.randomUUID();
-    return uuid.toString();
+  public String resetPassword(String password, String token) {
+    int index = token.indexOf("=");
+    String newToken = "";
+    if (index != -1) {
+      newToken = token.substring(index + 1);
+    }
+    User user = userRepository.getUserByResetToken(newToken)
+        .orElseThrow(() -> new TokenExpiredException("Token invalid!"));
+    if (resetTokenConfig.isTokenValid(newToken)) {
+      user.setPassword(passwordEncoder.encode(password));
+      user.setResetToken(null);
+      userRepository.save(user);
+      return "Password successfully updated";
+    } else {
+      throw new TokenExpiredException("Token is expired");
+    }
   }
 
   private void sendEmail(String to, String body) {
     SimpleMailMessage message = new SimpleMailMessage();
-    message.setFrom("sanadylov@gmail.com");
+    message.setFrom(EMAIL_FROM);
     message.setTo(to);
     message.setText(body);
     message.setSubject("Reset password");
-    javaMailSender.send(message);
-
+    mailSender.send(message);
   }
 
-
+  private void addAdmin() {
+    if (!userRepository.existsByEmail(EMAIL)) {
+      User user = User
+          .builder()
+          .firstName("Admin")
+          .lastName("Admin")
+          .email(EMAIL)
+          .phoneNumber(null)
+          .password(passwordEncoder.encode(PASSWORD))
+          .role(Role.ADMIN)
+          .isSubscription(false)
+          .build();
+      userRepository.save(user);
+    }
+  }
 }

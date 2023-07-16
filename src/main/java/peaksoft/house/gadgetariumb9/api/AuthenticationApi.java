@@ -3,8 +3,8 @@ package peaksoft.house.gadgetariumb9.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignUpRequest;
 import peaksoft.house.gadgetariumb9.service.AuthenticationService;
+import peaksoft.house.gadgetariumb9.validation.password.Password;
 
 @RestController
 @RequestMapping("/auth")
@@ -35,12 +36,24 @@ public class AuthenticationApi {
   }
 
   @PostMapping("/forgotPassword")
-  public String forgotPassword (@RequestParam String email ){
+  @Operation(summary = "forgotPassword")
+  public String forgotPassword (
+      @RequestParam
+      @Valid
+      @Email
+      String email ){
     return authenticationService.forgotPassword(email);
   }
-  @PostMapping("/resetPassword/{token}")
-  public String resetPassword(@RequestParam String email,@PathVariable String token){
-   return authenticationService.resetPassword(email,token);
+  @PostMapping("/resetPassword")
+  @Operation(summary = "resetPassword")
+  public String resetPassword(
+      @RequestParam
+      @Valid
+      @Password
+      String password,
+      @RequestParam
+      String token){
+   return authenticationService.resetPassword(password,token);
   }
 
 }

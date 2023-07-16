@@ -22,7 +22,7 @@ public class JwtService {
   private final UserRepository userRepository;
 
   @Value("${spring.jwt.secret_key}")
-  String SECRET_KEY;
+  private String SECRET_KEY;
 
   public String generateToken(UserDetails userDetails) {
     return JWT.create()
