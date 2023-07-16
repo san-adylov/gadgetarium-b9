@@ -19,7 +19,7 @@ target/
 *.iml
 *.ipr
 
-
+/src/main/resources/application-davran.properties
 
 ### NetBeans ###
 /nbproject/private/
