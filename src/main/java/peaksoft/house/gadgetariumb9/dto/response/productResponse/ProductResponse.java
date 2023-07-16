@@ -18,7 +18,7 @@ public class ProductResponse {
 
     private Long brandId;
 
-    private int guarantee;
+    private  int guarantee;
 
     private String name;
 
