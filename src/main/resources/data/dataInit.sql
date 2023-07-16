@@ -1,4 +1,4 @@
-insert into users(is_subscription, role, id,address, email, first_name, image, last_name, password, phone_number)
+insert into users(is_subscription, role, id, address, email, first_name, image, last_name, password, phone_number)
 values (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldoshabev',
         '$2a$12$rfe2c6WJHa3aq4DDIq0eBO/z9oKNiqcW.lrkSHRd7qPQ9updpsJzy', '0995665528'), --davran2005
        (true, 'USER', 2, 'Красный речка', 'salymbek@gmail.com', 'Salymbek', 'img', ' Khadzhakeldyev',
@@ -32,16 +32,18 @@ values (1, 'img', 'Apple'),
        (4, 'img', 'Sony'),
        (5, 'img', 'htc');
 
-insert into products(guarantee,brand_id, created_at, data_of_issue, id, sub_category_id, description, name, pdf, video_link,category_id)
-values (3, 1, '2023-07-14T12:59:00+00:00', '2023-08-14T00:00:00+00:00', 1, 1, 'The beast', 'Iphone 14', 'img', 'link',1),
+insert into products(guarantee, brand_id, created_at, data_of_issue, id, sub_category_id, description, name, pdf,
+                     video_link, category_id)
+values (3, 1, '2023-07-14T12:59:00+00:00', '2023-08-14T00:00:00+00:00', 1, 1, 'The beast', 'Iphone 14', 'img', 'link',
+        1),
        (4, 2, '2023-07-14T12:59:00+00:00', '2023-07-24T00:00:00+00:00', 2, 2, 'The beast', 'ThinkPad X1 Carbon Gen 11.',
-        'img', 'link',2),
+        'img', 'link', 2),
        (5, 3, '2023-07-14T12:59:00+00:00', '2023-07-30T00:00:00+00:00', 3, 3, 'The beast', 'xiaoxin pad 2022', 'img',
-        'link',3),
+        'link', 3),
        (6, 4, '2023-07-14T12:59:00+00:00', '2023-09-30T00:00:00+00:00', 4, 4, 'The beast', 'apple watch series 8',
-        'img', 'link',4),
+        'img', 'link', 4),
        (7, 5, '2023-07-14T12:59:00+00:00', '2023-09-30T00:00:00+00:00', 5, 1, 'The beast', 'Iphone 13 pro', 'img',
-        'link',1);
+        'link', 1);
 
 insert into banners(id)
 values (1),

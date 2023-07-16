@@ -47,7 +47,7 @@ public class Product {
     @OneToMany(
             mappedBy = "product",
             cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
-    private List<SubProduct> subProducts;
+     private List<SubProduct> subProducts;
 
     @ManyToOne(
             cascade = {MERGE, DETACH, REFRESH, PERSIST})
