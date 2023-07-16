@@ -1,5 +1,5 @@
 insert into users(is_subscription, role, id, address, email, first_name, image, last_name, password, phone_number)
-values (false, 'USER', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldoshabev',
+values (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldoshabev',
         '$2a$12$rfe2c6WJHa3aq4DDIq0eBO/z9oKNiqcW.lrkSHRd7qPQ9updpsJzy', '0995665528'), --davran2005
        (true, 'USER', 2, 'Красный речка', 'salymbek@gmail.com', 'Salymbek', 'img', ' Khadzhakeldyev',
         '$2a$12$obECYf/JcKcxdFVc4w57we64ZSiU9.RfZ/uV/l3D/.oa72NerEj7y',
