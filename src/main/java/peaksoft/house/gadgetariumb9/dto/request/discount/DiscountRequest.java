@@ -10,6 +10,7 @@ public record DiscountRequest(
     String discountStartDate,
 
     String discountEndDate,
+
     Long subProductId
 ) {
 }

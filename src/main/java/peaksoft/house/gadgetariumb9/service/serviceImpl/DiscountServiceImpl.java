@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.discount.DiscountRequest;
+import peaksoft.house.gadgetariumb9.dto.response.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.entities.Discount;
 import peaksoft.house.gadgetariumb9.entities.SubProduct;
 import peaksoft.house.gadgetariumb9.exception.BadCredentialException;

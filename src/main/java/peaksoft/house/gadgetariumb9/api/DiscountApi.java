@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.discount.DiscountRequest;
+import peaksoft.house.gadgetariumb9.dto.response.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.service.DiscountService;
 
 @RestController
