@@ -19,6 +19,7 @@ public record SignUpRequest(
 
     @PhoneNumber(message = "Wrong format phone number")
     String phoneNumber,
+
     @Email(message = "Wrong format email")
     String email,
 
