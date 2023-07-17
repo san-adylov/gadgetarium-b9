@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.productRequest.ProductRequest;
 import peaksoft.house.gadgetariumb9.entities.*;
 import peaksoft.house.gadgetariumb9.exception.NotFoundException;
-import peaksoft.house.gadgetariumb9.repository.BrandRepository;
-import peaksoft.house.gadgetariumb9.repository.CategoryRepository;
 import peaksoft.house.gadgetariumb9.repository.ProductRepository;
-import peaksoft.house.gadgetariumb9.repository.SubCategoryRepository;
 import peaksoft.house.gadgetariumb9.service.ProductService;
 
 import java.time.ZonedDateTime;
