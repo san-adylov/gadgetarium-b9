@@ -1,5 +1,6 @@
 package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
@@ -115,6 +116,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     mailSender.send(message);
   }
 
+  @PostConstruct
   private void addAdmin() {
     if (!userRepository.existsByEmail(EMAIL)) {
       User user = User
