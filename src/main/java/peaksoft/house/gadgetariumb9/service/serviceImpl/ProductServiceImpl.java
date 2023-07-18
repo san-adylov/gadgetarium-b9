@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.productRequest.ProductRequest;
@@ -11,7 +12,7 @@ import peaksoft.house.gadgetariumb9.service.ProductService;
 
 import java.time.ZonedDateTime;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -28,14 +29,24 @@ public class ProductServiceImpl implements ProductService {
     public SimpleResponse saveProduct(ProductRequest productRequest) {
 
         SubCategory subCategory = subCategoryRepository.findById(productRequest.getSubCategoryId())
-                .orElseThrow(() -> new NotFoundException("SubCategory with id: " + productRequest.getSubCategoryId() + "is not found"));
+                .orElseThrow(() -> {
+                    log.error("SubCategory with id: " + productRequest.getSubCategoryId() + "is not found");
+                    return new NotFoundException("SubCategory with id: " + productRequest.getSubCategoryId() + "is not found");
+
+                });
 
         Brand brand = brandRepository.findById(productRequest.getBrandId())
-                .orElseThrow(() -> new NotFoundException("Brand with id: " + productRequest.getBrandId() + "is not found"));
+                .orElseThrow(() -> {
+                    log.error("Brand with id: " + productRequest.getBrandId() + "is not found");
+                    return new NotFoundException("Brand with id: " + productRequest.getBrandId() + "is not found");
+                });
 
 
         Category category = categoryRepository.findById(productRequest.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category with id: " + productRequest.getCategoryId() + "is not found"));
+                .orElseThrow(() -> {
+                    log.error("Category with id: " + productRequest.getCategoryId() + "is not found");
+                    return new NotFoundException("Category with id: " + productRequest.getCategoryId() + "is not found");
+                });
         Product product = Product.builder()
                 .subCategory(subCategory)
                 .brand(brand)
