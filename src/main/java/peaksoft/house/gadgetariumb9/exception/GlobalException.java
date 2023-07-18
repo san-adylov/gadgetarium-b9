@@ -85,15 +85,4 @@ public class GlobalException {
         .build();
   }
 
-  @ExceptionHandler(TokenExpiredException.class)
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  public ExceptionResponse handleTokenExpired(TokenExpiredException e) {
-    return ExceptionResponse
-        .builder()
-        .message(e.getMessage())
-        .status(HttpStatus.UNAUTHORIZED)
-        .className(e.getClass().getSimpleName())
-        .build();
-  }
-
 }

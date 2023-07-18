@@ -2,6 +2,7 @@ package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailSender;
@@ -17,10 +18,10 @@ import peaksoft.house.gadgetariumb9.enums.Role;
 import peaksoft.house.gadgetariumb9.exception.AlreadyExistException;
 import peaksoft.house.gadgetariumb9.exception.BadCredentialException;
 import peaksoft.house.gadgetariumb9.exception.NotFoundException;
-import peaksoft.house.gadgetariumb9.exception.TokenExpiredException;
 import peaksoft.house.gadgetariumb9.repository.UserRepository;
 import peaksoft.house.gadgetariumb9.service.AuthenticationService;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -41,47 +42,60 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Override
   public String signUp(SignUpRequest signUpRequest) {
-    if (userRepository.existsByEmail(signUpRequest.email())) {
+    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+      log.error("User with email: %s already exist".formatted(signUpRequest.getEmail()));
       throw new AlreadyExistException(
-          "User with email: %s already exist".formatted(signUpRequest.email()));
+          "User with email: %s already exist".formatted(signUpRequest.getEmail()));
     }
     User user = User
         .builder()
-        .firstName(signUpRequest.firstName())
-        .lastName(signUpRequest.lastName())
-        .email(signUpRequest.email())
-        .phoneNumber(signUpRequest.phoneNumber())
-        .password(passwordEncoder.encode(signUpRequest.password()))
+        .firstName(signUpRequest.getFirstName())
+        .lastName(signUpRequest.getLastName())
+        .email(signUpRequest.getEmail())
+        .phoneNumber(signUpRequest.getPhoneNumber())
+        .password(passwordEncoder.encode(signUpRequest.getPassword()))
         .role(Role.USER)
         .isSubscription(false)
         .build();
+    log.info("User successfully saved");
     userRepository.save(user);
+    log.info("Generation of a token for a new user");
     return jwtService.generateToken(user);
   }
 
   @Override
   public String signIn(SignInRequest signInRequest) {
-    User user = userRepository.getUserByEmail(signInRequest.email())
-        .orElseThrow(() -> new NotFoundException(
-            "User with email: %s not found".formatted(signInRequest.email())));
-    if (signInRequest.password().isBlank()) {
+    User user = userRepository.getUserByEmail(signInRequest.getEmail())
+        .orElseThrow(() -> {
+          log.error("User with email: %s not found".formatted(signInRequest.getEmail()));
+          return new NotFoundException(
+              "User with email: %s not found".formatted(signInRequest.getEmail()));
+        });
+    if (signInRequest.getEmail().isBlank()) {
+      log.error("Password is blank!");
       throw new BadCredentialException("Password is blank!");
     }
-    if (!passwordEncoder.matches(signInRequest.password(), user.getPassword())) {
+    if (!passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {
+      log.error("Wrong password");
       throw new BadCredentialException("Wrong password!");
     }
+    log.info("Generation of a token for a registered user");
     return jwtService.generateToken(user);
   }
 
   @Override
   public SimpleResponse forgotPassword(String email, String link) {
     User user = userRepository.getUserByEmail(email)
-        .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
+        .orElseThrow(() -> {
+          log.error("User with email: %s not found".formatted(email));
+          return new NotFoundException("User with email: %s not found".formatted(email));
+        });
     String emailBody = "Для сброса перейдите по ссылке: " + link + "/" + user.getId();
     sendEmail(user.getEmail(), emailBody);
+    log.info("Message has been sent to your email");
     return SimpleResponse
         .builder()
-        .message("Message has been sent to your Email")
+        .message("Message has been sent to your email")
         .status(HttpStatus.OK)
         .build();
   }
@@ -90,9 +104,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   public SimpleResponse resetPassword(String password, Long userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(
-            () -> new TokenExpiredException("User with id: %s not found".formatted(userId)));
+            () -> {
+              log.error("User with id: %s not found".formatted(userId));
+              return new NotFoundException("User with id: %s not found".formatted(userId));
+            });
     user.setPassword(passwordEncoder.encode(password));
     userRepository.save(user);
+    log.info("Password successfully updated");
     return SimpleResponse
         .builder()
         .message("Password successfully updated")
@@ -123,6 +141,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
           .isSubscription(false)
           .build();
       userRepository.save(user);
+      log.info("Admin saved");
     }
   }
 }

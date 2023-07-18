@@ -23,7 +23,7 @@ import peaksoft.house.gadgetariumb9.validation.password.Password;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
-@CrossOrigin
+@CrossOrigin(maxAge = 3600,origins = "*")
 @Validated
 public class AuthenticationApi {
 
