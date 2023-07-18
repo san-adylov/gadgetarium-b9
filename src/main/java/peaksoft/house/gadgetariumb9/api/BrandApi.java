@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.brand.BrandRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.service.serviceImpl.BrandServiceImpl;
@@ -16,8 +13,8 @@ import peaksoft.house.gadgetariumb9.service.serviceImpl.BrandServiceImpl;
 @RequestMapping("/brand")
 @RequiredArgsConstructor
 @Tag(name = "Brand")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class BrandApi {
-
 
     private final BrandServiceImpl brandService;
 
