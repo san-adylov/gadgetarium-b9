@@ -3,14 +3,15 @@ package peaksoft.house.gadgetariumb9.service.serviceImpl;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.JwtService;
-import peaksoft.house.gadgetariumb9.config.ResetTokenConfig;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignUpRequest;
+import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.entities.User;
 import peaksoft.house.gadgetariumb9.enums.Role;
 import peaksoft.house.gadgetariumb9.exception.AlreadyExistException;
@@ -28,7 +29,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final MailSender mailSender;
-  private final ResetTokenConfig resetTokenConfig;
 
   @Value("${spring.admin_password}")
   private String PASSWORD;
@@ -74,37 +74,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   }
 
   @Override
-  public String forgotPassword(String email) {
+  public SimpleResponse forgotPassword(String email, String link) {
     User user = userRepository.getUserByEmail(email)
         .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
-    String resetToken = (resetTokenConfig.generateToken());
-    user.setResetToken(resetToken);
-    userRepository.save(user);
-    String resetLink =
-        "http://localhost:9090/swagger-ui/index.html#/Authentication/resetPassword/?token="
-            + resetToken;
-    String emailBody = "Для сброса перейдите по ссылке: " + resetLink;
+    String emailBody = "Для сброса перейдите по ссылке: " + link + "/" + user.getId();
     sendEmail(user.getEmail(), emailBody);
-    return "Message has been sent to your Email";
+    return SimpleResponse
+        .builder()
+        .message("Message has been sent to your Email")
+        .status(HttpStatus.OK)
+        .build();
   }
 
   @Override
-  public String resetPassword(String password, String token) {
-    int index = token.indexOf("=");
-    String newToken = "";
-    if (index != -1) {
-      newToken = token.substring(index + 1);
-    }
-    User user = userRepository.getUserByResetToken(newToken)
-        .orElseThrow(() -> new TokenExpiredException("Token invalid!"));
-    if (resetTokenConfig.isTokenValid(newToken)) {
-      user.setPassword(passwordEncoder.encode(password));
-      user.setResetToken(null);
-      userRepository.save(user);
-      return "Password successfully updated";
-    } else {
-      throw new TokenExpiredException("Token is expired");
-    }
+  public SimpleResponse resetPassword(String password, Long userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(
+            () -> new TokenExpiredException("User with id: %s not found".formatted(userId)));
+    user.setPassword(passwordEncoder.encode(password));
+    userRepository.save(user);
+    return SimpleResponse
+        .builder()
+        .message("Password successfully updated")
+        .status(HttpStatus.OK)
+        .build();
   }
 
   private void sendEmail(String to, String body) {

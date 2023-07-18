@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.exception;
 
 import java.util.List;
+import javax.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,6 +25,17 @@ public class GlobalException {
     return ExceptionResponse
         .builder()
         .message(errors.toString())
+        .status(HttpStatus.BAD_REQUEST)
+        .className(e.getClass().getSimpleName())
+        .build();
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionResponse handleConstraintViolation(ConstraintViolationException e) {
+    return ExceptionResponse
+        .builder()
+        .message(e.getMessage())
         .status(HttpStatus.BAD_REQUEST)
         .className(e.getClass().getSimpleName())
         .build();
