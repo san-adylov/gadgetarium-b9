@@ -5,7 +5,4 @@ import org.springframework.stereotype.Repository;
 import peaksoft.house.gadgetariumb9.entities.SubProduct;
 
 public interface SubProductRepository extends JpaRepository<SubProduct,Long> {
-
-
-
 }

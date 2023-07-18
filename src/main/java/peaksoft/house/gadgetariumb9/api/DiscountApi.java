@@ -3,6 +3,7 @@ package peaksoft.house.gadgetariumb9.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,7 @@ import peaksoft.house.gadgetariumb9.service.DiscountService;
 @Tag(name = "Discount")
 @RequiredArgsConstructor
 @RequestMapping("/discount")
+@CrossOrigin(maxAge = 3600,origins = "*")
 public class DiscountApi {
 
   private final DiscountService discountService;

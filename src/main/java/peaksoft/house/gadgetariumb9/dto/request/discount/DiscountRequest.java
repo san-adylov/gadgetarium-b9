@@ -1,16 +1,25 @@
 package peaksoft.house.gadgetariumb9.dto.request.discount;
 
+import java.time.LocalDate;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
-public record DiscountRequest(
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class DiscountRequest {
 
-    int amountOfDiscount,
+  private int amountOfDiscount;
 
-    String discountStartDate,
+  private LocalDate discountStartDate;
 
-    String discountEndDate,
+  private LocalDate discountEndDate;
 
-    Long subProductId
-) {
+  private List<Long> subProductIds;
 }

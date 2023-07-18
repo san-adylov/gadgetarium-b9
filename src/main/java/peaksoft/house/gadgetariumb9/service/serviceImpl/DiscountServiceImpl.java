@@ -3,19 +3,22 @@ package peaksoft.house.gadgetariumb9.service.serviceImpl;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.discount.DiscountRequest;
 import peaksoft.house.gadgetariumb9.dto.response.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.entities.Discount;
-import peaksoft.house.gadgetariumb9.entities.SubProduct;
 import peaksoft.house.gadgetariumb9.exception.BadCredentialException;
 import peaksoft.house.gadgetariumb9.exception.NotFoundException;
 import peaksoft.house.gadgetariumb9.repository.DiscountRepository;
 import peaksoft.house.gadgetariumb9.repository.SubProductRepository;
 import peaksoft.house.gadgetariumb9.service.DiscountService;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class DiscountServiceImpl implements DiscountService {
@@ -25,33 +28,36 @@ public class DiscountServiceImpl implements DiscountService {
 
   @Override
   public SimpleResponse saveDiscount(DiscountRequest discountRequest) {
-    LocalDate discountStartDate = LocalDate.parse(discountRequest.discountStartDate());
-    LocalDate discountEndDate = LocalDate.parse(discountRequest.discountEndDate());
-    if (discountStartDate.isEqual(discountEndDate)){
+    if (discountRequest.getDiscountStartDate().isBefore(discountRequest.getDiscountEndDate())) {
       throw new BadCredentialException("The start and end of the action must not be the same");
     }
-    if (discountStartDate.isAfter(LocalDate.now()) && discountEndDate.isAfter(LocalDate.now())) {
-      ZoneId zoneId = ZoneId.systemDefault();
-      ZonedDateTime startDate = discountStartDate.atStartOfDay(zoneId);
-      ZonedDateTime endDate = discountEndDate.atStartOfDay(zoneId);
-      SubProduct subProduct = subProductRepository.findById(discountRequest.subProductId())
-          .orElseThrow(() -> new NotFoundException(
-              "SubProduct with id: %s not found".formatted(discountRequest.subProductId())));
-      Discount discount = Discount
-          .builder()
-          .sale(discountRequest.amountOfDiscount())
-          .startDate(startDate)
-          .finishDate(endDate)
-          .subProduct(subProduct)
-          .build();
-      discountRepository.save(discount);
-      return SimpleResponse
-          .builder()
-          .message("Discount successfully saved")
-          .status(HttpStatus.OK)
-          .build();
-    } else {
+    if (discountRequest.getDiscountStartDate().isBefore(LocalDate.now())
+        && discountRequest.getDiscountEndDate().isBefore(LocalDate.now())) {
       throw new BadCredentialException("The date must be in the future");
     }
+    ZoneId zoneId = ZoneId.systemDefault();
+    ZonedDateTime startDate = discountRequest.getDiscountStartDate().atStartOfDay(zoneId);
+    ZonedDateTime endDate = discountRequest.getDiscountEndDate().atStartOfDay(zoneId);
+    List<Discount> discounts = discountRequest.getSubProductIds().stream()
+        .map(subProductId -> subProductRepository.findById(subProductId)
+            .orElseThrow(() -> {
+              log.error("SubProduct with id: %s not found".formatted(subProductId));
+              return new NotFoundException(
+                  "SubProduct with id: %s not found".formatted(subProductId));
+            }))
+        .map(subProduct -> Discount.builder()
+            .sale(discountRequest.getAmountOfDiscount())
+            .startDate(startDate)
+            .finishDate(endDate)
+            .subProduct(subProduct)
+            .build())
+        .collect(Collectors.toList());
+    discountRepository.saveAll(discounts);
+    log.info("Discount successfully saved");
+    return SimpleResponse
+        .builder()
+        .message("Discount successfully saved")
+        .status(HttpStatus.OK)
+        .build();
   }
 }

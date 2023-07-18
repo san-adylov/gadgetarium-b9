@@ -1,12 +1,24 @@
 package peaksoft.house.gadgetariumb9.dto.response.simple;
 
 import lombok.Builder;
-import org.apache.http.HttpStatus;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
-@Builder
-public record SimpleResponse (
 
-    String message,
+@Getter
+@Setter
+@NoArgsConstructor
+public class SimpleResponse {
 
-    HttpStatus status
-){}
+  private String message;
+
+  private HttpStatus status;
+
+  @Builder
+  public SimpleResponse(String message, HttpStatus status) {
+    this.message = message;
+    this.status = status;
+  }
+}
