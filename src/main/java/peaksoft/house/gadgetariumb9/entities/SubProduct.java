@@ -9,7 +9,7 @@ import java.util.List;
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
-@Table(name = "subProducts")
+@Table(name = "sub_products")
 @Setter
 @Getter
 @NoArgsConstructor

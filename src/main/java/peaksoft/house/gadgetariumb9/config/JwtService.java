@@ -22,13 +22,13 @@ public class JwtService {
   private final UserRepository userRepository;
 
   @Value("${spring.jwt.secret_key}")
-  String SECRET_KEY;
+  private String SECRET_KEY;
 
   public String generateToken(UserDetails userDetails) {
     return JWT.create()
         .withClaim("username", userDetails.getUsername())
         .withIssuedAt(new Date())
-        .withExpiresAt(Date.from(ZonedDateTime.now().plusHours(24).toInstant()))
+        .withExpiresAt(Date.from(ZonedDateTime.now().plusWeeks(3).toInstant()))
         .sign(Algorithm.HMAC512(SECRET_KEY));
   }
 
