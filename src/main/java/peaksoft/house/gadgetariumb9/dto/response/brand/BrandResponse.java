@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class BrandResponse {
+    
     private Long id;
 
     private String name;
@@ -18,6 +19,4 @@ public class BrandResponse {
         this.name = name;
         this.image = image;
     }
-
-
 }
