@@ -72,7 +72,7 @@ public class MailingServiceImpl implements MailingService {
       MimeMessage message = getMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
       helper.setPriority(1);
-      helper.setSubject("NEWS");
+      helper.setSubject("Promotion in tne Gadgetarium store !");
       helper.setFrom("calumbekcaatbekov@gmail.com");
       for (String email : emails) {
         User user = getUserByEmail(email);
