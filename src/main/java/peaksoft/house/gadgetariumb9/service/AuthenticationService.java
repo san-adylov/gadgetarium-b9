@@ -2,6 +2,7 @@ package peaksoft.house.gadgetariumb9.service;
 
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignUpRequest;
+import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 
 public interface AuthenticationService {
 
@@ -9,4 +10,7 @@ public interface AuthenticationService {
 
   String signIn(SignInRequest signInRequest);
 
+  SimpleResponse forgotPassword(String email,String link);
+
+  SimpleResponse resetPassword(String password,Long userId);
 }
