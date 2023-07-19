@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import peaksoft.house.gadgetariumb9.dto.response.brand.BrandResponse;
 import peaksoft.house.gadgetariumb9.entities.Brand;
-
 import java.util.List;
 
 @Repository

@@ -10,7 +10,6 @@ import peaksoft.house.gadgetariumb9.dto.request.brand.BrandRequest;
 import peaksoft.house.gadgetariumb9.dto.response.brand.BrandResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.service.serviceImpl.BrandServiceImpl;
-
 import java.util.List;
 
 @RestController
