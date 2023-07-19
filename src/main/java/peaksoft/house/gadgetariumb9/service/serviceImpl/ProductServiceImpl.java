@@ -68,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
                         product.setSubProducts(List.of(subProduct));
                     }
 
+                    log.info("SubProduct saved successfully");
                     subProductRepository.save(subProduct);
 
                     if (category.getTitle().equalsIgnoreCase("Laptop")) {
@@ -78,7 +79,10 @@ public class ProductServiceImpl implements ProductService {
                         laptop.setScreenSize(subProductRequest.getScreenSize());
                         subProduct.setLaptop(laptop);
                         laptop.setSubProduct(subProduct);
+
+                        log.info("Laptop saved successfully");
                         laptopRepository.save(laptop);
+
                     } else if (category.getTitle().equalsIgnoreCase("Smartphone") || category.getTitle().equalsIgnoreCase("Tablet")) {
                         Phone phone = new Phone();
                         phone.setSim(subProductRequest.getSim());
@@ -87,19 +91,25 @@ public class ProductServiceImpl implements ProductService {
                         phone.setBatteryCapacity(subProductRequest.getBatteryCapacity());
                         subProduct.setPhone(phone);
                         phone.setSubProduct(subProduct);
+
+                        log.info("phone saved successfully");
                         phoneRepository.save(phone);
-                    } else if (category.getTitle().equalsIgnoreCase("Smart watch")){
+
+                    } else if (category.getTitle().equalsIgnoreCase("Smart watch")) {
                         SmartWatch smartWatch = new SmartWatch();
-                            smartWatch.setAnInterface(subProductRequest.getAnInterface());
-                            smartWatch.setHUllShape(subProductRequest.getHullShape());
-                            smartWatch.setMaterialBracelet(subProductRequest.getMaterialBracelet());
-                            smartWatch.setHousingMaterial(subProductRequest.getHousingMaterial());
-                            smartWatch.setGender(subProductRequest.getGender());
-                            smartWatch.setWaterproof(subProductRequest.isWaterproof());
-                            smartWatch.setDisplayDiscount(subProductRequest.getDisplayDiscount());
-                            subProduct.setSmartWatch(smartWatch);
-                            smartWatch.setSubProduct(subProduct);
-                            smartWatchRepository.save(smartWatch);
+                        smartWatch.setAnInterface(subProductRequest.getAnInterface());
+                        smartWatch.setHUllShape(subProductRequest.getHullShape());
+                        smartWatch.setMaterialBracelet(subProductRequest.getMaterialBracelet());
+                        smartWatch.setHousingMaterial(subProductRequest.getHousingMaterial());
+                        smartWatch.setGender(subProductRequest.getGender());
+                        smartWatch.setWaterproof(subProductRequest.isWaterproof());
+                        smartWatch.setDisplayDiscount(subProductRequest.getDisplayDiscount());
+                        subProduct.setSmartWatch(smartWatch);
+                        smartWatch.setSubProduct(subProduct);
+
+                        log.info("SmartWatch saved successfully");
+                        smartWatchRepository.save(smartWatch);
+
                     }
                     return subProduct;
                 })
@@ -110,12 +120,13 @@ public class ProductServiceImpl implements ProductService {
                 .brand(brand)
                 .category(category)
                 .name(productRequest.getName())
-                .dataOfIssue(ZonedDateTime.now())
+                .dataOfIssue(productRequest.getDateOfIssue())
                 .createdAt(ZonedDateTime.now())
                 .guarantee(productRequest.getGuarantee())
                 .subProducts(subProducts)
                 .build();
 
+        log.info("Product saved successfully");
         productRepository.save(product2);
 
         return SimpleResponse.builder()
@@ -129,8 +140,7 @@ public class ProductServiceImpl implements ProductService {
         return random.nextInt(9000) + 1000;
     }
 
-    @Operation
-    public List<String> getColor(){
+    public List<String> getColor() {
         return new ArrayList<>(codeColor.getColorMap().keySet());
     }
 }

@@ -38,7 +38,6 @@ public class SubProductRequest {
     private List<String>images;
 
     private BigDecimal price;
-    //-------------Laptop----------------------
 
     private Processor processor;
 
@@ -46,18 +45,13 @@ public class SubProductRequest {
 
     private int videoMemory;
 
-    //--------------------------------------
-
-    private double screenSize;   //общая строка Phone, Laptop
-
-    //-------------Phone---------------------
+    private double screenSize;
 
     private int sim;
 
     private String diagonalScreen;
 
     private String batteryCapacity;
-    //--------------SmartWatch----------------
 
     private Interface anInterface;
 
