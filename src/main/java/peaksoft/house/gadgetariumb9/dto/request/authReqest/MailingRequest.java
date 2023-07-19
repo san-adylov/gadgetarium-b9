@@ -1,5 +1,6 @@
 package peaksoft.house.gadgetariumb9.dto.request.authReqest;
 
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class MailingRequest {
 
   private String image;
 
-  private String startDate;
+  private LocalDate startDate;
 
-  private String finishDate;
+  private LocalDate finishDate;
 }

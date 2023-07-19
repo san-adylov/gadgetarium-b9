@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -25,6 +26,7 @@ import peaksoft.house.gadgetariumb9.repository.MailingRepository;
 import peaksoft.house.gadgetariumb9.repository.UserRepository;
 import peaksoft.house.gadgetariumb9.service.MailingService;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MailingServiceImpl implements MailingService {
@@ -42,17 +44,21 @@ public class MailingServiceImpl implements MailingService {
   public SimpleResponse sendHtmlEmail(MailingRequest mailingRequest) {
     List<String> emails = getUsers();
     try {
-      LocalDate startDate = LocalDate.parse(mailingRequest.getStartDate());
-      LocalDate finishDate = LocalDate.parse(mailingRequest.getFinishDate());
       LocalDate currentDate = LocalDate.now();
 
-      if (!startDate.isAfter(currentDate) || !finishDate.isAfter(currentDate)) {
-        throw new BadCredentialException("Дата должна быть в будущем");
+      if (mailingRequest.getFinishDate().isBefore(mailingRequest.getStartDate())){
+        log.error("Дата окончания не должна быть раньше даты начала акции!");
+        throw new BadCredentialException("Дата окончания не должна быть раньше даты начала акции!");
+      }
+
+      if (!mailingRequest.getStartDate().isAfter(currentDate) || !mailingRequest.getFinishDate().isAfter(currentDate)) {
+        log.error("Дата ложна быть в будущем!");
+        throw new BadCredentialException("Дата должна быть в будущем!");
       }
 
       ZoneId zoneId = ZoneId.systemDefault();
-      ZonedDateTime startDateZ = ZonedDateTime.of(startDate.atStartOfDay(), zoneId);
-      ZonedDateTime finishDateZ = ZonedDateTime.of(finishDate.atStartOfDay(), zoneId);
+      ZonedDateTime startDateZ = ZonedDateTime.of(mailingRequest.getStartDate().atStartOfDay(), zoneId);
+      ZonedDateTime finishDateZ = ZonedDateTime.of(mailingRequest.getFinishDate().atStartOfDay(), zoneId);
 
       Mailing mailing = Mailing.builder()
           .title(mailingRequest.getName())
