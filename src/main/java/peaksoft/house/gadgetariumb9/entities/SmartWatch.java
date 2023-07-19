@@ -7,7 +7,7 @@ import peaksoft.house.gadgetariumb9.enums.*;
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
-@Table(name = "smartWatches")
+@Table(name = "smart_watches")
 @Setter
 @Getter
 @NoArgsConstructor
