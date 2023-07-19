@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.color;
+package peaksoft.house.gadgetariumb9.entities.color;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
