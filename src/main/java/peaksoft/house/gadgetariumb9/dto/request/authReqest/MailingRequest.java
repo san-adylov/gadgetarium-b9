@@ -13,8 +13,12 @@ import lombok.Setter;
 @Builder
 public class MailingRequest {
   private String name;
+
   private String description;
+
   private String image;
+
   private String startDate;
+
   private String finishDate;
 }
