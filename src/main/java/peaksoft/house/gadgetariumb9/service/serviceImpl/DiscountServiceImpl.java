@@ -28,7 +28,8 @@ public class DiscountServiceImpl implements DiscountService {
 
   @Override
   public SimpleResponse saveDiscount(DiscountRequest discountRequest) {
-    if (discountRequest.getDiscountStartDate().isBefore(discountRequest.getDiscountEndDate())) {
+    if (discountRequest.getDiscountStartDate().isAfter(discountRequest.getDiscountEndDate()) ||
+    discountRequest.getDiscountStartDate().isEqual(discountRequest.getDiscountEndDate())) {
       throw new BadCredentialException("The start and end of the action must not be the same");
     }
     if (discountRequest.getDiscountStartDate().isBefore(LocalDate.now())
