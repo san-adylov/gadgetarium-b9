@@ -7,7 +7,7 @@ values (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldo
        (false, 'USER', 3, 'Ибраимова 3', 'gulira@gmail.com', 'Gulira', 'img', ' Abdukerim kyzy',
         '$2a$12$KMfRpt80J70ZllO4C4thouR/NV.1QIVrEvY74VqMCS/yTZeMQgQJW',
         '0700020206'),                                                                 --gulira2002
-       (true, 'USER', 4, 'Арча бешик ', 'sanzhar@gmail.com', 'Sanzhar', 'img', '  Abdymomunov',
+       (true, 'USER', 4, 'Арча бешик ', 'sanjarabdymomunov@gmail.com', 'Sanzhar', 'img', '  Abdymomunov',
         '$2a$12$pBVBShiP3FroQBWzcZxedun38JGBzpStTDLaenL1BnGhWYANXzH.G',
         '0700020206'),                                                                 --sanzhar2003
        (false, 'USER', 5, 'Аламидин-1', 'erjan@gmail.com', 'Erjan', 'img', '  Taalaibekov',

@@ -9,7 +9,7 @@ import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
 
 @Entity
-@Table(name = "subCategories")
+@Table(name = "sub_categories")
 @Setter
 @Getter
 @NoArgsConstructor
