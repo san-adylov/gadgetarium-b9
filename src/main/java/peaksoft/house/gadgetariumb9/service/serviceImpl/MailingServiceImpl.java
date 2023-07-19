@@ -9,6 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.MailingRequest;
+import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.entities.Mailing;
 import peaksoft.house.gadgetariumb9.entities.User;
 import peaksoft.house.gadgetariumb9.exception.BadCredentialException;
@@ -37,7 +39,7 @@ public class MailingServiceImpl implements MailingService {
 
   @Override
   @Async
-  public void sendHtmlEmail(MailingRequest mailingRequest) {
+  public SimpleResponse sendHtmlEmail(MailingRequest mailingRequest) {
     List<String> emails = getUsers();
     try {
       LocalDate startDate = LocalDate.parse(mailingRequest.getStartDate());
@@ -86,6 +88,10 @@ public class MailingServiceImpl implements MailingService {
       System.out.println(exception.getMessage());
       throw new RuntimeException(exception.getMessage());
     }
+    return SimpleResponse.builder()
+        .status(HttpStatus.OK)
+        .message("Mailing successfully send!")
+        .build();
   }
 
   private List<String> getUsers() {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.MailingRequest;
+import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.service.MailingService;
 
 @RestController
@@ -27,8 +28,7 @@ public class MailingApi {
 
   @PostMapping("/send")
   @Operation(summary = "save Mailing")
-  public ResponseEntity<String> sendMailing(@RequestBody MailingRequest mailingRequest) {
-    mailingService.sendHtmlEmail(mailingRequest);
-    return ResponseEntity.ok("Mailing sent successfully");
+  public SimpleResponse sendMailing(@RequestBody MailingRequest mailingRequest) {
+    return mailingService.sendHtmlEmail(mailingRequest);
   }
 }
