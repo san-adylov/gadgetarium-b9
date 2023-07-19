@@ -90,7 +90,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
           log.error("User with email: %s not found".formatted(email));
           return new NotFoundException("User with email: %s not found".formatted(email));
         });
-    String emailBody = "Для сброса перейдите по ссылке: " + link + "/" + user.getId();
+    String emailBody = "Для сброса пароля перейдите по ссылке: " + link + "/" + user.getId();
     sendEmail(user.getEmail(), emailBody);
     log.info("Message has been sent to your email");
     return SimpleResponse
