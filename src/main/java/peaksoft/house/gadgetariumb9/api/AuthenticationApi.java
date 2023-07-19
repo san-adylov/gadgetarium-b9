@@ -43,25 +43,23 @@ public class AuthenticationApi {
 
   @PostMapping("/forgot-password")
   @Operation(summary = "forgotPassword")
-  public SimpleResponse forgotPassword (
-      @RequestParam
-      @Valid
-      @Email
-      String email,
-      @RequestParam
-      String link){
+  public SimpleResponse forgotPassword (@RequestParam
+                                        @Valid
+                                        @Email
+                                        String email,
+                                        @RequestParam
+                                        String link){
     return authenticationService.forgotPassword(email,link);
   }
 
   @PostMapping("/reset-password/{userId}")
   @Operation(summary = "resetPassword")
-  public SimpleResponse resetPassword(
-      @RequestParam
-      @Valid
-      @Password
-      String password,
-      @PathVariable
-      Long userId){
+  public SimpleResponse resetPassword(@RequestParam
+                                      @Valid
+                                      @Password
+                                      String password,
+                                      @PathVariable
+                                      Long userId){
    return authenticationService.resetPassword(password,userId);
   }
 }
