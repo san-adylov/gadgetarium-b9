@@ -2,10 +2,8 @@ package peaksoft.house.gadgetariumb9.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.ZonedDateTime;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
