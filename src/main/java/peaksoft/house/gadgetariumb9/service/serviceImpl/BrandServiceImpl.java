@@ -1,36 +1,33 @@
 package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
-import peaksoft.house.gadgetariumb9.config.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.brand.BrandRequest;
+import peaksoft.house.gadgetariumb9.dto.response.brand.BrandResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.entities.Brand;
-import peaksoft.house.gadgetariumb9.entities.User;
-import peaksoft.house.gadgetariumb9.enums.Role;
 import peaksoft.house.gadgetariumb9.exception.AlreadyExistException;
 import peaksoft.house.gadgetariumb9.exception.NotFoundException;
 import peaksoft.house.gadgetariumb9.repository.BrandRepository;
 import peaksoft.house.gadgetariumb9.service.BrandService;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
-    private final JwtService jwtService;
-
 
     @Override
     public SimpleResponse saveBrand(BrandRequest brandRequest) {
         if (brandRepository.existsByName(brandRequest.getName())) {
-            throw new AlreadyExistException("Brand with name : %s already exists" + brandRequest.getName());
-        }
-        User authentication = jwtService.getAuthentication();
-        if(!authentication.getRole().equals(Role.ADMIN)){
-            throw new NotFoundException("THE ADMIN does not exist...");
+            String errorMessage = String.format("Brand with name '%s' already exists", brandRequest.getName());
+            log.error(errorMessage);
+            throw new AlreadyExistException(errorMessage);
         }
         Brand brand = new Brand();
         brand.setName(brandRequest.getName());
@@ -41,6 +38,29 @@ public class BrandServiceImpl implements BrandService {
                 .message(String.format("Brand with name : %s successfully saved ...!", brandRequest.getImage()))
                 .build();
     }
+
+    @Override
+    public List<BrandResponse> getAllBrands() {
+        List<BrandResponse> brands = brandRepository.getAllBrands();
+        if (brands.isEmpty()) {
+            throw new NotFoundException("No brands found");
+        }
+        return brands;
+    }
+
+    @Override
+    public SimpleResponse deleteById(Long id) {
+        if (!brandRepository.existsById(id)) {
+            throw new NotFoundException(String.format("Brand with id: %d not found", id));
+        }
+        brandRepository.deleteById(id);
+        log.info("Successfully deleted");
+        return SimpleResponse.builder()
+                .httpStatus(HttpStatus.OK)
+                .message(String.format("Brand with id: %d is deleted", id))
+                .build();
+    }
+
 }
 
 
