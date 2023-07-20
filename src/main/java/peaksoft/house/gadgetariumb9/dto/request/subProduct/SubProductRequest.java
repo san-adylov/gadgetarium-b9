@@ -1,6 +1,5 @@
-package peaksoft.house.gadgetariumb9.dto.request.authReqest.subProduct;
+package peaksoft.house.gadgetariumb9.dto.request.subProduct;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.AllArgsConstructor;

@@ -32,7 +32,7 @@ public class BrandServiceImpl implements BrandService {
         brand.setImage(brandRequest.getImage());
         brandRepository.save(brand);
         return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
+                .status(HttpStatus.OK)
                 .message(String.format("Brand with name : %s successfully saved ...!", brandRequest.getName()))
                 .build();
     }
@@ -54,7 +54,7 @@ public class BrandServiceImpl implements BrandService {
         brandRepository.deleteById(id);
         log.info("Successfully deleted");
         return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
+                .status(HttpStatus.OK)
                 .message(String.format("Brand with id: %d is deleted", id))
                 .build();
     }

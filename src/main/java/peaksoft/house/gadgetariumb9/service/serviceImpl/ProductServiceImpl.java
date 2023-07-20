@@ -2,18 +2,20 @@ package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.entities.color.CodeColor;
-import peaksoft.house.gadgetariumb9.dto.request.authReqest.productRequest.ProductRequest;
+import peaksoft.house.gadgetariumb9.dto.request.productRequest.ProductRequest;
 import peaksoft.house.gadgetariumb9.entities.*;
 import peaksoft.house.gadgetariumb9.exception.NotFoundException;
+import peaksoft.house.gadgetariumb9.repository.BrandRepository;
 import peaksoft.house.gadgetariumb9.repository.ProductRepository;
 import peaksoft.house.gadgetariumb9.service.ProductService;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -25,6 +27,20 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+
+    private final SubCategoryRepository subCategoryRepository;
+
+    private final SubProductRepository subProductRepository;
+
+    private final CategoryRepository categoryRepository;
+
+    private final BrandRepository brandRepository;
+
+    private final LaptopRepository laptopRepository;
+
+    private final PhoneRepository phoneRepository;
+
+    private final SmartWatchRepository smartWatchRepository;
 
     private final CodeColor codeColor;
 
@@ -120,7 +136,7 @@ public class ProductServiceImpl implements ProductService {
                 .brand(brand)
                 .category(category)
                 .name(productRequest.getName())
-                .dataOfIssue(productRequest.getDateOfIssue())
+                .dataOfIssue(ZonedDateTime.from(productRequest.getDateOfIssue()))
                 .createdAt(ZonedDateTime.now())
                 .guarantee(productRequest.getGuarantee())
                 .subProducts(subProducts)
@@ -140,7 +156,7 @@ public class ProductServiceImpl implements ProductService {
         return random.nextInt(9000) + 1000;
     }
 
-    public List<String> getColor() {
-        return new ArrayList<>(codeColor.getColorMap().keySet());
+    public List<String> getColor(String name) {
+        return new ArrayList<>(Collections.singleton(codeColor.ColorName(name)));
     }
 }
