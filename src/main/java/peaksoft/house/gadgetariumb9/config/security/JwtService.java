@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import peaksoft.house.gadgetariumb9.db.entities.User;
-import peaksoft.house.gadgetariumb9.exception.NotFoundException;
-import peaksoft.house.gadgetariumb9.db.repository.UserRepository;
+import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 
 @Service
 @RequiredArgsConstructor

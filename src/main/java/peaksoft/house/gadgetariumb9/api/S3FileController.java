@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import peaksoft.house.gadgetariumb9.db.service.serviceImpl.S3FileService;
+import peaksoft.house.gadgetariumb9.services.serviceImpl.S3FileService;
 
 @RestController
 @RequestMapping("/api/file")

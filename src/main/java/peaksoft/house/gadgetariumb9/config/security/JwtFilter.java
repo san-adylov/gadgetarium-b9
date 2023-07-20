@@ -13,9 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import peaksoft.house.gadgetariumb9.db.entities.User;
-import peaksoft.house.gadgetariumb9.exception.NotFoundException;
-import peaksoft.house.gadgetariumb9.db.repository.UserRepository;
+import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 
 @Component
 @RequiredArgsConstructor
