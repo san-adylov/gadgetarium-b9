@@ -2,6 +2,7 @@ package peaksoft.house.gadgetariumb9.service.serviceImpl;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,52 +24,67 @@ public class SubProductServiceImpl implements SubProductService {
   @Override
   public List<SubProductCatalogResponse> getSubProductCatalogs(
       SubProductCatalogRequest subProductCatalogRequest) {
-//    if (subProductCatalogRequest.getGadgetType().equalsIgnoreCase("SmartPhone") ||
-//        subProductCatalogRequest.getGadgetType().equalsIgnoreCase("Tablet")) {
-      return getPhoneFilter(new PhoneCatalogRequest(
-          subProductCatalogRequest.getBrandIds(),
-          subProductCatalogRequest.getPriceStart(),
-          subProductCatalogRequest.getPriceEnd(),
-          subProductCatalogRequest.getCodeColor(),
-          subProductCatalogRequest.getRom(),
-          subProductCatalogRequest.getRam(),
-          subProductCatalogRequest.getNovelties(),
-          subProductCatalogRequest.getByShare(),
-          subProductCatalogRequest.getRecommended(),
-          subProductCatalogRequest.getByPriceIncrease(),
-          subProductCatalogRequest.getByDecreasingPrice(),
-          subProductCatalogRequest.getSim(),
-          subProductCatalogRequest.getBatteryCapacity(),
-          subProductCatalogRequest.getScreenSize(),
-          subProductCatalogRequest.getScreenDiagonal(),
-          subProductCatalogRequest.getScreenResolution()
-      ));
-//    }
-//    return null;
+
+    List<SubProductCatalogResponse> subProductCatalogs = getPhoneFilter(new PhoneCatalogRequest(
+        subProductCatalogRequest.getBrandIds(),
+        subProductCatalogRequest.getPriceStart(),
+        subProductCatalogRequest.getPriceEnd(),
+        subProductCatalogRequest.getCodeColor(),
+        subProductCatalogRequest.getRom(),
+        subProductCatalogRequest.getRam(),
+        subProductCatalogRequest.getNovelties(),
+        subProductCatalogRequest.getByShare(),
+        subProductCatalogRequest.getRecommended(),
+        subProductCatalogRequest.getByPriceIncrease(),
+        subProductCatalogRequest.getByDecreasingPrice(),
+        subProductCatalogRequest.getSim(),
+        subProductCatalogRequest.getBatteryCapacity(),
+        subProductCatalogRequest.getScreenSize(),
+        subProductCatalogRequest.getScreenDiagonal(),
+        subProductCatalogRequest.getScreenResolution()
+    ));
+
+    return subProductCatalogs.stream()
+        .filter(subProduct ->
+            (subProductCatalogRequest.getBrandIds() == null || subProductCatalogRequest.getBrandIds().contains(subProduct.getBrandId()))
+                && (subProductCatalogRequest.getPriceStart() == null || subProduct.getPrice() >= subProductCatalogRequest.getPriceStart())
+                && (subProductCatalogRequest.getPriceEnd() == null || subProduct.getPrice() <= subProductCatalogRequest.getPriceEnd())
+                && (subProductCatalogRequest.getCodeColor() == null || subProductCatalogRequest.getCodeColor().contains(subProduct.getCodeColor()))
+                && (subProductCatalogRequest.getRom() == null || subProductCatalogRequest.getRom().contains(subProduct.getRom()))
+                && (subProductCatalogRequest.getRam() == null || subProductCatalogRequest.getRam().contains(subProduct.getRam()))
+                && (subProductCatalogRequest.getSim() == 0 || subProductCatalogRequest.getSim() == (subProduct.getSim()))
+                && (subProductCatalogRequest.getBatteryCapacity() == null || subProductCatalogRequest.getBatteryCapacity().contains(subProduct.getBatteryCapacity()))
+                && (subProductCatalogRequest.getScreenSize() == null || subProductCatalogRequest.getScreenSize().contains(subProduct.getScreenSize()))
+                && (subProductCatalogRequest.getScreenDiagonal() == null || subProductCatalogRequest.getScreenDiagonal().equals(subProduct.getScreenDiagonal()))
+                && (subProductCatalogRequest.getScreenResolution() == null || subProductCatalogRequest.getScreenResolution().equals(subProduct.getScreenResolution()))
+        )
+        .collect(Collectors.toList());
   }
+
 
   private List<SubProductCatalogResponse> getPhoneFilter(PhoneCatalogRequest phoneCatalogRequest) {
     String sql = """
-        SELECT s.id, d.sale, spi.images, s.quantity, s.name, s.price
-        FROM sub_products s
-                 JOIN sub_product_images spi on s.id = spi.sub_product_id
-                 JOIN discounts d on s.id = d.sub_product_id
-                 JOIN phones p on s.id = p.sub_product_id
-                 JOIN products p2 on s.product_id = p2.id
-                 JOIN brands b on p2.brand_id = b.id
-                 JOIN sub_categories sc on p2.sub_category_id = sc.id
-                 JOIN categories c on sc.category_id = c.id
-        WHERE (:brandIds IS NULL OR b.id IN (:brandIds))
-          AND (:priceStart IS NULL OR s.price >= :priceStart)
-          AND (:priceEnd IS NULL OR s.price <= :priceEnd)
-          AND (:colorCode IS NULL OR s.code_color IN (:colorCode))
-          AND (:rom IS NULL OR s.rom IN (:rom))
-          AND (:ram IS NULL OR s.ram IN (:ram))
-          AND (:sim IS NULL OR p.sim IN (:sim))
-          AND (:batteryCapacity IS NULL OR p.battery_capacity IN (:batteryCapacity))
-          AND (:screenSize IS NULL OR p.screen_size IN (:screenSize))
-          AND (:screenDiagonal IS NULL OR p.diagonal_screen IN (:screenDiagonal))
-          AND (:screenResolution IS NULL OR s.screen_resolution IN (:screenResolution))
+       SELECT s.id, d.sale, spi.images, s.quantity, p2.name, s.price
+       FROM sub_products s
+                FULL JOIN sub_product_images spi ON s.id = spi.sub_product_id
+                FULL JOIN discounts d ON s.id = d.sub_product_id
+                FULL JOIN phones p ON s.id = p.sub_product_id
+                FULL JOIN products p2 ON s.product_id = p2.id
+                FULL JOIN brands b ON p2.brand_id = b.id
+                FULL JOIN sub_categories sc ON p2.sub_category_id = sc.id
+                FULL JOIN categories c ON sc.category_id = c.id
+       WHERE (:brandIds IS NULL OR b.id IN (:brandIds))
+         AND (:priceStart IS NULL OR s.price >= :priceStart)
+         AND (:priceEnd IS NULL OR s.price <= :priceEnd)
+         AND (:colorCode IS NULL OR s.code_color IN (:colorCode))
+         AND (:ram IS NULL OR s.ram IN (:ram1, :ram2))
+         AND (:rom1 IS NULL OR s.rom IN (:rom1, :rom2))
+         AND (:sim IS NULL OR p.sim = :sim)
+         AND (:batteryCapacity IS NULL OR p.battery_capacity = :batteryCapacity)
+         AND ((:screenSize1 IS NULL AND :screenSize2 IS NULL) OR
+              p.screen_size IN (:screenSize1, :screenSize2))
+         AND (:screenDiagonal IS NULL OR p.diagonal_screen = :screenDiagonal)
+         AND (:screenResolution IS NULL OR s.screen_resolution = :screenResolution)
         """;
     MapSqlParameterSource params = new MapSqlParameterSource();
     params.addValue("brandIds", phoneCatalogRequest.getBrandIs());
@@ -83,19 +99,16 @@ public class SubProductServiceImpl implements SubProductService {
     params.addValue("screenDiagonals", phoneCatalogRequest.getScreenDiagonal());
     params.addValue("screenResolutions", phoneCatalogRequest.getScreenResolution());
 
-    return jdbcTemplate.query(sql,(rs, rowNum) -> new SubProductCatalogResponse(
+    return jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductCatalogResponse(
         rs.getLong("id"),
         rs.getInt("sale"),
         rs.getString("images"),
         rs.getInt("quantity"),
         rs.getString("name"),
         rs.getBigDecimal("price")
-    ) , params);
-    }
+    ), params);
 
-  //    params.addValue("novelties", novelties);
-//    params.addValue("byShare", byShare);
-//    params.addValue("recommended", recommended);
-//    params.addValue("byPriceIncrease", byPriceIncrease);
-//    params.addValue("byDecreasingPrice", byDecreasingPrice);
+    return getPhoneFilter(phoneCatalogRequest).stream()
+        .filter(phoneCatalogRequest -> phoneCatalogRequest.g)
+  }
 }
