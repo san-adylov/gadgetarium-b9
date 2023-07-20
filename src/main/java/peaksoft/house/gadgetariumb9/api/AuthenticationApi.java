@@ -20,8 +20,8 @@ import peaksoft.house.gadgetariumb9.service.AuthenticationService;
 import peaksoft.house.gadgetariumb9.validation.password.Password;
 
 @RestController
-@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/auth")
 @Tag(name = "Authentication")
 @CrossOrigin(maxAge = 3600,origins = "*")
 @Validated

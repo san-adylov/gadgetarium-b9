@@ -73,7 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         });
     if (signInRequest.getEmail().isBlank()) {
       log.error("Password is blank!");
-      throw new BadCredentialException("Password is blank!");
+      throw new BadCredentialException("Email is blank!");
     }
     if (!passwordEncoder.matches(signInRequest.getPassword(), user.getPassword())) {
       log.error("Wrong password");
