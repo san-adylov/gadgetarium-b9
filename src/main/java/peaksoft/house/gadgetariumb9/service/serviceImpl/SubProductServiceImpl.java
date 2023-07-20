@@ -43,22 +43,24 @@ public class SubProductServiceImpl implements SubProductService {
         subProductCatalogRequest.getScreenDiagonal(),
         subProductCatalogRequest.getScreenResolution()
     ));
+    return subProductCatalogs;
 
-    return subProductCatalogs.stream()
-        .filter(subProduct ->
-            (subProductCatalogRequest.getBrandIds() == null || subProductCatalogRequest.getBrandIds().contains(subProduct.getBrandId()))
-                && (subProductCatalogRequest.getPriceStart() == null || subProduct.getPrice() >= subProductCatalogRequest.getPriceStart())
-                && (subProductCatalogRequest.getPriceEnd() == null || subProduct.getPrice() <= subProductCatalogRequest.getPriceEnd())
-                && (subProductCatalogRequest.getCodeColor() == null || subProductCatalogRequest.getCodeColor().contains(subProduct.getCodeColor()))
-                && (subProductCatalogRequest.getRom() == null || subProductCatalogRequest.getRom().contains(subProduct.getRom()))
-                && (subProductCatalogRequest.getRam() == null || subProductCatalogRequest.getRam().contains(subProduct.getRam()))
-                && (subProductCatalogRequest.getSim() == 0 || subProductCatalogRequest.getSim() == (subProduct.getSim()))
-                && (subProductCatalogRequest.getBatteryCapacity() == null || subProductCatalogRequest.getBatteryCapacity().contains(subProduct.getBatteryCapacity()))
-                && (subProductCatalogRequest.getScreenSize() == null || subProductCatalogRequest.getScreenSize().contains(subProduct.getScreenSize()))
-                && (subProductCatalogRequest.getScreenDiagonal() == null || subProductCatalogRequest.getScreenDiagonal().equals(subProduct.getScreenDiagonal()))
-                && (subProductCatalogRequest.getScreenResolution() == null || subProductCatalogRequest.getScreenResolution().equals(subProduct.getScreenResolution()))
-        )
-        .collect(Collectors.toList());
+//
+//    return subProductCatalogs.stream()
+//        .filter(subProduct ->
+//            (subProductCatalogRequest.getBrandIds() == null || subProductCatalogRequest.getBrandIds().contains(subProduct.getBrandId()))
+//                && (subProductCatalogRequest.getPriceStart() == null || subProduct.getPrice() >= subProductCatalogRequest.getPriceStart())
+//                && (subProductCatalogRequest.getPriceEnd() == null || subProduct.getPrice() <= subProductCatalogRequest.getPriceEnd())
+//                && (subProductCatalogRequest.getCodeColor() == null || subProductCatalogRequest.getCodeColor().contains(subProduct.getCodeColor()))
+//                && (subProductCatalogRequest.getRom() == null || subProductCatalogRequest.getRom().contains(subProduct.getRom()))
+//                && (subProductCatalogRequest.getRam() == null || subProductCatalogRequest.getRam().contains(subProduct.getRam()))
+//                && (subProductCatalogRequest.getSim() == 0 || subProductCatalogRequest.getSim() == (subProduct.getSim()))
+//                && (subProductCatalogRequest.getBatteryCapacity() == null || subProductCatalogRequest.getBatteryCapacity().contains(subProduct.getBatteryCapacity()))
+//                && (subProductCatalogRequest.getScreenSize() == null || subProductCatalogRequest.getScreenSize().contains(subProduct.getScreenSize()))
+//                && (subProductCatalogRequest.getScreenDiagonal() == null || subProductCatalogRequest.getScreenDiagonal().equals(subProduct.getScreenDiagonal()))
+//                && (subProductCatalogRequest.getScreenResolution() == null || subProductCatalogRequest.getScreenResolution().equals(subProduct.getScreenResolution()))
+//        )
+//        .collect(Collectors.toList());
   }
 
 
@@ -77,12 +79,12 @@ public class SubProductServiceImpl implements SubProductService {
          AND (:priceStart IS NULL OR s.price >= :priceStart)
          AND (:priceEnd IS NULL OR s.price <= :priceEnd)
          AND (:colorCode IS NULL OR s.code_color IN (:colorCode))
-         AND (:ram IS NULL OR s.ram IN (:ram1, :ram2))
-         AND (:rom1 IS NULL OR s.rom IN (:rom1, :rom2))
+         AND (:ram IS NULL OR s.ram IN (:ram))
+         AND (:rom IS NULL OR s.rom IN (:rom))
          AND (:sim IS NULL OR p.sim = :sim)
          AND (:batteryCapacity IS NULL OR p.battery_capacity = :batteryCapacity)
-         AND ((:screenSize1 IS NULL AND :screenSize2 IS NULL) OR
-              p.screen_size IN (:screenSize1, :screenSize2))
+         AND ((:screenSizes IS NULL OR :screenSizes = []) OR
+              p.screen_size IN :screenSizes)
          AND (:screenDiagonal IS NULL OR p.diagonal_screen = :screenDiagonal)
          AND (:screenResolution IS NULL OR s.screen_resolution = :screenResolution)
         """;
@@ -91,8 +93,8 @@ public class SubProductServiceImpl implements SubProductService {
     params.addValue("priceStart", phoneCatalogRequest.getPriceStart());
     params.addValue("priceEnd", phoneCatalogRequest.getPriceEnd());
     params.addValue("codeColor", phoneCatalogRequest.getCodeColor());
-    params.addValue("rom", phoneCatalogRequest.getRom());
     params.addValue("ram", phoneCatalogRequest.getRam());
+    params.addValue("rom", phoneCatalogRequest.getRom());
     params.addValue("sim", phoneCatalogRequest.getSim());
     params.addValue("batteryCapacities", phoneCatalogRequest.getBatteryCapacity());
     params.addValue("screenSizes", phoneCatalogRequest.getScreenSize());
@@ -107,8 +109,6 @@ public class SubProductServiceImpl implements SubProductService {
         rs.getString("name"),
         rs.getBigDecimal("price")
     ), params);
-
-    return getPhoneFilter(phoneCatalogRequest).stream()
-        .filter(phoneCatalogRequest -> phoneCatalogRequest.g)
   }
+
 }
