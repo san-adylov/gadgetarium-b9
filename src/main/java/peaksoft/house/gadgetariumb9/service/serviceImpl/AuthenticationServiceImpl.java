@@ -71,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
           return new NotFoundException(
               "User with email: %s not found".formatted(signInRequest.getEmail()));
         });
-    if (signInRequest.getEmail().isBlank()) {
+    if (signInRequest.getPassword().isBlank()) {
       log.error("Password is blank!");
       throw new BadCredentialException("Password is blank!");
     }
