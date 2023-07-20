@@ -27,13 +27,13 @@ public class SubProductCatalogResponse {
 
   @Builder
   public SubProductCatalogResponse(Long id, int discount, String image, int quantity, String name,
-      int rating, BigDecimal price) {
+       BigDecimal price) {
     this.id = id;
     this.discount = discount;
     this.image = image;
     this.quantity = quantity;
     this.name = name;
-    this.rating = rating;
     this.price = price;
   }
+
 }

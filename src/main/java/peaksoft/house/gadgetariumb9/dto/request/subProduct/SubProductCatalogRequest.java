@@ -19,6 +19,8 @@ import peaksoft.house.gadgetariumb9.enums.Purpose;
 @NoArgsConstructor
 public class SubProductCatalogRequest {
 
+  private String gadgetType;
+
   private List<Long> brandIds;
 
   private BigDecimal priceStart;

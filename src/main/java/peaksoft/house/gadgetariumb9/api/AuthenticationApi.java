@@ -36,7 +36,7 @@ public class AuthenticationApi {
   }
 
   @PostMapping("/sign-in")
-  @Operation(summary = "signIp")
+  @Operation(summary = "sign-in")
   public String signIn(@RequestBody @Valid SignInRequest signInRequest) {
     return authenticationService.signIn(signInRequest);
   }
