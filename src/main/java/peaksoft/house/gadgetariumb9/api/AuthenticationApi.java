@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignUpRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
-import peaksoft.house.gadgetariumb9.service.AuthenticationService;
-import peaksoft.house.gadgetariumb9.validation.password.Password;
+import peaksoft.house.gadgetariumb9.services.AuthenticationService;
+import peaksoft.house.gadgetariumb9.validations.password.Password;
 
 @Validated
 @RestController
@@ -30,19 +30,19 @@ public class AuthenticationApi {
   private final AuthenticationService authenticationService;
 
   @PostMapping("/sign-up")
-  @Operation(summary = "sign-up",description = "Login for users")
+  @Operation(summary = "sign-up", description = "Login for users")
   public String signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
     return authenticationService.signUp(signUpRequest);
   }
 
   @PostMapping("/sign-in")
-  @Operation(summary = "sign in",description = "Registration for users")
+  @Operation(summary = "sign in", description = "Registration for users")
   public String signIn(@RequestBody @Valid SignInRequest signInRequest) {
     return authenticationService.signIn(signInRequest);
   }
 
   @PostMapping("/forgot-password")
-  @Operation(summary = "Forgot password",description = "Forgot password for users")
+  @Operation(summary = "Forgot password", description = "Forgot password for users")
   public SimpleResponse forgotPassword(
       @RequestParam
       @Valid
@@ -54,7 +54,7 @@ public class AuthenticationApi {
   }
 
   @PostMapping("/reset-password/{userId}")
-  @Operation(summary = "Reset password",description = "Reset password for users")
+  @Operation(summary = "Reset password", description = "Reset password for users")
   public SimpleResponse resetPassword(
       @RequestParam
       @Valid
