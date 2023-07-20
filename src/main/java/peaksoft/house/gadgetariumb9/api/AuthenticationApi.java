@@ -19,49 +19,49 @@ import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.service.AuthenticationService;
 import peaksoft.house.gadgetariumb9.validation.password.Password;
 
-@RestController
-@RequestMapping("/api/v1/auth")
-@RequiredArgsConstructor
-@Tag(name = "Authentication")
-@CrossOrigin(maxAge = 3600,origins = "*")
 @Validated
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/auth")
+@CrossOrigin(maxAge = 3600, origins = "*")
+@Tag(name = "Authentication", description = "Authentication for users")
 public class AuthenticationApi {
 
   private final AuthenticationService authenticationService;
 
   @PostMapping("/sign-up")
-  @Operation(summary = "sign-up")
+  @Operation(summary = "sign-up",description = "Login for users")
   public String signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
     return authenticationService.signUp(signUpRequest);
   }
 
   @PostMapping("/sign-in")
-  @Operation(summary = "signIp")
+  @Operation(summary = "sign in",description = "Registration for users")
   public String signIn(@RequestBody @Valid SignInRequest signInRequest) {
     return authenticationService.signIn(signInRequest);
   }
 
   @PostMapping("/forgot-password")
-  @Operation(summary = "forgotPassword")
-  public SimpleResponse forgotPassword (
+  @Operation(summary = "Forgot password",description = "Forgot password for users")
+  public SimpleResponse forgotPassword(
       @RequestParam
       @Valid
       @Email
       String email,
       @RequestParam
-      String link){
-    return authenticationService.forgotPassword(email,link);
+      String link) {
+    return authenticationService.forgotPassword(email, link);
   }
 
   @PostMapping("/reset-password/{userId}")
-  @Operation(summary = "resetPassword")
+  @Operation(summary = "Reset password",description = "Reset password for users")
   public SimpleResponse resetPassword(
       @RequestParam
       @Valid
       @Password
       String password,
       @PathVariable
-      Long userId){
-   return authenticationService.resetPassword(password,userId);
+      Long userId) {
+    return authenticationService.resetPassword(password, userId);
   }
 }
