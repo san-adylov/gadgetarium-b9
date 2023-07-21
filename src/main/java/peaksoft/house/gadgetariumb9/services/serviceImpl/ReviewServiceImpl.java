@@ -3,7 +3,6 @@ package peaksoft.house.gadgetariumb9.services.serviceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRatingRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.repositories.ReviewRepository;
@@ -19,8 +18,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
 
     @Override
-    public ReviewRatingResponse countReviewsRating(ReviewRatingRequest request) {
-        long subProductId = request.getSubProductId();
+    public ReviewRatingResponse countReviewsRating(Long subProductId) {
         reviewRepository.findById(subProductId).orElseThrow(() -> {
             log.error("SubProductId not found");
             return new NotFoundException("Review with subProductId: " + subProductId + " not found");
