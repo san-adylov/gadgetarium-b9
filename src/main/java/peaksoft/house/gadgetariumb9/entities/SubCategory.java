@@ -32,5 +32,4 @@ public class SubCategory {
             mappedBy = "subCategory",
             cascade = {MERGE, DETACH, REFRESH, PERSIST})
     private List<Product> products;
-
 }

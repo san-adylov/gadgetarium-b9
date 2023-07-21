@@ -52,5 +52,4 @@ public class Product {
     @ManyToOne(
             cascade = {MERGE, DETACH, REFRESH, PERSIST})
     private Category category;
-
 }
