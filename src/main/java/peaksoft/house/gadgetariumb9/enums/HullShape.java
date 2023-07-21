@@ -4,7 +4,7 @@ public enum HullShape {
   SQUARE("Квадратный"),
   ROUND("Круглый"),
   OVAL("Овальный"),
-  RECTANGULAR("Прямоуголный");
+  RECTANGULAR("Прямоугольный");
 
   HullShape(String value) {
   }

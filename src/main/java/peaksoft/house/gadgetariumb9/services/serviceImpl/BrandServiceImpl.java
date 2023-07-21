@@ -12,7 +12,6 @@ import peaksoft.house.gadgetariumb9.models.Brand;
 import peaksoft.house.gadgetariumb9.exceptions.AlreadyExistException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.repositories.BrandRepository;
-
 import java.util.List;
 
 @Service
