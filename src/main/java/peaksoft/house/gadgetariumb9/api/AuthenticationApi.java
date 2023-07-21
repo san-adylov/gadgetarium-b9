@@ -30,19 +30,19 @@ public class AuthenticationApi {
   private final AuthenticationService authenticationService;
 
   @PostMapping("/sign-up")
-  @Operation(summary = "sign-up", description = "Login for users")
+  @Operation(summary = "sign-up", description = "Registration for users")
   public String signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
     return authenticationService.signUp(signUpRequest);
   }
 
   @PostMapping("/sign-in")
-  @Operation(summary = "sign in", description = "Registration for users")
+  @Operation(summary = "sign in", description = "Login for users")
   public String signIn(@RequestBody @Valid SignInRequest signInRequest) {
     return authenticationService.signIn(signInRequest);
   }
 
   @PostMapping("/forgot-password")
-  @Operation(summary = "Forgot password", description = "Forgot password for users")
+  @Operation(summary = "Forgot password", description = "Password recovery")
   public SimpleResponse forgotPassword(
       @RequestParam
       @Valid
