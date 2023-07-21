@@ -2,10 +2,8 @@ package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.ZonedDateTime;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -48,4 +46,9 @@ public class Product {
             mappedBy = "product",
             cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
     private List<SubProduct> subProducts;
+
+    @ManyToOne(
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private Category category;
+
 }

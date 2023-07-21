@@ -18,8 +18,9 @@ target/
 *.iws
 *.iml
 *.ipr
+application-sanzhar.properties
 
-
+/src/main/resources/application-davran.properties
 
 ### NetBeans ###
 /nbproject/private/

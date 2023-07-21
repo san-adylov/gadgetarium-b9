@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Template</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+    }
+
+    header {
+      width: 777px;
+      height: 8.125rem;
+      display: flex;
+      background: #1A1A25;
+      justify-content: center;
+    }
+
+    main {
+      padding: 2.5rem;
+    }
+
+    .container {
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .containerFooterText {
+      margin: 20px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    h1 {
+      color: #333333;
+    }
+
+    p {
+      color: #555555;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <img src="https://gadgetarium-b9.s3.eu-north-1.amazonaws.com/LogoGadgetarium.png" width="777px" height="144px"  />
+</header>
+<main>
+  <h1>Здравствуйте!</h1>
+  <h1>У нас есть специальное предложение для вас:</h1>
+  <div class="container">
+    <div class="card-body">
+      <img class="card-text" th:src="${image}" alt="Product Image">
+      <h2 class="card-title" th:text="${description}">Description</h2>
+      <h2 class="card-title" th:text="'Начало акции: ' + ${startDate}">Start Date</h2>
+      <h2 class="card-title" th:text="'Конец акции: ' + ${finishDate}">Finish Date</h2>
+    </div>
+  </div>
+  <div class="containerFooterText">
+    <h2>Не упустите шанс приобрести новый продукт по отличной цене!</h2>
+    <h2>С уважением, Gadgetarium</h2>
+  </div>
+</main>
+</body>
+</html>
