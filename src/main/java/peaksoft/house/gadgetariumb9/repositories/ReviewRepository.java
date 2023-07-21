@@ -1,9 +1,9 @@
-package peaksoft.house.gadgetariumb9.repository;
+package peaksoft.house.gadgetariumb9.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import peaksoft.house.gadgetariumb9.entities.Review;
+import peaksoft.house.gadgetariumb9.models.Review;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 

@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.api;
+package peaksoft.house.gadgetariumb9.apis;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRatingRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
-import peaksoft.house.gadgetariumb9.service.ReviewService;
+import peaksoft.house.gadgetariumb9.services.ReviewService;
 
 @RestController
 @RequiredArgsConstructor

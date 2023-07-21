@@ -1,13 +1,13 @@
-package peaksoft.house.gadgetariumb9.service.serviceImpl;
+package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRatingRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
-import peaksoft.house.gadgetariumb9.exception.NotFoundException;
-import peaksoft.house.gadgetariumb9.repository.ReviewRepository;
-import peaksoft.house.gadgetariumb9.service.ReviewService;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
+import peaksoft.house.gadgetariumb9.repositories.ReviewRepository;
+import peaksoft.house.gadgetariumb9.services.ReviewService;
 import java.util.HashMap;
 import java.util.Map;
 
