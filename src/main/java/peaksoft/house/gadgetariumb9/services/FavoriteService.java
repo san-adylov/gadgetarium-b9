@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface FavoriteService {
 
-    SimpleResponse addAndDeleteFavorite(Long subProductId);
+    SimpleResponse addAndDeleteFavorite(List<Long> subProductId);
 
     SimpleResponse clearFavorite(Long userId);
 

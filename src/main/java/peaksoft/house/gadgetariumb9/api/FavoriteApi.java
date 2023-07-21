@@ -2,6 +2,7 @@ package peaksoft.house.gadgetariumb9.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +24,9 @@ public class FavoriteApi {
     private final FavoriteService favoriteService;
 
     @Operation(summary = "add or delete", description = "This method may or may not accept")
-    @PreAuthorize("hasAnyAuthority('ADMIN,USER')")
-    @PostMapping("/add Or Delete Favorite/{subProductId}")
-    SimpleResponse addOrDeleteFavorite(@PathVariable Long subProductId) {
+    @PermitAll
+    @PostMapping("/add Or Delete Favorite")
+    SimpleResponse addOrDeleteFavorite(@RequestBody List<Long> subProductId) {
         return favoriteService.addAndDeleteFavorite(subProductId);
     }
 
@@ -42,9 +43,10 @@ public class FavoriteApi {
     List<SubProductResponse> getAllFavorite(@PathVariable Long userId) {
         return favoriteService.getAllFavorite(userId);
     }
-@Operation(summary = "delete Favorite",description = "This method allows you to delete favorites")
-@DeleteMapping
-    SimpleResponse deleteFavorite(@PathVariable List<Long> userId){
+
+    @Operation(summary = "delete Favorite", description = "This method allows you to delete favorites")
+    @DeleteMapping
+    SimpleResponse deleteFavorite(@PathVariable List<Long> userId) {
         return favoriteService.deleteFavorite(userId);
     }
 }

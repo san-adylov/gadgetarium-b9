@@ -19,11 +19,11 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.MailingRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
-import peaksoft.house.gadgetariumb9.entities.Mailing;
-import peaksoft.house.gadgetariumb9.entities.User;
-import peaksoft.house.gadgetariumb9.exception.BadCredentialException;
+import peaksoft.house.gadgetariumb9.models.Mailing;
+import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.exceptions.BadCredentialException;
 import peaksoft.house.gadgetariumb9.repository.MailingRepository;
-import peaksoft.house.gadgetariumb9.repository.UserRepository;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.service.MailingService;
 
 @Slf4j

@@ -40,34 +40,39 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public SimpleResponse addAndDeleteFavorite(Long subProductId) {
+    public SimpleResponse addAndDeleteFavorite(List<Long> subProductIds) {
         User user = getAuthenticateUser();
-        SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
-            log.error("SubProduct with id: " + subProductId + " is not found");
-            return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
-        });
         List<Long> favorites = user.getFavorite();
+        boolean hasChanges = false;
 
-        if (favorites == null) {
-            favorites = new ArrayList<>();
+        for (Long subProductId : subProductIds) {
+            SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
+                log.error("SubProduct with id: " + subProductId + " is not found");
+                return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
+            });
+
+            if (favorites.contains(subProductId)) {
+                favorites.remove(subProductId);
+                log.info("Successfully removed the product with id " + subProductId + " from favorites");
+                hasChanges = true;
+            } else {
+                favorites.add(subProductId);
+                log.info("Successfully added the product with id " + subProductId + " to favorites");
+                hasChanges = true;
+            }
         }
 
-        if (favorites.contains(subProduct.getId())) {
-            favorites.remove(subProduct.getId());
-            log.info("Successfully removed this product from favorites");
-        } else {
-            favorites.add(subProduct.getId());
-            log.info("Successfully added this product to favorites");
+        if (hasChanges) {
+            user.setFavorite(favorites);
+            userRepository.save(user);
         }
-
-        user.setFavorite(favorites);
-        userRepository.save(user);
 
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Successfully added or removed from favorites.")
                 .build();
     }
+
 
 
     @Override
