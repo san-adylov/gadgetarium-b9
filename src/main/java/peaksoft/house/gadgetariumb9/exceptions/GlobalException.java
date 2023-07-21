@@ -85,4 +85,14 @@ public class GlobalException {
         .build();
   }
 
+  @ExceptionHandler(InvalidBannerException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionResponse handleInvalidBannerException(InvalidBannerException e) {
+    return ExceptionResponse
+            .builder()
+            .message(e.getMessage())
+            .status(HttpStatus.BAD_REQUEST)
+            .className(e.getClass().getSimpleName())
+            .build();
+  }
 }
