@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.service.serviceImpl;
+package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,17 +9,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.response.brand.subProductResponse.SubProductResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
-import peaksoft.house.gadgetariumb9.entities.SubProduct;
-import peaksoft.house.gadgetariumb9.entities.User;
-import peaksoft.house.gadgetariumb9.exception.NotFoundException;
-import peaksoft.house.gadgetariumb9.repository.SubProductRepository;
-import peaksoft.house.gadgetariumb9.repository.UserRepository;
-import peaksoft.house.gadgetariumb9.service.FavoriteService;
+import peaksoft.house.gadgetariumb9.models.SubProduct;
+import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
+import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
+import peaksoft.house.gadgetariumb9.services.FavoriteService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -43,18 +40,18 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public SimpleResponse addAndDeleteFavorite(Long userId, Long subProductId) {
+    public SimpleResponse addAndDeleteFavorite(Long subProductId) {
+        User user = getAuthenticateUser();
         SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
             log.error("SubProduct with id: " + subProductId + " is not found");
             return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
         });
-
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            log.error("User with id: " + userId + " is not found");
-            return new NotFoundException("User with id: " + userId + " is not found");
-        });
-
         List<Long> favorites = user.getFavorite();
+
+        if (favorites == null) {
+            favorites = new ArrayList<>();
+        }
+
         if (favorites.contains(subProduct.getId())) {
             favorites.remove(subProduct.getId());
             log.info("Successfully removed this product from favorites");
@@ -71,6 +68,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .message("Successfully added or removed from favorites.")
                 .build();
     }
+
 
     @Override
     public SimpleResponse clearFavorite(Long userId) {
@@ -106,7 +104,6 @@ public class FavoriteServiceImpl implements FavoriteService {
                 new Object[]{userId},
                 (rs, rowNum) -> {
                     long subProductId = rs.getLong("id");
-
                     SubProductResponse subProductResponse = subProductMap.getOrDefault(subProductId, new SubProductResponse());
                     subProductResponse.setId(subProductId);
                     subProductResponse.setArticleNumber(rs.getInt("article_number"));

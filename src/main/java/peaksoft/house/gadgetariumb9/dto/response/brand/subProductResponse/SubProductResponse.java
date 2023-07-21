@@ -1,9 +1,6 @@
 package peaksoft.house.gadgetariumb9.dto.response.brand.subProductResponse;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,6 +8,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class SubProductResponse {
     private Long id;

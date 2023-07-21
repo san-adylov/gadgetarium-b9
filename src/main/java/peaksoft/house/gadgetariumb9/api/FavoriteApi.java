@@ -7,7 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.response.brand.subProductResponse.SubProductResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
-import peaksoft.house.gadgetariumb9.service.FavoriteService;
+import peaksoft.house.gadgetariumb9.services.FavoriteService;
+
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(name = "/api/favorite")
-@Tag(name = "Favorite", description = "Favorite")
+@Tag(name = "Favorite API", description = "API for favorite CRUD management")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class FavoriteApi {
 
@@ -23,9 +24,9 @@ public class FavoriteApi {
 
     @Operation(summary = "add or delete", description = "This method may or may not accept")
     @PreAuthorize("hasAnyAuthority('ADMIN,USER')")
-    @PostMapping("/add Or Delete Favorite/{userId}/{subProductId}")
-    SimpleResponse addOrDeleteFavorite(@PathVariable Long userId, @PathVariable Long subProductId) {
-        return favoriteService.addAndDeleteFavorite(userId, subProductId);
+    @PostMapping("/add Or Delete Favorite/{subProductId}")
+    SimpleResponse addOrDeleteFavorite(@PathVariable Long subProductId) {
+        return favoriteService.addAndDeleteFavorite(subProductId);
     }
 
     @Operation(summary = "clear favorite", description = "This method can clear favorites")
@@ -42,6 +43,7 @@ public class FavoriteApi {
         return favoriteService.getAllFavorite(userId);
     }
 @Operation(summary = "delete Favorite",description = "This method allows you to delete favorites")
+@DeleteMapping
     SimpleResponse deleteFavorite(@PathVariable List<Long> userId){
         return favoriteService.deleteFavorite(userId);
     }
