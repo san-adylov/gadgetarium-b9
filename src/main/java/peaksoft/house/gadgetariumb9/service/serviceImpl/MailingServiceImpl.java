@@ -60,14 +60,15 @@ public class MailingServiceImpl implements MailingService {
       ZonedDateTime startDateZ = ZonedDateTime.of(mailingRequest.getStartDate().atStartOfDay(), zoneId);
       ZonedDateTime finishDateZ = ZonedDateTime.of(mailingRequest.getFinishDate().atStartOfDay(), zoneId);
 
+      String title = "Акция в магазине Gadgetarium!";
+
       Mailing mailing = Mailing.builder()
-          .title(mailingRequest.getName())
+          .title(title)
           .description(mailingRequest.getDescription())
           .startDate(startDateZ)
           .finishDate(finishDateZ)
           .image(mailingRequest.getImage())
           .build();
-
       mailingRepository.save(mailing);
       Context context = new Context();
       context.setVariable("description", mailingRequest.getDescription());
@@ -78,8 +79,8 @@ public class MailingServiceImpl implements MailingService {
       MimeMessage message = getMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
       helper.setPriority(1);
-      helper.setSubject("Promotion in tne Gadgetarium store !");
-      helper.setFrom("calumbekcaatbekov@gmail.com");
+      helper.setSubject(title);
+      helper.setFrom("shop.gadgetarium.kg@gmail.com");
       for (String email : emails) {
         User user = getUserByEmail(email);
         if (user != null && user.isSubscription()) {
