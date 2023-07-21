@@ -24,8 +24,8 @@ public class DiscountApi {
 
   private final DiscountService discountService;
 
-  @PostMapping("/save-discount")
-  @Operation(summary = "Save discount",description = "Save discount")
+  @PostMapping
+  @Operation(summary = "Save discount",description = "Adding a discount for sub products")
   @PreAuthorize("hasAuthority('ADMIN')")
   public SimpleResponse saveDiscount(@RequestParam DiscountRequest discountRequest){
     return discountService.saveDiscount(discountRequest);
