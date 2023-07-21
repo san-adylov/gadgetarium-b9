@@ -17,9 +17,9 @@ import peaksoft.house.gadgetariumb9.services.DiscountService;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/discount")
+@RequestMapping("/api/discounts")
 @CrossOrigin(maxAge = 3600,origins = "*")
-@Tag(name = "Discount",description = "Discount api")
+@Tag(name = "Discount API",description = "API for working with discounts")
 public class DiscountApi {
 
   private final DiscountService discountService;
