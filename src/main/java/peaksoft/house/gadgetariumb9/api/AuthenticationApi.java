@@ -30,19 +30,19 @@ public class AuthenticationApi {
   private final AuthenticationService authenticationService;
 
   @PostMapping("/sign-up")
-  @Operation(summary = "sign-up", description = "Registration for users")
+  @Operation(summary = "Sign up", description = "Register new users")
   public String signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
     return authenticationService.signUp(signUpRequest);
   }
 
   @PostMapping("/sign-in")
-  @Operation(summary = "sign in", description = "Login for users")
+  @Operation(summary = "Sign in", description = "Login for existing users")
   public String signIn(@RequestBody @Valid SignInRequest signInRequest) {
     return authenticationService.signIn(signInRequest);
   }
 
   @PostMapping("/forgot-password")
-  @Operation(summary = "Forgot password", description = "Password recovery")
+  @Operation(summary = "Forgot password", description = "Initiate password recovery")
   public SimpleResponse forgotPassword(
       @RequestParam
       @Valid
@@ -54,7 +54,7 @@ public class AuthenticationApi {
   }
 
   @PostMapping("/reset-password/{userId}")
-  @Operation(summary = "Reset password", description = "Reset password for users")
+  @Operation(summary = "Reset password", description = "Reset password for a specific user")
   public SimpleResponse resetPassword(
       @RequestParam
       @Valid
