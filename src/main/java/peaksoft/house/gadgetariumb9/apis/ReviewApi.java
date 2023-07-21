@@ -19,7 +19,7 @@ public class ReviewApi {
     private final ReviewService service;
 
     @PermitAll
-    @Operation(summary = "Rating of reviews", description = "Get the rating summary of reviews for a specific product.")
+    @Operation(summary = "Rating of reviews", description = "Get the rating summary of reviews for a specific product..")
     @GetMapping()
     public ReviewRatingResponse countReviewsRating(@Valid @RequestParam  Long subProductId) {
         return service.countReviewsRating(subProductId);
