@@ -46,4 +46,9 @@ public class Product {
             mappedBy = "product",
             cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
     private List<SubProduct> subProducts;
+
+    @ManyToOne(
+            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+    private Category category;
+
 }
