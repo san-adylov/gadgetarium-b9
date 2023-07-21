@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.service;
+package peaksoft.house.gadgetariumb9.services;
 
 
 import peaksoft.house.gadgetariumb9.dto.request.productRequest.ProductRequest;

@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.service.serviceImpl;
+package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.entities.color.CodeColor;
 import peaksoft.house.gadgetariumb9.dto.request.productRequest.ProductRequest;
-import peaksoft.house.gadgetariumb9.entities.*;
-import peaksoft.house.gadgetariumb9.exception.NotFoundException;
-import peaksoft.house.gadgetariumb9.repository.*;
-import peaksoft.house.gadgetariumb9.service.ProductService;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
+import peaksoft.house.gadgetariumb9.models.*;
+import peaksoft.house.gadgetariumb9.repositories.*;
+import peaksoft.house.gadgetariumb9.services.ProductService;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
