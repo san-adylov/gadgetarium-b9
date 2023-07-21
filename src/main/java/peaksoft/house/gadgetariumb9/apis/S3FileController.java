@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.api;
+package peaksoft.house.gadgetariumb9.apis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
