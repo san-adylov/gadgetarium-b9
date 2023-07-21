@@ -15,21 +15,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
 @CrossOrigin(maxAge = 3600 , origins = "*")
-@Tag(name = "Products",description = "Here we create a product and different methods work")
+@Tag(name = "Products API",description = "API for product CRUD management")
 public class ProductApi {
 
     private final ProductService productService;
 
-    @PostMapping("/save-product")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "save Product", description = "Here we create different products")
+    @Operation(summary = "save Product", description = "Creating a new product")
     public SimpleResponse save(@RequestBody ProductRequest productRequest) {
         return productService.saveProduct(productRequest);
     }
 
-    @GetMapping("/colors{name}")
+    @GetMapping("/colors/{name}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @Operation(summary = "Get color", description = "Here we get gentle colors")
+    @Operation(summary = "Get color", description = "Get the right colors")
     public List<String> getColors(@PathVariable String name){
         return productService.getColor(name);
     }
