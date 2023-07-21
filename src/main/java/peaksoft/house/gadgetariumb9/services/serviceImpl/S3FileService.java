@@ -8,6 +8,7 @@ import com.amazonaws.util.IOUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +30,6 @@ public class S3FileService {
         File fileObj = convertMultiPartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
-        fileObj.delete();
         return "File uploaded : " + fileName;
     }
 
@@ -50,7 +50,7 @@ public class S3FileService {
     }
 
     private File convertMultiPartFileToFile(MultipartFile file) {
-        File convertedFile = new File(file.getOriginalFilename());
+        File convertedFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
         try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
             fos.write(file.getBytes());
         } catch (IOException e) {
