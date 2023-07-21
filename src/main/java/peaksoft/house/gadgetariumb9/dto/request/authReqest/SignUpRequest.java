@@ -8,8 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import peaksoft.house.gadgetariumb9.validation.password.Password;
-import peaksoft.house.gadgetariumb9.validation.phoneNumber.PhoneNumber;
+import peaksoft.house.gadgetariumb9.validations.password.Password;
+import peaksoft.house.gadgetariumb9.validations.phoneNumber.PhoneNumber;
 
 @Builder
 @Getter

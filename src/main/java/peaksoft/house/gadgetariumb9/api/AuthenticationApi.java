@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignUpRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
-import peaksoft.house.gadgetariumb9.service.AuthenticationService;
-import peaksoft.house.gadgetariumb9.validation.password.Password;
+import peaksoft.house.gadgetariumb9.services.AuthenticationService;
+import peaksoft.house.gadgetariumb9.validations.password.Password;
 
 @RestController
-@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/auth")
 @Tag(name = "Authentication")
 @CrossOrigin(maxAge = 3600,origins = "*")
 @Validated
