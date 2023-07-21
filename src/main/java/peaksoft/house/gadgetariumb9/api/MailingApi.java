@@ -15,9 +15,9 @@ import peaksoft.house.gadgetariumb9.service.MailingService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/mailing")
+@RequestMapping("/api/mailings")
 @CrossOrigin(maxAge = 3600,origins = "*")
-@Tag(name = "Mailing")
+@Tag(name = "Mailing API", description = "Mailing List API")
 public class MailingApi {
 
   private final MailingService mailingService;
