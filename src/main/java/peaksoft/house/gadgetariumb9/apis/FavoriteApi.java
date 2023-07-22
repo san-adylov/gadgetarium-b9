@@ -19,7 +19,7 @@ public class FavoriteApi {
 
     private final FavoriteService favoriteService;
 
-    @Operation(summary = "Ddd or delete", description = "Honey adds to favorites, if there is, then deletes")
+    @Operation(summary = "Add or delete", description = "Honey adds to favorites, if there is, then deletes")
     @PreAuthorize("hasAnyAuthority('USER')")
     @PostMapping("/add-0r-delete-favorite")
     SimpleResponse addOrDeleteFavorite(@RequestBody Long subProductId) {
