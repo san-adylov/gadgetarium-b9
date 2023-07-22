@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.service.serviceImpl;
+package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
@@ -19,12 +19,12 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.MailingRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
+import peaksoft.house.gadgetariumb9.exceptions.BadCredentialException;
 import peaksoft.house.gadgetariumb9.models.Mailing;
 import peaksoft.house.gadgetariumb9.models.User;
-import peaksoft.house.gadgetariumb9.exceptions.BadCredentialException;
-import peaksoft.house.gadgetariumb9.repository.MailingRepository;
+import peaksoft.house.gadgetariumb9.repositories.MailingRepository;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
-import peaksoft.house.gadgetariumb9.service.MailingService;
+import peaksoft.house.gadgetariumb9.services.MailingService;
 
 @Slf4j
 @Service
