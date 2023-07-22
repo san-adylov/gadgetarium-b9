@@ -7,7 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import peaksoft.house.gadgetariumb9.dto.response.brand.subProductResponse.SubProductResponse;
+import peaksoft.house.gadgetariumb9.config.security.JwtService;
+import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.models.SubProduct;
 import peaksoft.house.gadgetariumb9.models.User;
@@ -29,6 +30,8 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final JwtService jwtService;
+
     private User getAuthenticateUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String login = authentication.getName();
@@ -40,26 +43,24 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public SimpleResponse addAndDeleteFavorite(List<Long> subProductIds) {
+    public SimpleResponse addAndDeleteFavorite(Long subProductId) {
         User user = getAuthenticateUser();
         List<Long> favorites = user.getFavorite();
         boolean hasChanges = false;
 
-        for (Long subProductId : subProductIds) {
-            SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
-                log.error("SubProduct with id: " + subProductId + " is not found");
-                return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
-            });
+        SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
+            log.error("SubProduct with id: " + subProductId + " is not found");
+            return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
+        });
 
-            if (favorites.contains(subProductId)) {
-                favorites.remove(subProductId);
-                log.info("Successfully removed the product with id " + subProductId + " from favorites");
-                hasChanges = true;
-            } else {
-                favorites.add(subProductId);
-                log.info("Successfully added the product with id " + subProductId + " to favorites");
-                hasChanges = true;
-            }
+        if (favorites.contains(subProductId)) {
+            favorites.remove(subProductId);
+            log.info("Successfully removed the product with id " + subProductId + " from favorites");
+            hasChanges = true;
+        } else {
+            favorites.add(subProductId);
+            log.info("Successfully added the product with id " + subProductId + " to favorites");
+            hasChanges = true;
         }
 
         if (hasChanges) {
@@ -74,18 +75,17 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
 
-
     @Override
-    public SimpleResponse clearFavorite(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            log.error("User with id: " + userId + " is not found");
-            return new NotFoundException("User with id: " + userId + " is not found");
-        });
+    public SimpleResponse clearFavorite() {
+        User user = getAuthenticateUser();
+        if (user == null) {
+            log.error("User not authenticated.");
+            throw new NotFoundException("User not authenticated.");
+        }
 
         List<Long> favorites = user.getFavorite();
         favorites.clear();
 
-        user.setFavorite(favorites);
         userRepository.save(user);
 
         return SimpleResponse.builder()
@@ -94,61 +94,83 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .build();
     }
 
+
     @Override
-    public List<SubProductResponse> getAllFavorite(Long userId) {
-        String query = "SELECT s.id, s.article_number, s.price, s.quantity, s.ram, s.rom, s.additional_features, s.code_color, s.screen_resolution, spi.images " +
-                "FROM user_favorite AS u " +
-                "JOIN sub_products AS s ON u.user_id = s.id " +
-                "JOIN sub_product_images AS spi ON s.id = spi.sub_product_id " +
-                "WHERE u.user_id =?";
+    public List<SubProductResponse> getAllFavorite() {
+        User user = jwtService.getAuthentication();
+        if (user == null) {
+            log.error("User not authenticated.");
+            throw new NotFoundException("User not authenticated.");
+        } else {
+            log.error(user.getId().toString());
+            String query = """
+                  SELECT sp.id,
+                         sp.article_number,
+                         sp.price,
+                         sp.quantity,
+                         sp.ram,
+                         sp.rom,
+                         sp.additional_features,
+                         sp.code_color,
+                         sp.screen_resolution,
+                         COALESCE(
+                         (SELECT spi.images
+                          FROM sub_product_images spi
+                          WHERE spi.sub_product_id = sp.id
+                          LIMIT 1),' ') AS image
+                          
+                  FROM sub_products sp
+                           JOIN sub_product_images spi ON sp.id = spi.sub_product_id
+                           JOIN user_favorite uf ON uf.favorite = sp.id
+                           JOIN users u ON uf.user_id = u.id
+                  WHERE u.id = ?
+                       """;
+           return jdbcTemplate.query(
+                    query,
+                    (rs, rowNum) -> new SubProductResponse(
+                            rs.getLong("id"),
+                            rs.getInt("ram"),
+                            rs.getString("screen_resolution"),
+                            rs.getInt("rom"),
+                            rs.getString("additional_features"),
+                            rs.getBigDecimal("price"),
+                            rs.getInt("quantity"),
+                            rs.getString("code_color"),
+                            rs.getLong("article_number"),
+                            rs.getString("image")),
+                    user.getId());
 
-        Map<Long, SubProductResponse> subProductMap = new HashMap<>();
-
-        jdbcTemplate.query(
-                query,
-                new Object[]{userId},
-                (rs, rowNum) -> {
-                    long subProductId = rs.getLong("id");
-                    SubProductResponse subProductResponse = subProductMap.getOrDefault(subProductId, new SubProductResponse());
-                    subProductResponse.setId(subProductId);
-                    subProductResponse.setArticleNumber(rs.getInt("article_number"));
-                    subProductResponse.setPrice(rs.getBigDecimal("price"));
-                    subProductResponse.setQuantity(rs.getInt("quantity"));
-                    subProductResponse.setRam(rs.getInt("ram"));
-                    subProductResponse.setRom(rs.getInt("rom"));
-                    subProductResponse.setAdditionalFeatures(rs.getString("additional_features"));
-                    subProductResponse.setCodeColor(rs.getString("code_color"));
-                    subProductResponse.setScreenResolution(rs.getString("screen_resolution"));
-
-                    List<String> images = subProductResponse.getImages();
-                    if (images == null) {
-                        images = new ArrayList<>();
-                    }
-                    images.add(rs.getString("images"));
-                    subProductResponse.setImages(images);
-
-                    subProductMap.put(subProductId, subProductResponse);
-
-                    return subProductResponse;
-                }
-        );
-
-        return new ArrayList<>(subProductMap.values());
+        }
     }
 
 
     @Override
-    public SimpleResponse deleteFavorite(List<Long> userId) {
-        for (Long userIds : userId) {
-            User user = userRepository.findById(userIds).orElseThrow(() -> {
-                log.error("User with id: " + userIds + " is not found");
-                return new NotFoundException("User with id: " + userIds + " is not found");
-            });
-            userRepository.delete(user);
+    public SimpleResponse deleteFavorite(List<Long> subProductIds) {
+        User user = getAuthenticateUser();
+        if (user == null) {
+            log.error("User not authenticated.");
+            throw new NotFoundException("User not authenticated.");
         }
+
+        for (Long subProductId : subProductIds) {
+            SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
+                log.error("SubProduct with id: " + subProductId + " is not found");
+                return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
+            });
+
+            List<Long> favorites = user.getFavorite();
+            if (favorites.contains(subProductId)) {
+                favorites.remove(subProductId);
+                log.info("Successfully removed the product with id " + subProductId + " from favorites.");
+            }
+        }
+
+        userRepository.save(user);
+
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Successfully removed favorites.")
                 .build();
     }
+
 }
