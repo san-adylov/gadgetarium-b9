@@ -22,7 +22,7 @@ public class SubProductResponse {
 
     private BigDecimal price;
 
-    private int quantity;
+    private String quantity;
 
     private String codeColor;
 
@@ -30,17 +30,24 @@ public class SubProductResponse {
 
     private Long articleNumber;
 
-    public SubProductResponse(Long id, int ram, String screenResolution, int rom, String additionalFeatures, BigDecimal price, int quantity, String codeColor,  Long articleNumber,String image) {
+    private int discount;
+
+    public SubProductResponse(Long id, int ram, String screenResolution, int rom, String additionalFeatures, BigDecimal price, int quantity, String codeColor,  Long articleNumber,String image, int discount) {
         this.id = id;
         this.ram = ram;
         this.screenResolution = screenResolution;
         this.rom = rom;
         this.additionalFeatures = additionalFeatures;
         this.price = price;
-        this.quantity = quantity;
+        if (quantity >= 1){
+            this.quantity = "В наличии";
+        }else {
+            this.quantity = "Не в наличии";
+        }
         this.codeColor = codeColor;
         this.articleNumber = articleNumber;
         this.image = image;
+        this.discount = discount;
     }
 
 }
