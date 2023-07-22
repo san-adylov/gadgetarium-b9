@@ -32,6 +32,8 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
             log.error(user.getId().toString());
             String query = """
                     SELECT sp.id,
+                    b.name,
+                        p.name as prodNamae,
                            sp.article_number,
                            sp.price,
                            sp.quantity,
@@ -47,16 +49,20 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
                             WHERE spi.sub_product_id = sp.id
                             LIMIT 1),' ') AS image
                     FROM sub_products sp
-                             JOIN sub_product_images spi ON sp.id = spi.sub_product_id
-                             JOIN discounts d on spi.sub_product_id = d.sub_product_id
-                             JOIN user_favorite uf ON uf.favorite = sp.id
-                             JOIN users u ON uf.user_id = u.id
+                    JOIN products p on p.id = sp.product_id
+                    JOIN brands b on b.id = p.brand_id
+                    JOIN sub_product_images spi ON sp.id = spi.sub_product_id
+                    JOIN discounts d on spi.sub_product_id = d.sub_product_id
+                    JOIN user_favorite uf ON uf.favorite = sp.id
+                    JOIN users u ON uf.user_id = u.id
                     WHERE u.id = ?
                          """;
 
             return jdbcTemplate.query(
                     query,
                     (rs, rowNum) -> new SubProductResponse(
+                            rs.getString("name"),
+                            rs.getString("prodNamae"),
                             rs.getLong("id"),
                             rs.getInt("ram"),
                             rs.getString("screen_resolution"),
