@@ -22,28 +22,28 @@ public class FavoriteApi {
 
     private final FavoriteService favoriteService;
 
-    @Operation(summary = "add or delete", description = "This method may or may not accept")
+    @Operation(summary = "add or delete", description = "honey adds to favorites, if there is, then deletes")
     @PreAuthorize("hasAnyAuthority('USER')")
     @PostMapping("/add Or Delete Favorite")
     SimpleResponse addOrDeleteFavorite(@RequestBody Long subProductId) {
         return favoriteService.addAndDeleteFavorite(subProductId);
     }
 
-    @Operation(summary = "clear favorite", description = "This method can clear favorites")
+    @Operation(summary = "clear favorite", description = "method to clear selected available USER")
     @PreAuthorize("hasAnyAuthority('USER')")
     @DeleteMapping("/clear-favorite")
     SimpleResponse clearFavorite() {
         return favoriteService.clearFavorite();
     }
 
-    @Operation(summary = "get all favorite", description = "This method allows all objects to be seen")
+    @Operation(summary = "get all favorite", description = "method exports favorites available to USER himself")
     @PreAuthorize("hasAnyAuthority('USER')")
     @GetMapping("/get-all-favorite")
     List<SubProductResponse> getAllFavorite() {
         return favoriteService.getAllFavorite();
     }
 
-    @Operation(summary = "delete Favorite", description = "This method allows you to delete favorites")
+    @Operation(summary = "delete Favorite", description = " Method removes products to favorites")
     @PreAuthorize("hasAnyAuthority('USER')")
     @DeleteMapping
     SimpleResponse deleteFavorite(@RequestBody List<Long> subProductId) {
