@@ -28,5 +28,4 @@ public class SubProductApi {
       @RequestBody SubProductCatalogRequest subProductCatalogRequest) {
     return subProductService.getSubProductCatalogs(subProductCatalogRequest);
   }
-
 }

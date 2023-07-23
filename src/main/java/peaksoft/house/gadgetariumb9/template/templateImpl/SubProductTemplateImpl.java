@@ -109,7 +109,6 @@ public class SubProductTemplateImpl implements SubProductTemplate {
       sql += "OR (sw.hull_shape = ANY(?))";
       params.add(subProductCatalogRequest.getHullShapes().toArray(new String[0]));
     }
-
     return jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductCatalogResponse(
         rs.getLong("id"),
         rs.getInt("sale"),

@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.dto.request.authReqest;
+package peaksoft.house.gadgetariumb9.dto.request.authentication;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
