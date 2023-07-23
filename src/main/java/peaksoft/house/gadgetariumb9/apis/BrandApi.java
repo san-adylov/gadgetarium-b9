@@ -16,8 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/brand")
 @PreAuthorize("hasAuthority('ADMIN')")
-@Tag(name = "Brand")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@Tag(name = "Brand",description = "API for working with brand")
 public class BrandApi {
 
     private final BrandServiceImpl brandService;

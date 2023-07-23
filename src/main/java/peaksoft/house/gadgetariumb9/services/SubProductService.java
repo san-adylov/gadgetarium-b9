@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.service;
+package peaksoft.house.gadgetariumb9.services;
 
 import java.util.List;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
