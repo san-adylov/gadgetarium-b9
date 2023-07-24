@@ -22,17 +22,25 @@ public class SubProductTemplateImpl implements SubProductTemplate {
   public List<SubProductCatalogResponse> getProductFilter(
       SubProductCatalogRequest subProductCatalogRequest) {
     String sql = """
-            SELECT s.id, d.sale, (SELECT spi.images FROM sub_product_images spi WHERE spi.sub_product_id = s.id LIMIT 1) AS image, s.quantity, p2.name, s.price
-            FROM sub_products s
-                     FULL JOIN discounts d ON s.id = d.sub_product_id
-                     FULL JOIN phones p ON s.id = p.sub_product_id
-                     FULl JOIN laptops l ON s.id = l.sub_product_id
-                     FULL JOIN smart_watches sw ON s.id = sw.sub_product_id
-                     FULL JOIN products p2 ON s.product_id = p2.id
-                     FULL JOIN brands b ON p2.brand_id = b.id
-                     FULL JOIN sub_categories sc ON p2.sub_category_id = sc.id
-                     FULL JOIN categories c ON sc.category_id = c.id
-            WHERE c.title = ?
+           SELECT s.id,
+                  d.sale,
+                  (SELECT spi.images
+                   FROM sub_product_images spi
+                   WHERE spi.sub_product_id = s.id
+                   LIMIT 1) AS image,
+                  s.quantity,
+                  p2.name,
+                  s.price
+           FROM sub_products s
+                    LEFT JOIN discounts d ON s.id = d.sub_product_id
+                    JOIN phones p ON s.id = p.sub_product_id
+                    JOIN laptops l ON s.id = l.sub_product_id
+                    JOIN smart_watches sw ON s.id = sw.sub_product_id
+                    LEFT JOIN products p2 ON s.product_id = p2.id
+                    LEFT JOIN brands b ON p2.brand_id = b.id
+                    JOIN sub_categories sc ON p2.sub_category_id = sc.id
+                    JOIN categories c ON sc.category_id = c.id
+           WHERE c.title = ?
         """;
     List<Object> params = new ArrayList<>();
     params.add(subProductCatalogRequest.getGadgetType());
