@@ -1,6 +1,5 @@
-package peaksoft.house.gadgetariumb9.service;
+package peaksoft.house.gadgetariumb9.services;
 
-import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.authReqest.MailingRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 
