@@ -58,7 +58,6 @@ public class BrandServiceImpl implements BrandService {
                 .message(String.format("Brand with id: %d is deleted", id))
                 .build();
     }
-
 }
 
 

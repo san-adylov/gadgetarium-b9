@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
@@ -12,6 +13,7 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogRes
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -146,6 +148,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
             rs.getString("name"),
             rs.getBigDecimal("price")
         ), params.toArray());
+    log.info("Filtering completed successfully");
     return new SubProductPagination(subProductCatalogResponses, pageSize, pageNumber);
   }
 }
