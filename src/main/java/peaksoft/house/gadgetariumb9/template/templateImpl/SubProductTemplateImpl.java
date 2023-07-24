@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 
 @Service
@@ -19,8 +20,8 @@ public class SubProductTemplateImpl implements SubProductTemplate {
   private final JdbcTemplate jdbcTemplate;
 
   @Override
-  public List<SubProductCatalogResponse> getProductFilter(
-      SubProductCatalogRequest subProductCatalogRequest) {
+  public SubProductPagination getProductFilter(
+      SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber) {
     String sql = """
            SELECT s.id,
                   d.sale,
@@ -117,13 +118,34 @@ public class SubProductTemplateImpl implements SubProductTemplate {
       sql += "OR (sw.hull_shape = ANY(?))";
       params.add(subProductCatalogRequest.getHullShapes().toArray(new String[0]));
     }
-    return jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductCatalogResponse(
-        rs.getLong("id"),
-        rs.getInt("sale"),
-        rs.getString("image"),
-        rs.getInt("quantity"),
-        rs.getString("name"),
-        rs.getBigDecimal("price")
-    ), params.toArray());
+    if (subProductCatalogRequest.getSorting().equalsIgnoreCase("Новинки")) {
+      sql += " ORDER BY s.id DESC";
+    } else if (subProductCatalogRequest.getSorting().equalsIgnoreCase("Все скидки")) {
+      sql += " ORDER BY CASE WHEN d.sale > 0 THEN 0 END";
+    } else if (subProductCatalogRequest.getSorting().equalsIgnoreCase("Свыше 50%")) {
+      sql += "ORDER BY CASE WHEN d.sale > 50 THEN 1 END";
+    } else if (subProductCatalogRequest.getSorting().equalsIgnoreCase("До 50%")) {
+      sql += "ORDER BY CASE WHEN d.sale > 0 THEN 2 END";
+    } else if (subProductCatalogRequest.getSorting().equalsIgnoreCase("По увеличению цены")) {
+      sql += "ORDER BY s.price ASC";
+    } else if (subProductCatalogRequest.getSorting().equalsIgnoreCase("По уменьшению цены")) {
+      sql += "ORDER BY s.price DESC";
+    } else if (subProductCatalogRequest.getSorting().equalsIgnoreCase("Рекомендуемые")) {
+      sql += "ORDER BY s.rating DESC";
+    }
+    int offset = (pageNumber - 1) * pageSize;
+    sql += " LIMIT ? OFFSET ?";
+    params.add(pageSize);
+    params.add(offset);
+    List<SubProductCatalogResponse> subProductCatalogResponses = jdbcTemplate.query(sql,
+        (rs, rowNum) -> new SubProductCatalogResponse(
+            rs.getLong("id"),
+            rs.getInt("sale"),
+            rs.getString("image"),
+            rs.getInt("quantity"),
+            rs.getString("name"),
+            rs.getBigDecimal("price")
+        ), params.toArray());
+    return new SubProductPagination(subProductCatalogResponses, pageSize, pageNumber);
   }
 }

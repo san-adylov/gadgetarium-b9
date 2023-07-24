@@ -1,11 +1,10 @@
 package peaksoft.house.gadgetariumb9.services;
 
-import java.util.List;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 
 public interface SubProductService {
 
-  List<SubProductCatalogResponse> getSubProductCatalogs(SubProductCatalogRequest subProductCatalogRequest);
+ SubProductPagination getSubProductCatalogs(SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber);
 
 }

@@ -14,31 +14,30 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/brand")
+@RequestMapping("api/brand")
 @PreAuthorize("hasAuthority('ADMIN')")
-@Tag(name = "Brand",description = "API for working with brand")
+@Tag(name = "Brand", description = "API for working with brand")
 public class BrandApi {
 
-    private final BrandServiceImpl brandService;
+  private final BrandServiceImpl brandService;
 
-    @Operation(summary = "brandSave")
-    @PostMapping("/save")
-    public SimpleResponse saveBrand(@RequestBody @Valid BrandRequest brandRequest) {
-        return brandService.saveBrand(brandRequest);
-    }
+  @Operation(summary = "Save brand", description = "Preservation of the new brand")
+  @PostMapping("/save")
+  public SimpleResponse saveBrand(@RequestBody @Valid BrandRequest brandRequest) {
+    return brandService.saveBrand(brandRequest);
+  }
 
-    @Operation(summary = "brand get all")
-    @GetMapping("/getAll")
-    public List<BrandResponse> getAllBrands() {
-        return brandService.getAllBrands();
-    }
+  @Operation(summary = "Get all", description = "Getting all brands")
+  @GetMapping("/get-all")
+  public List<BrandResponse> getAllBrands() {
+    return brandService.getAllBrands();
+  }
 
-    @Operation(summary = "brand delete")
-    @DeleteMapping("/{id}/delete")
-    public SimpleResponse deleteById(@PathVariable Long id) {
-        return brandService.deleteById(id);
-    }
-
+  @Operation(summary = "brand delete", description = "Removing a brand")
+  @DeleteMapping("/{id}/delete")
+  public SimpleResponse deleteById(@PathVariable Long id) {
+    return brandService.deleteById(id);
+  }
 
 
 }

@@ -27,7 +27,7 @@ public class Review {
 
     private String replyToComment;
 
-    private int rating;
+    private int grade;
 
     @ManyToOne(
             cascade = {MERGE, DETACH, REFRESH, PERSIST})

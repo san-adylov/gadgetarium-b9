@@ -36,6 +36,8 @@ public class SubProduct {
 
     private String codeColor;
 
+    private double rating;
+
     @ElementCollection
     private List<String> images;
 

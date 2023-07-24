@@ -13,6 +13,8 @@ public class SubProductCatalogRequest {
 
   private String gadgetType;
 
+  private String sorting;
+
   private List<Long> brandIds;
 
   private BigDecimal priceStart;
@@ -24,16 +26,6 @@ public class SubProductCatalogRequest {
   private List<Integer> rom;
 
   private List<Integer> ram;
-
-  private String novelties;
-
-  private String byShare;
-
-  private String recommended;
-
-  private String byPriceIncrease;
-
-  private String byDecreasingPrice;
 
   private List<Integer> sim;
 
