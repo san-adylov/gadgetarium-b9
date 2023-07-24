@@ -21,13 +21,13 @@ public class FavoriteApi {
     private final FavoriteService favoriteService;
 
     @Operation(summary = "Add or delete", description = "The method adds and, if present, removes")
-    @PostMapping("/add-or-delete/{subProductId}")
+    @PostMapping("/{subProductId}")
     SimpleResponse addOrDeleteFavorite(@PathVariable Long subProductId) {
         return favoriteService.addAndDeleteFavorite(subProductId);
     }
 
     @Operation(summary = "Clear favorite", description = "Method to clear selected available USER")
-    @DeleteMapping("/clear")
+    @DeleteMapping
     SimpleResponse clearFavorite() {
         return favoriteService.clearFavorite();
     }
