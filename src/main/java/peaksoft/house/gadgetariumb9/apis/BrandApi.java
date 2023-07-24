@@ -14,32 +14,29 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/brand")
+@RequestMapping("/api/brands")
 @PreAuthorize("hasAuthority('ADMIN')")
-@Tag(name = "Brand")
+@Tag(name = "Brand API", description = "All brand endpoints")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class BrandApi {
 
     private final BrandServiceImpl brandService;
 
-    @Operation(summary = "brandSave")
-    @PostMapping("/save")
+    @Operation(summary = "Add brand", description = "Add new brand")
+    @PostMapping
     public SimpleResponse saveBrand(@RequestBody @Valid BrandRequest brandRequest) {
         return brandService.saveBrand(brandRequest);
     }
 
-    @Operation(summary = "brand get all")
-    @GetMapping("/getAll")
+    @Operation(summary = "Get all brands", description = "Get all brands")
+    @GetMapping
     public List<BrandResponse> getAllBrands() {
         return brandService.getAllBrands();
     }
 
-    @Operation(summary = "brand delete")
-    @DeleteMapping("/{id}/delete")
-    public SimpleResponse deleteById(@PathVariable Long id) {
-        return brandService.deleteById(id);
+    @Operation(summary = "Delete brand", description = "Delete brand by id")
+    @DeleteMapping("/{brandId}")
+    public SimpleResponse deleteById(@PathVariable Long brandId) {
+        return brandService.deleteById(brandId);
     }
-
-
-
 }
