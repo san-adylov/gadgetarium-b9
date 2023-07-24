@@ -17,7 +17,6 @@ public class ReviewApi {
 
     private final ReviewService service;
 
-    @PermitAll
     @Operation(summary = "Rating of reviews", description = "Get the rating summary of reviews for a specific product..")
     @GetMapping()
     public ReviewRatingResponse countReviewsRating(@RequestParam  Long subProductId) {
