@@ -15,35 +15,27 @@ import java.util.List;
 @RequestMapping(name = "/api/favorite")
 @Tag(name = "Favorite API", description = "API for favorite CRUD management")
 @CrossOrigin(origins = "*", maxAge = 3600)
+@PreAuthorize("hasAnyAuthority('USER')")
 public class FavoriteApi {
 
     private final FavoriteService favoriteService;
 
-    @Operation(summary = "Add or delete", description = "Honey adds to favorites, if there is, then deletes")
-    @PreAuthorize("hasAnyAuthority('USER')")
-    @PostMapping("/add-0r-delete-favorite")
-    SimpleResponse addOrDeleteFavorite(@RequestBody Long subProductId) {
+    @Operation(summary = "Add or delete", description = "The method adds and, if present, removes")
+    @PostMapping("/add-or-delete/{subProductId}")
+    SimpleResponse addOrDeleteFavorite(@PathVariable Long subProductId) {
         return favoriteService.addAndDeleteFavorite(subProductId);
     }
 
     @Operation(summary = "Clear favorite", description = "Method to clear selected available USER")
-    @PreAuthorize("hasAnyAuthority('USER')")
-    @DeleteMapping("/clear-favorite")
+    @DeleteMapping("/clear")
     SimpleResponse clearFavorite() {
         return favoriteService.clearFavorite();
     }
 
     @Operation(summary = "Get all favorite", description = "Method exports favorites available to USER himself")
-    @PreAuthorize("hasAnyAuthority('USER')")
-    @GetMapping("/get-all-favorite")
+    @GetMapping
     List<SubProductResponse> getAllFavorite() {
         return favoriteService.getAllFavorite();
     }
 
-    @Operation(summary = "Delete Favorite", description = " Method removes products to favorites")
-    @PreAuthorize("hasAnyAuthority('USER')")
-    @DeleteMapping("/delete-favorite")
-    SimpleResponse deleteFavorite(@RequestParam Long subProductId) {
-        return favoriteService.deleteFavorite(subProductId);
-    }
 }

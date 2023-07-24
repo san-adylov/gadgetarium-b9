@@ -65,51 +65,20 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public SimpleResponse clearFavorite() {
         User user = jwtService.getAuthentication();
-        if (user == null) {
-            log.error("User not authenticated.");
-            throw new NotFoundException("User not authenticated.");
-        }
-
         List<Long> favorites = user.getFavorite();
         favorites.clear();
-
         userRepository.save(user);
-
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Successfully cleared favorites.")
                 .build();
     }
 
+
+
     @Override
     public List<SubProductResponse> getAllFavorite() {
         return favoriteTemplate.getAllFavorite();
     }
-
-    @Override
-    public SimpleResponse deleteFavorite(Long subProductId) {
-        User user = jwtService.getAuthentication();
-        SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
-            log.error("SubProduct with id: " + subProductId + " is not found");
-            return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
-        });
-
-        List<Long> favorites = user.getFavorite();
-        if (favorites.contains(subProduct.getId())) {
-            favorites.remove(subProduct.getId());
-            log.info("Successfully removed the product with id " + subProductId + " from favorites.");
-        } else {
-            log.info("Product with id " + subProductId + " was not found in favorites.");
-            throw new NotFoundException("Product with id " + subProductId + " was not found in favorites");
-        }
-
-        userRepository.save(user);
-
-        return SimpleResponse.builder()
-                .status(HttpStatus.OK)
-                .message("Successfully removed favorite.")
-                .build();
-    }
-
 
 }

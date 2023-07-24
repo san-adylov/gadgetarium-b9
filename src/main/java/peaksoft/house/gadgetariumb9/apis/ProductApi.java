@@ -22,6 +22,7 @@ public class ProductApi {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "save Product", description = "Creating a new product")
+    @PostMapping
     public SimpleResponse save(@RequestBody ProductRequest productRequest) {
         return productService.saveProduct(productRequest);
     }

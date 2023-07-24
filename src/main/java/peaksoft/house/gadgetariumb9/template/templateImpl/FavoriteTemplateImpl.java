@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductResponse;
-import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.template.FavoriteTemplate;
 import peaksoft.house.gadgetariumb9.models.User;
 import java.util.List;
@@ -25,11 +24,6 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
     @Override
     public List<SubProductResponse> getAllFavorite() {
         User user = jwtService.getAuthentication();
-        if (user == null) {
-            log.error("User not authenticated.");
-            throw new NotFoundException("User not authenticated.");
-        } else {
-            log.error(user.getId().toString());
             String query = """
                     SELECT sp.id,
                     b.name,
@@ -78,4 +72,4 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
                     user.getId());
         }
     }
-}
+

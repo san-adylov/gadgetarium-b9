@@ -13,5 +13,4 @@ public interface FavoriteService {
 
     List<SubProductResponse> getAllFavorite();
 
-    SimpleResponse deleteFavorite(Long subProductId);
 }
