@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.dto.response.productResponse;
+package peaksoft.house.gadgetariumb9.dto.response.product;
 
 import lombok.*;
 import java.time.ZonedDateTime;

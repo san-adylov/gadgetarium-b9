@@ -6,15 +6,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignInRequest;
-import peaksoft.house.gadgetariumb9.dto.request.authReqest.SignUpRequest;
+import peaksoft.house.gadgetariumb9.dto.request.authentication.SignInRequest;
+import peaksoft.house.gadgetariumb9.dto.request.authentication.SignUpRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.AuthenticationService;
 import peaksoft.house.gadgetariumb9.validations.password.Password;
@@ -23,7 +22,6 @@ import peaksoft.house.gadgetariumb9.validations.password.Password;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
-@CrossOrigin(maxAge = 3600, origins = "*")
 @Tag(name = "Authentication", description = "Authentication for users")
 public class AuthenticationApi {
 

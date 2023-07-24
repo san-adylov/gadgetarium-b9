@@ -131,7 +131,7 @@ values (4, '2023-07-14T12:59:00+00:00', 1, 1, 1, 'comm', 'ok'),
        (4, '2023-07-14T12:59:00+00:00', 4, 4, 4, 'comm', 'ok'),
        (3, '2023-07-14T12:59:00+00:00', 5, 5, 5, 'comm', 'ok');
 
-insert into smart_watches (display_discount, waterproof, id, sub_product_id, an_interface, gender, h_ull_shape,
+insert into smart_watches (display_discount, waterproof, id, sub_product_id, an_interface, gender, hull_shape,
                            housing_material, material_bracelet)
 values (2.0, false, 1, 1, 'BLUETOOTH', 'FEMALE', 'SQUARE', 'ACRYLIC', 'RUBBER'),
        (3.0, true, 2, 2, 'WIFI', 'MALE', 'ROUND', 'CERAMIC', 'IMITATION_LEATHER'),
