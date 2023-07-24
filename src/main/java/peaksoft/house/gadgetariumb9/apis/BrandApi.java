@@ -38,6 +38,4 @@ public class BrandApi {
   public SimpleResponse deleteById(@PathVariable Long id) {
     return brandService.deleteById(id);
   }
-
-
 }
