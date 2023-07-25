@@ -2,6 +2,7 @@ package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,6 +37,7 @@ public class SubProduct {
 
     private String codeColor;
 
+    @Nullable
     private double rating;
 
     @ElementCollection
