@@ -67,12 +67,13 @@ values (1, 1),
        (5, 5);
 
 insert into sub_products (article_number, price, quantity, ram, rom, id, product_id, additional_features, code_color,
-                          screen_resolution, rating)
-values (322323, 78000, 1, 4, 5, 1, 1, 'asc', 'red', '2532×1170',3),
-       (123454, 74000, 1, 4, 5, 2, 2, 'rte', 'red', '1920x1200',4),
-       (987665, 79000, 1, 4, 5, 3, 3, 'bvcb', 'red', '2000x1200 ',2),
-       (878787, 71000, 1, 4, 5, 4, 4, 'dfsdf', 'red', '352х430',4),
-       (343434, 75000, 1, 4, 5, 5, 5, 'gtbgf', 'red', '2532х1170',5);
+                          screen_resolution,rating)
+values (322323, 78000, 1, 4, 5, 1, 1, 'asc', 'red', '2532×1170',2.5),
+       (123454, 74000, 1, 4, 5, 2, 2, 'rte', 'red', '1920x1200',5),
+       (987665, 79000, 1, 4, 5, 3, 3, 'bvcb', 'red', '2000x1200 ',1.3),
+       (878787, 71000, 1, 4, 5, 4, 4, 'dfsdf', 'red', '352х430',4.3),
+       (343434, 75000, 1, 4, 5, 5, 5, 'gtbgf', 'red', '2532х1170',3.4);
+
 
 insert into baskets_sub_products (baskets_id, sub_products_id)
 values (1, 1),
