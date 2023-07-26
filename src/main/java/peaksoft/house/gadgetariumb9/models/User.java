@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import peaksoft.house.gadgetariumb9.enums.Role;
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.CascadeType.PERSIST;
 
@@ -52,6 +53,9 @@ public class User implements UserDetails {
   @ElementCollection
   private List<Long> favorite;
 
+  @ElementCollection
+  private List<Long> recentlyViewedProducts;
+
   @OneToMany(
       mappedBy = "user",
       cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
@@ -66,6 +70,7 @@ public class User implements UserDetails {
       mappedBy = "user",
       cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
   private List<Basket> baskets;
+
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

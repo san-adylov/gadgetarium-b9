@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/products")
-@CrossOrigin(maxAge = 3600 , origins = "*")
 @Tag(name = "Products API",description = "API for product CRUD management")
 public class ProductApi {
 

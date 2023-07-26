@@ -7,4 +7,5 @@ public interface SubProductService {
 
  SubProductPagination getSubProductCatalogs(SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber);
 
+
 }
