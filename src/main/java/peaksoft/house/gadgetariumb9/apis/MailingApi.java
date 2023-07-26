@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import peaksoft.house.gadgetariumb9.dto.request.authReqest.MailingRequest;
+import peaksoft.house.gadgetariumb9.dto.request.mailing.MailingRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.MailingService;
 
@@ -17,7 +17,7 @@ import peaksoft.house.gadgetariumb9.services.MailingService;
 @RequiredArgsConstructor
 @RequestMapping("/api/mailings")
 @CrossOrigin(maxAge = 3600,origins = "*")
-@Tag(name = "Mailing API", description = "Mailing List API")
+@Tag(name = "Mailing API", description = "API for working with mailing")
 public class MailingApi {
 
   private final MailingService mailingService;
