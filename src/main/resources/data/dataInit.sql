@@ -74,6 +74,7 @@ values (322323, 78000, 1, 4, 5, 1, 1, 'asc', 'red', '2532×1170',2.5),
        (878787, 71000, 1, 4, 5, 4, 4, 'dfsdf', 'red', '352х430',4.3),
        (343434, 75000, 1, 4, 5, 5, 5, 'gtbgf', 'red', '2532х1170',3.4);
 
+
 insert into baskets_sub_products (baskets_id, sub_products_id)
 values (1, 1),
        (2, 2),
