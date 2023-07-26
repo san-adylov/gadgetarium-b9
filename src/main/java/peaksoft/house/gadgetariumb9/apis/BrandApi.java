@@ -14,29 +14,28 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/brands")
+@RequestMapping("api/brand")
 @PreAuthorize("hasAuthority('ADMIN')")
-@Tag(name = "Brand API", description = "All brand endpoints")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@Tag(name = "Brand", description = "API for working with brand")
 public class BrandApi {
 
-    private final BrandServiceImpl brandService;
+  private final BrandServiceImpl brandService;
 
-    @Operation(summary = "Add brand", description = "Add new brand")
-    @PostMapping
-    public SimpleResponse saveBrand(@RequestBody @Valid BrandRequest brandRequest) {
-        return brandService.saveBrand(brandRequest);
-    }
+  @Operation(summary = "Save brand", description = "Preservation of the new brand")
+  @PostMapping("/save")
+  public SimpleResponse saveBrand(@RequestBody @Valid BrandRequest brandRequest) {
+    return brandService.saveBrand(brandRequest);
+  }
 
-    @Operation(summary = "Get all brands", description = "Get all brands")
-    @GetMapping
-    public List<BrandResponse> getAllBrands() {
-        return brandService.getAllBrands();
-    }
+  @Operation(summary = "Get all", description = "Getting all brands")
+  @GetMapping("/get-all")
+  public List<BrandResponse> getAllBrands() {
+    return brandService.getAllBrands();
+  }
 
-    @Operation(summary = "Delete brand", description = "Delete brand by id")
-    @DeleteMapping("/{brandId}")
-    public SimpleResponse deleteById(@PathVariable Long brandId) {
-        return brandService.deleteById(brandId);
-    }
+  @Operation(summary = "brand delete", description = "Removing a brand")
+  @DeleteMapping("/{id}/delete")
+  public SimpleResponse deleteById(@PathVariable Long id) {
+    return brandService.deleteById(id);
+  }
 }

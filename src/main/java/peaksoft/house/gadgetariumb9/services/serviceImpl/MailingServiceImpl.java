@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import peaksoft.house.gadgetariumb9.dto.request.authReqest.MailingRequest;
+import peaksoft.house.gadgetariumb9.dto.request.mailing.MailingRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.BadCredentialException;
 import peaksoft.house.gadgetariumb9.models.Mailing;
