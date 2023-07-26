@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.dto.request.productRequest;
+package peaksoft.house.gadgetariumb9.dto.request.product;
 
 import lombok.*;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductRequest;

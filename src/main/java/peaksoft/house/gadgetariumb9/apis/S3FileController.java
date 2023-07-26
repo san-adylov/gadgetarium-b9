@@ -1,5 +1,6 @@
 package peaksoft.house.gadgetariumb9.apis;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import peaksoft.house.gadgetariumb9.services.serviceImpl.S3FileService;
 @RestController
 @RequestMapping("/api/file")
 @RequiredArgsConstructor
+@Tag(name = "S3 File API",description = "API for working with S3")
 public class S3FileController {
 
     private final S3FileService s3FileService;

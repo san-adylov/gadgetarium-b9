@@ -19,23 +19,23 @@ import java.util.List;
 @Tag(name = "Brand", description = "API for working with brand")
 public class BrandApi {
 
-    private final BrandServiceImpl brandService;
+  private final BrandServiceImpl brandService;
 
-    @Operation(summary = "Save brand", description = "Preservation of the new brand")
-    @PostMapping("/save")
-    public SimpleResponse saveBrand(@RequestBody @Valid BrandRequest brandRequest) {
-        return brandService.saveBrand(brandRequest);
-    }
+  @Operation(summary = "Save brand", description = "Preservation of the new brand")
+  @PostMapping("/save")
+  public SimpleResponse saveBrand(@RequestBody @Valid BrandRequest brandRequest) {
+    return brandService.saveBrand(brandRequest);
+  }
 
-    @Operation(summary = "Get all", description = "Getting all brands")
-    @GetMapping("/get-all")
-    public List<BrandResponse> getAllBrands() {
-        return brandService.getAllBrands();
-    }
+  @Operation(summary = "Get all", description = "Getting all brands")
+  @GetMapping("/get-all")
+  public List<BrandResponse> getAllBrands() {
+    return brandService.getAllBrands();
+  }
 
-    @Operation(summary = "brand delete", description = "Removing a brand")
-    @DeleteMapping("/{id}/delete")
-    public SimpleResponse deleteById(@PathVariable Long id) {
-        return brandService.deleteById(id);
-    }
+  @Operation(summary = "brand delete", description = "Removing a brand")
+  @DeleteMapping("/{id}/delete")
+  public SimpleResponse deleteById(@PathVariable Long id) {
+    return brandService.deleteById(id);
+  }
 }

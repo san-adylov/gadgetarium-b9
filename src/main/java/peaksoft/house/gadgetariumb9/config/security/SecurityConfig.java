@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -23,14 +24,22 @@ public class SecurityConfig {
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
+    http.cors(cors -> cors.configurationSource(request -> {
+      var corsConfiguration = new CorsConfiguration();
+      corsConfiguration.addAllowedOrigin("*");
+      corsConfiguration.addAllowedMethod("*");
+      corsConfiguration.addAllowedHeader("*");
+      return corsConfiguration;
+    }))
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests((authorizeHttpRequests) ->
             authorizeHttpRequests
                 .requestMatchers(
+                        "/",
                     "/api/v1/auth/**",
                     "/swagger-ui/**",
-                    "v3/api-docs/**"
+                    "v3/api-docs/**",
+                    "/api/**"
                 )
                 .permitAll()
                 .anyRequest()

@@ -24,7 +24,7 @@ public class SmartWatch {
     private Interface anInterface;
 
     @Enumerated(EnumType.STRING)
-    private HullShape hUllShape;
+    private HullShape hullShape;
 
     @Enumerated(EnumType.STRING)
     private MaterialBracelet materialBracelet;
