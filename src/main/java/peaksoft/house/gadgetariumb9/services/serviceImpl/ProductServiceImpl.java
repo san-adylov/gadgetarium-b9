@@ -1,5 +1,6 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
+import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-
 
 @Slf4j
 @Service
@@ -62,7 +62,17 @@ public class ProductServiceImpl implements ProductService {
                     return new NotFoundException("Category with id: " + productRequest.getCategoryId() + " is not found");
                 });
 
-        Product product = new Product();
+      ZoneId zoneId = ZoneId.systemDefault();
+      ZonedDateTime startDateZ = ZonedDateTime.of(productRequest.getDateOfIssue().atStartOfDay(), zoneId);
+
+      Product product = new Product();
+        product.setCategory(category);
+        product.setSubCategory(subCategory);
+        product.setBrand(brand);
+        product.setName(productRequest.getName());
+        product.setGuarantee(productRequest.getGuarantee());
+        product.setDataOfIssue(startDateZ);
+        product.setCreatedAt(ZonedDateTime.now());
 
         List<SubProduct> subProducts = productRequest.getSubProductRequests().stream()
                 .map(subProductRequest -> {
@@ -75,6 +85,9 @@ public class ProductServiceImpl implements ProductService {
                     subProduct.setQuantity(subProductRequest.getQuantity());
                     subProduct.setImages(subProductRequest.getImages());
                     subProduct.setPrice(subProductRequest.getPrice());
+                    subProduct.setPrice(subProductRequest.getPrice());
+                    subProduct.setQuantity(subProductRequest.getQuantity());
+
                     int art = generate();
                     while (subProduct.getArticleNumber() != art) {
                         subProduct.setArticleNumber(art);
@@ -129,19 +142,13 @@ public class ProductServiceImpl implements ProductService {
                 })
                 .collect(Collectors.toList());
 
-        Product product2 = Product.builder()
-                .subCategory(subCategory)
-                .brand(brand)
-                .category(category)
-                .name(productRequest.getName())
-                .dataOfIssue(ZonedDateTime.from(productRequest.getDateOfIssue()))
-                .createdAt(ZonedDateTime.now())
-                .guarantee(productRequest.getGuarantee())
-                .subProducts(subProducts)
-                .build();
+        product.setSubProducts(subProducts);
+        product.setVideoLink(productRequest.getVideoLink());
+        product.setPdf(productRequest.getPdf());
+        product.setDescription(product.getDescription());
 
         log.info("Product saved successfully");
-        productRepository.save(product2);
+        productRepository.save(product);
 
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
