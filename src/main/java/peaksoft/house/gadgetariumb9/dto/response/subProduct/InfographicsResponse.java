@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.dto.response;
+package peaksoft.house.gadgetariumb9.dto.response.subProduct;
 
 import java.math.BigDecimal;
 import lombok.*;
