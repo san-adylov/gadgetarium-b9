@@ -81,4 +81,14 @@ public class FavoriteServiceImpl implements FavoriteService {
         return favoriteTemplate.getAllFavorite();
     }
 
+    @Override
+    public SimpleResponse selectDelete(List<Long> subProductId) {
+        return null;
+    }
+
+    @Override
+    public SimpleResponse delete(Long subProductId) {
+        return null;
+    }
+
 }

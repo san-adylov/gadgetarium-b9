@@ -13,7 +13,7 @@ public class SubProductResponse {
 
     private String name;
 
-    private String brantName;
+    private String brandName;
 
     private Long subProductId;
 
@@ -37,8 +37,8 @@ public class SubProductResponse {
 
     private int discount;
 
-    public SubProductResponse(String brantName, String name, Long subProductId, int ram, String screenResolution, int rom, String additionalFeatures, BigDecimal price, int quantity, String codeColor, Long articleNumber, String image, int discount) {
-        this.brantName = brantName;
+    public SubProductResponse(String brandName, String name, Long subProductId, int ram, String screenResolution, int rom, String additionalFeatures, BigDecimal price, int quantity, String codeColor, Long articleNumber, String image, int discount) {
+        this.brandName = brandName;
         this.name = name;
         this.subProductId = subProductId;
         this.ram = ram;
