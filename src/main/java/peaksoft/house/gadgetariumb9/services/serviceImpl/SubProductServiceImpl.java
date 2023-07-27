@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 import peaksoft.house.gadgetariumb9.models.User;
@@ -30,9 +31,14 @@ public class SubProductServiceImpl implements SubProductService, SubProductHisto
     return subProductTemplate.getProductFilter(subProductCatalogRequest, pageSize, pageNumber);
   }
 
-  @Override
+    @Override
+    public InfographicsResponse infographics(String period) {
+        return null;
+    }
+
+    @Override
   public void addRecentlyViewedProduct(Long productId) {
-    User user = jwtService.getAuthentication();
+    User user = jwtService.getAuthenticationUser();
     user.getRecentlyViewedProducts().add(productId);
     log.info("Product added recently viewed");
   }

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.ProductService;
-
 import java.util.List;
 
 @RestController
@@ -29,7 +28,7 @@ public class ProductApi {
     @GetMapping("/colors/{name}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @Operation(summary = "Get color", description = "Get the right colors")
-    public List<String> getColors(@PathVariable String name){
+    public List<String> getColors(@PathVariable String name) {
         return productService.getColor(name);
     }
 }

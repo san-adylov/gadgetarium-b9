@@ -16,14 +16,14 @@ import peaksoft.house.gadgetariumb9.services.serviceImpl.BannerServiceImpl;
 @Tag(name = "Banner API", description = "API for banner management")
 public class BannerApi {
 
-        private final BannerServiceImpl bannerService;
+    private final BannerServiceImpl bannerService;
 
-        @PreAuthorize("hasAuthority('ADMIN')")
-        @Operation(summary = "Save Banner",description = "This is a method of saving banners")
-        @PostMapping()
-        SimpleResponse saveBanners(@RequestBody @Valid BannerRequest bannerRequest) {
-            return bannerService.saveBanners(bannerRequest);
-        }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Save Banner", description = "This is a method of saving banners")
+    @PostMapping()
+    SimpleResponse saveBanners(@RequestBody @Valid BannerRequest bannerRequest) {
+        return bannerService.saveBanners(bannerRequest);
     }
+}
 
 

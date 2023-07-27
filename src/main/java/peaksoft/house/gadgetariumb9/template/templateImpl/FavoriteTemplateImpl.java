@@ -9,6 +9,7 @@ import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductResponse;
 import peaksoft.house.gadgetariumb9.template.FavoriteTemplate;
 import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.template.FavoriteTemplate;
 import java.util.List;
 
 @Slf4j
@@ -23,7 +24,7 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
 
   @Override
   public List<SubProductResponse> getAllFavorite() {
-    User user = jwtService.getAuthentication();
+    User user = jwtService.getAuthenticationUser();
     String query = """
         SELECT sp.id,
         b.name,

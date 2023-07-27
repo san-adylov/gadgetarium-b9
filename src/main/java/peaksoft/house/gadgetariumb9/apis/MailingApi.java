@@ -18,13 +18,13 @@ import peaksoft.house.gadgetariumb9.services.MailingService;
 @Tag(name = "Mailing API", description = "API for working with mailing")
 public class MailingApi {
 
-  private final MailingService mailingService;
+    private final MailingService mailingService;
 
-  @PostMapping("/send")
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @Operation(summary = "save mailing and sending mailing",
-      description = "saving mailing and sending the promotion to store users by mail")
-  public SimpleResponse sendMailing(@RequestBody MailingRequest mailingRequest) {
-    return mailingService.sendHtmlEmail(mailingRequest);
-  }
+    @PostMapping("/send")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "save mailing and sending mailing",
+            description = "saving mailing and sending the promotion to store users by mail")
+    public SimpleResponse sendMailing(@RequestBody MailingRequest mailingRequest) {
+        return mailingService.sendHtmlEmail(mailingRequest);
+    }
 }

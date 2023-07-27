@@ -1,19 +1,9 @@
 package peaksoft.house.gadgetariumb9.dto.request.subProduct;
 
+import lombok.*;
+import peaksoft.house.gadgetariumb9.enums.*;
 import java.math.BigDecimal;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import peaksoft.house.gadgetariumb9.enums.Gender;
-import peaksoft.house.gadgetariumb9.enums.HousingMaterial;
-import peaksoft.house.gadgetariumb9.enums.HullShape;
-import peaksoft.house.gadgetariumb9.enums.Interface;
-import peaksoft.house.gadgetariumb9.enums.MaterialBracelet;
-import peaksoft.house.gadgetariumb9.enums.Processor;
-import peaksoft.house.gadgetariumb9.enums.Purpose;
 
 @Setter
 @Getter
@@ -34,7 +24,7 @@ public class SubProductRequest {
 
     private int quantity;
 
-    private List<String>images;
+    private List<String> images;
 
     private BigDecimal price;
 

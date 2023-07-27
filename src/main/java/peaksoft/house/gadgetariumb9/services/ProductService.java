@@ -9,5 +9,5 @@ public interface ProductService {
 
     SimpleResponse saveProduct(ProductRequest productRequest);
 
-    public List<String> getColor(String name);
+    List<String> getColor(String name);
 }

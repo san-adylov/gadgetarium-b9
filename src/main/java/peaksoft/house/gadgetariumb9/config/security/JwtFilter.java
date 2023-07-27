@@ -21,14 +21,14 @@ import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-  private final JwtService jwtService;
-  private final UserRepository userRepository;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
 
-  @Override
-  protected void doFilterInternal(
-      @NotNull HttpServletRequest request,
-      @NotNull HttpServletResponse response,
-      @NotNull FilterChain filterChain) throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(
+            @NotNull HttpServletRequest request,
+            @NotNull HttpServletResponse response,
+            @NotNull FilterChain filterChain) throws ServletException, IOException {
 
     final String tokenHeader = request.getHeader("Authorization");
     if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
