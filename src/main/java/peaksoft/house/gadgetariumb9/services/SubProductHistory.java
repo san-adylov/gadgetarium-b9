@@ -6,6 +6,7 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryRes
 public interface SubProductHistory {
 
   void addRecentlyViewedProduct (Long productId);
+
   List<SubProductHistoryResponse> getRecentlyViewedProduct();
 
 }

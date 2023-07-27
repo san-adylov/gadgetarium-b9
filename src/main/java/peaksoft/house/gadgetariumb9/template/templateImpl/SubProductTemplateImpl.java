@@ -206,7 +206,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                 FROM sub_product_images spi
                 WHERE spi.sub_product_id = s.id
                 LIMIT 1)                    AS image,
-               CONCAT(p.name, ' ', c.title) AS name,
+               CONCAT(c.title, ' ', p.name) AS name,
                s.rating,
                s.price
         FROM sub_products s
