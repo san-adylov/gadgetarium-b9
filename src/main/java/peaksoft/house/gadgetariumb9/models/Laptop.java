@@ -1,7 +1,6 @@
 package peaksoft.house.gadgetariumb9.models;
 
 import static jakarta.persistence.CascadeType.*;
-
 import jakarta.persistence.*;
 import lombok.*;
 import peaksoft.house.gadgetariumb9.enums.Processor;

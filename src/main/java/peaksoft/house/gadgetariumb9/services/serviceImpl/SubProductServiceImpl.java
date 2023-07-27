@@ -16,18 +16,18 @@ import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 @RequiredArgsConstructor
 public class SubProductServiceImpl implements SubProductService {
 
-  private final SubProductTemplate subProductTemplate;
+    private final SubProductTemplate subProductTemplate;
 
-  @Override
-  public SubProductPagination getSubProductCatalogs(
-      SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber) {
-    log.info("Filter sub product");
-    return subProductTemplate.getProductFilter(subProductCatalogRequest, pageSize, pageNumber);
-  }
+    @Override
+    public SubProductPagination getSubProductCatalogs(
+            SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber) {
+        log.info("Filter sub product");
+        return subProductTemplate.getProductFilter(subProductCatalogRequest, pageSize, pageNumber);
+    }
 
-  @Override
-  public InfographicsResponse infographics(String period) {
-    return subProductTemplate.infographics(period);
-  }
+    @Override
+    public InfographicsResponse infographics(String period) {
+        return subProductTemplate.infographics(period);
+    }
 }
 

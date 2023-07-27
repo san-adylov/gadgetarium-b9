@@ -25,41 +25,41 @@ import peaksoft.house.gadgetariumb9.validations.password.Password;
 @Tag(name = "Authentication", description = "Authentication for users")
 public class AuthenticationApi {
 
-  private final AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
-  @PostMapping("/sign-up")
-  @Operation(summary = "Sign up", description = "Register new users")
-  public String signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
-    return authenticationService.signUp(signUpRequest);
-  }
+    @PostMapping("/sign-up")
+    @Operation(summary = "Sign up", description = "Register new users")
+    public String signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
+        return authenticationService.signUp(signUpRequest);
+    }
 
-  @PostMapping("/sign-in")
-  @Operation(summary = "Sign in", description = "Login for existing users")
-  public String signIn(@RequestBody @Valid SignInRequest signInRequest) {
-    return authenticationService.signIn(signInRequest);
-  }
+    @PostMapping("/sign-in")
+    @Operation(summary = "Sign in", description = "Login for existing users")
+    public String signIn(@RequestBody @Valid SignInRequest signInRequest) {
+        return authenticationService.signIn(signInRequest);
+    }
 
-  @PostMapping("/forgot-password")
-  @Operation(summary = "Forgot password", description = "Initiate password recovery")
-  public SimpleResponse forgotPassword(
-      @RequestParam
-      @Valid
-      @Email
-      String email,
-      @RequestParam
-      String link) {
-    return authenticationService.forgotPassword(email, link);
-  }
+    @PostMapping("/forgot-password")
+    @Operation(summary = "Forgot password", description = "Initiate password recovery")
+    public SimpleResponse forgotPassword(
+            @RequestParam
+            @Valid
+            @Email
+            String email,
+            @RequestParam
+            String link) {
+        return authenticationService.forgotPassword(email, link);
+    }
 
-  @PostMapping("/reset-password/{userId}")
-  @Operation(summary = "Reset password", description = "Reset password for a specific user")
-  public SimpleResponse resetPassword(
-      @RequestParam
-      @Valid
-      @Password
-      String password,
-      @PathVariable
-      Long userId) {
-    return authenticationService.resetPassword(password, userId);
-  }
+    @PostMapping("/reset-password/{userId}")
+    @Operation(summary = "Reset password", description = "Reset password for a specific user")
+    public SimpleResponse resetPassword(
+            @RequestParam
+            @Valid
+            @Password
+            String password,
+            @PathVariable
+            Long userId) {
+        return authenticationService.resetPassword(password, userId);
+    }
 }

@@ -11,7 +11,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.CascadeType.PERSIST;
 
 @Entity
 @Table(name = "orders")

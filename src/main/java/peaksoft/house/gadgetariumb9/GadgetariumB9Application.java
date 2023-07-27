@@ -14,7 +14,7 @@ public class GadgetariumB9Application {
     }
 
     @GetMapping
-    public String greetings(){
+    public String greetings() {
         return "index";
     }
 }

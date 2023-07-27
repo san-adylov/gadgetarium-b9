@@ -18,7 +18,7 @@ import peaksoft.house.gadgetariumb9.services.serviceImpl.S3FileService;
 @RestController
 @RequestMapping("/api/file")
 @RequiredArgsConstructor
-@Tag(name = "S3 File API",description = "API for working with S3")
+@Tag(name = "S3 File API", description = "API for working with S3")
 public class S3FileController {
 
     private final S3FileService s3FileService;

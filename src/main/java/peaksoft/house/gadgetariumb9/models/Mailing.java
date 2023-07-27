@@ -2,7 +2,6 @@ package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.ZonedDateTime;
 
 @Entity

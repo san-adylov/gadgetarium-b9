@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import peaksoft.house.gadgetariumb9.services.BrandService;
 import peaksoft.house.gadgetariumb9.dto.request.brand.BrandRequest;
 import peaksoft.house.gadgetariumb9.dto.response.brand.BrandResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
-import peaksoft.house.gadgetariumb9.models.Brand;
 import peaksoft.house.gadgetariumb9.exceptions.AlreadyExistException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
+import peaksoft.house.gadgetariumb9.models.Brand;
 import peaksoft.house.gadgetariumb9.repositories.BrandRepository;
+import peaksoft.house.gadgetariumb9.services.BrandService;
 import java.util.List;
 
 @Service
@@ -25,7 +25,7 @@ public class BrandServiceImpl implements BrandService {
     public SimpleResponse saveBrand(BrandRequest brandRequest) {
         if (brandRepository.existsByName(brandRequest.getName())) {
             log.error("Brand name  already exists");
-            throw new AlreadyExistException("Brand with name:  "+ brandRequest.getName()+ " already exists");
+            throw new AlreadyExistException("Brand with name:  " + brandRequest.getName() + " already exists");
         }
         Brand brand = new Brand();
         brand.setName(brandRequest.getName());

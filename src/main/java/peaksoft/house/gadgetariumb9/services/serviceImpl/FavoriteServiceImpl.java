@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.SubProduct;
 import peaksoft.house.gadgetariumb9.models.User;
-import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.services.FavoriteService;
 import peaksoft.house.gadgetariumb9.template.FavoriteTemplate;
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -73,7 +73,6 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .message("Successfully cleared favorites.")
                 .build();
     }
-
 
 
     @Override
