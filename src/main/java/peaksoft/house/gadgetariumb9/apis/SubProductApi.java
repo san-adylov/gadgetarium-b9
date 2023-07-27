@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 
@@ -40,4 +41,27 @@ public class SubProductApi {
     public InfographicsResponse infographics(@RequestParam(defaultValue = "day") String period) {
         return subProductService.infographics(period);
     }
+
+    @GetMapping("/new")
+    @Operation(summary = "Get new products", description = "This method gets new products")
+    public MainPagePaginationResponse getNewProducts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int pageSize) {
+        return subProductService.getNewProducts(page,pageSize);
+    }
+
+    @GetMapping("/recommended")
+    @Operation(summary = "Get recommended products", description = "This method gets recommended products")
+    public MainPagePaginationResponse getRecommendedProducts(@RequestParam(defaultValue = "1") int page,
+                                                             @RequestParam(defaultValue = "5") int pageSize) {
+        return subProductService.getRecommendedProducts(page, pageSize);
+    }
+
+    @GetMapping("/discount")
+    @Operation(summary = "Get discount products", description = "This method gets all discount products")
+    public MainPagePaginationResponse getAllDiscountProducts(@RequestParam(defaultValue = "1") int page,
+                                                             @RequestParam(defaultValue = "5") int pageSize) {
+        return subProductService.getAllDiscountProducts(page, pageSize);
+    }
+
 }
