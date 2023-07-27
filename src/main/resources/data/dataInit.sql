@@ -66,12 +66,14 @@ values (1, 1),
        (4, 4),
        (5, 5);
 
-insert into sub_products (article_number, price, quantity, ram, rating, rom, id, product_id, additional_features, code_color, screen_resolution)
-values (322323, 78000, 1, 4, 5, 1, 1, 1,'asc', 'red', '2532×1170'),
-       (123454, 74000, 1, 4, 5, 2, 2, 2,'rte', 'red', '1920x1200'),
-       (987665, 79000, 1, 4, 5, 3, 3, 3,'bvcb', 'red', '2000x1200 '),
-       (878787, 71000, 1, 4, 5, 4, 4, 4,'dfsdf', 'red', '352х430'),
-       (343434, 75000, 1, 4, 5, 5, 5, 5,'gtbgf', 'red', '2532х1170');
+insert into sub_products (article_number, price, quantity, ram, rom, id, product_id, additional_features, code_color,
+                          screen_resolution, rating)
+values (322323, 78000, 1, 4, 5, 1, 1, 'asc', 'red', '2532×1170', 2.5),
+       (123454, 74000, 1, 4, 5, 2, 2, 'rte', 'red', '1920x1200', 5),
+       (987665, 79000, 1, 4, 5, 3, 3, 'bvcb', 'red', '2000x1200 ', 1.3),
+       (878787, 71000, 1, 4, 5, 4, 4, 'dfsdf', 'red', '352х430', 4.3),
+       (343434, 75000, 1, 4, 5, 5, 5, 'gtbgf', 'red', '2532х1170', 3.4);
+
 
 insert into baskets_sub_products (baskets_id, sub_products_id)
 values (1, 1),
@@ -124,11 +126,11 @@ values (1.0, 2, 1, 1, '2400-4799mah', '0-2'),
        (5.0, 1, 5, 5, '0-2399mah', '12-15');
 
 insert into reviews (grade, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment)
-values (1,'2023-07-14T12:59:00+00:00',  1, 1, 1,'comm', 'ok'),
-       (2,'2023-07-14T12:59:00+00:00', 2, 2, 2, 'comm', 'ok'),
-       (3,'2023-07-14T12:59:00+00:00', 3, 3, 3, 'comm', 'ok'),
-       (4,'2023-07-14T12:59:00+00:00', 4, 4, 4, 'comm', 'ok'),
-       (5,'2023-07-14T12:59:00+00:00', 5, 5, 5, 'comm', 'ok');
+values (4, '2023-07-14T12:59:00+00:00', 1, 1, 1, 'comm', 'ok'),
+       (2, '2023-07-14T12:59:00+00:00', 2, 2, 2, 'comm', 'ok'),
+       (1, '2023-07-14T12:59:00+00:00', 3, 3, 3, 'comm', 'ok'),
+       (4, '2023-07-14T12:59:00+00:00', 4, 4, 4, 'comm', 'ok'),
+       (3, '2023-07-14T12:59:00+00:00', 5, 5, 5, 'comm', 'ok');
 
 insert into smart_watches (display_discount, waterproof, id, sub_product_id, an_interface, gender, hull_shape,
                            housing_material, material_bracelet)
@@ -158,7 +160,6 @@ values (1, 1),
        (3, 3),
        (4, 4),
        (5, 5);
-
 
 
 

@@ -3,7 +3,6 @@ package peaksoft.house.gadgetariumb9.models;
 import jakarta.persistence.*;
 import lombok.*;
 import peaksoft.house.gadgetariumb9.enums.*;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity

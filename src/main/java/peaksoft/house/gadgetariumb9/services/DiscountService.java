@@ -6,6 +6,6 @@ import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 
 public interface DiscountService {
 
-  SimpleResponse saveDiscount(DiscountRequest discountRequest);
+    SimpleResponse saveDiscount(DiscountRequest discountRequest);
 
 }

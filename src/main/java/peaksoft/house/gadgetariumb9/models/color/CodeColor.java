@@ -1,16 +1,15 @@
-package peaksoft.house.gadgetariumb9.entities.color;
+package peaksoft.house.gadgetariumb9.models.color;
 
 import lombok.Getter;
 import org.springframework.stereotype.Component;
-
-
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @Getter
 public class CodeColor {
-    private Map<String, String> colors = new HashMap<>();
+    private final Map<String, String> colors = new HashMap<>();
+
     {
         colors.put("#FFFFFF", "Whit");
         colors.put("#E1E1E1", "LightGray");

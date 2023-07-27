@@ -19,24 +19,24 @@ import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  @Bean
-  public UserDetailsService userDetailsService() {
-    return username -> userRepository.getUserByEmail(username).orElseThrow(
-        () -> new NotFoundException("User with email: %s not found".formatted(username)));
-  }
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> userRepository.getUserByEmail(username).orElseThrow(
+                () -> new NotFoundException("User with email: %s not found".formatted(username)));
+    }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public AuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-    daoAuthenticationProvider.setUserDetailsService(userDetailsService());
-    daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-    return daoAuthenticationProvider;
-  }
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
+    }
 }

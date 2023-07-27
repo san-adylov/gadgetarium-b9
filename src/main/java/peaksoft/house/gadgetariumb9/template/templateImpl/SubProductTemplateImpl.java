@@ -1,22 +1,19 @@
 package peaksoft.house.gadgetariumb9.template.templateImpl;
 
 import jakarta.transaction.Transactional;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
-import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductCatalogAdminResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductPaginationCatalogAdminResponse;
-import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -158,254 +155,42 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     }
 
     @Override
-    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, int pageSize, int pageNumber) {
-        List<SubProductCatalogAdminResponse> subProductCatalogAdminResponses = new ArrayList<>();
-        String sql = "";
-        if (productTyp != null) {
-            if (productTyp.equalsIgnoreCase("Все товары")) {
-                sql = """
-                        SELECT s.id                                                                     AS subProductId,
-                               (SELECT spi.images
-                                FROM sub_product_images spi
-                                WHERE spi.sub_product_id = s.id
-                                LIMIT 1)                                                                AS images,
-                               s.article_number                                                         AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name) AS name,
-                               p2.data_of_issue                                                         AS dateOfCreation,
-                               s.quantity                                                               AS quantity,
-                               CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
-                               SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount                                                         
-                        FROM sub_products s
-                                 LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                 LEFT JOIN products p2 ON s.product_id = p2.id
-                                 LEFT JOIN brands b ON p2.brand_id = b.id
-                        GROUP BY s.id,s.article_number, p2.data_of_issue,s.quantity, s.price, d.sale, b.name, p2.name
-                        """;
-            } else if (productTyp.equalsIgnoreCase("В продаже")) {
-                sql = """
-                        SELECT s.id                                                                     AS subProductId,
-                               (SELECT spi.images
-                                FROM sub_product_images spi
-                                WHERE spi.sub_product_id = s.id
-                                LIMIT 1)                                                                AS images,
-                               s.article_number                                                         AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name) AS name,
-                               p2.data_of_issue                                                         AS dateOfCreation,
-                               s.quantity                                                               AS quantity,
-                               CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
-                               SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount                                                         
-                        FROM sub_products s
-                                 LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                 LEFT JOIN products p2 ON s.product_id = p2.id
-                                 LEFT JOIN brands b ON p2.brand_id = b.id
-                                 where s.quantity>0
-                        GROUP BY s.id,s.article_number, p2.data_of_issue,s.quantity, s.price, d.sale, b.name, p2.name
-                        """;
-            } else if (productTyp.equalsIgnoreCase("В избранном")) {
+    public InfographicsResponse infographics(String period) {
+        log.info("Get infographic!");
+        String sql = """
+                SELECT COALESCE(SUM(CASE WHEN o.status = 'DELIVERED' THEN total_price END), 0) AS delivered_total_price,
+                       COALESCE(COUNT(CASE WHEN o.status = 'DELIVERED' THEN total_price END), 0) AS delivered_quantity,
+                       COALESCE(SUM(CASE WHEN o.status = 'EXPECTATION' OR o.status = 'PROCESSING' OR o.status = 'COURIER_ON_THE_WAY' OR o.status = 'READY_FOR_DELIVERY' THEN total_price END), 0) AS waiting_total_price,
+                       COALESCE(COUNT(CASE WHEN o.status = 'EXPECTATION' OR o.status = 'PROCESSING' OR o.status = 'COURIER_ON_THE_WAY' OR o.status = 'READY_FOR_DELIVERY' THEN total_price END), 0) AS waiting_quantity,
+                       COALESCE(SUM(CASE
+                               WHEN o.status = 'DELIVERED' AND o.date_of_order = current_date and 'day' = ? THEN total_price
+                               WHEN o.status = 'DELIVERED' AND extract(year from o.date_of_order) = extract(year from current_date) and
+                                 extract(month from o.date_of_order) = extract(month from current_date) and 'month' = ? THEN total_price
+                               WHEN o.status = 'DELIVERED' AND extract(year from o.date_of_order) = extract(year from current_date) and 'year' = ?
+                                   THEN total_price END),0)
+                       AS current_period,
+                       COALESCE(SUM(CASE
+                               WHEN o.status = 'DELIVERED' AND o.date_of_order = (current_date - interval '1 day') and ? = 'day' THEN total_price
+                               WHEN o.status = 'DELIVERED' AND extract(year from o.date_of_order) = extract(year from current_date) and
+                                 extract(month from o.date_of_order) = extract(month from current_date - interval '1 month') and
+                                    ? = 'month' THEN total_price
+                               WHEN o.status = 'DELIVERED' AND extract(year from o.date_of_order) = extract(year from current_date - interval '1 year') and ? = 'year'
+                                   THEN total_price END),0)
+                       AS previous_period
+                FROM orders o;
+                """;
 
-            } else if (productTyp.equalsIgnoreCase("В карзине")) {
-                sql += """
-                        SELECT
-                            s.id AS subProductId,
-                            COALESCE(
-                                (SELECT spi.images
-                                FROM sub_product_images spi
-                                WHERE spi.sub_product_id = s.id
-                                LIMIT 1),' '
-                            ) AS images,
-                            u.favorite,
-                            u.user_id,
-                            s.article_number AS articleNumber,
-                            CONCAT(b.name, ' ', p2.name) AS name,
-                            p2.data_of_issue AS dateOfCreation,
-                            s.quantity AS quantity,
-                            CONCAT(s.price, ', ', d.sale) AS price_and_sale,
-                            SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount
-                        FROM
-                            sub_products s
-                        JOIN
-                            user_favorite u ON u.favorite = s.id
-                        LEFT JOIN
-                            discounts d ON s.id = d.sub_product_id
-                        LEFT JOIN
-                            products p2 ON s.product_id = p2.id
-                        LEFT JOIN
-                            brands b ON p2.brand_id = b.id
-                        GROUP BY
-                            s.id,
-                            u.favorite,
-                            u.user_id,
-                            s.article_number,
-                            CONCAT(b.name, ' ', p2.name),
-                            p2.data_of_issue,
-                            s.quantity,
-                            CONCAT(s.price, ', ', d.sale);
-                                             
-                           """;
-            } else if (productTyp.equalsIgnoreCase("Новинки")) {
-                sql = """
-                         SELECT s.id                                                                     AS subProductId,
-                                                       (SELECT spi.images
-                                                        FROM sub_product_images spi
-                                                        WHERE spi.sub_product_id = s.id
-                                                        LIMIT 1)                                                                AS images,
-                                                       s.article_number                                                         AS articleNumber,
-                                                       CONCAT(b.name, ' ', p2.name) AS name,
-                                                       p2.data_of_issue                                                         AS dateOfCreation,
-                                                       s.quantity                                                               AS quantity,
-                                                       CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
-                                                       SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount                                                         
-                                                FROM sub_products s
-                                                         LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                                         LEFT JOIN products p2 ON s.product_id = p2.id
-                                                         LEFT JOIN brands b ON p2.brand_id = b.id
-                                                GROUP BY s.id,s.article_number, p2.data_of_issue,s.quantity, s.price, d.sale, b.name, p2.name ORDER BY s.id desc 
-                        """;
-            } else if (productTyp.equalsIgnoreCase("По акции")) {
-                if (productTyp.equalsIgnoreCase("Все акции")) {
-                    sql = """
-                            SELECT s.id                                                                     AS subProductId,
-                                                          (SELECT spi.images
-                                                           FROM sub_product_images spi
-                                                           WHERE spi.sub_product_id = s.id
-                                                           LIMIT 1)                                                                AS images,
-                                                          s.article_number                                                         AS articleNumber,
-                                                          CONCAT(b.name, ' ', p2.name) AS name,
-                                                          p2.data_of_issue                                                         AS dateOfCreation,
-                                                          s.quantity                                                               AS quantity,
-                                                          CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
-                                                          SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount                                                         
-                                                   FROM sub_products s
-                                                            LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                                            LEFT JOIN products p2 ON s.product_id = p2.id
-                                                            LEFT JOIN brands b ON p2.brand_id = b.id
-                                                            
-                                                   GROUP BY s.id,s.article_number, p2.data_of_issue,s.quantity, s.price, d.sale, b.name, p2.name""";
-
-                } else if (productTyp.equalsIgnoreCase("До 50%")) {
-                    sql = """
-                            SELECT s.id                                AS subProductId,
-                                   (SELECT spi.images
-                                    FROM sub_product_images spi
-                                    WHERE spi.sub_product_id = s.id
-                                    LIMIT 1)                           AS images,
-                                   s.article_number                    AS articleNumber,
-                                   CONCAT(b.name, ' ', p2.name)        AS name,
-                                   p2.data_of_issue                    AS dateOfCreation,
-                                   s.quantity                          AS quantity,
-                                   CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
-                                   SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount
-                            FROM sub_products s
-                                     LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                     LEFT JOIN products p2 ON s.product_id = p2.id
-                                     LEFT JOIN brands b ON p2.brand_id = b.id
-                            where d.sale<50
-                            GROUP BY s.id, s.article_number, p2.data_of_issue, s.quantity, s.price, d.sale, b.name, p2.name
-                            """;
-
-                } else if (productTyp.equalsIgnoreCase("Свыше 50%")) {
-                    sql = """
-                            SELECT s.id                                AS subProductId,
-                                   (SELECT spi.images
-                                    FROM sub_product_images spi
-                                    WHERE spi.sub_product_id = s.id
-                                    LIMIT 1)                           AS images,
-                                   s.article_number                    AS articleNumber,
-                                   CONCAT(b.name, ' ', p2.name)        AS name,
-                                   p2.data_of_issue                    AS dateOfCreation,
-                                   s.quantity                          AS quantity,
-                                   CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
-                                   SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount
-                            FROM sub_products s
-                                     LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                     LEFT JOIN products p2 ON s.product_id = p2.id
-                                     LEFT JOIN brands b ON p2.brand_id = b.id
-                            where d.sale>=50
-                            GROUP BY s.id, s.article_number, p2.data_of_issue, s.quantity, s.price, d.sale, b.name, p2.name
-                            """;
-                }
-            } else if (productTyp.equalsIgnoreCase("Рекомендуемые")) {
-                sql = """
-                        SELECT s.id                                AS subProductId,
-                               (SELECT spi.images
-                                FROM sub_product_images spi
-                                WHERE spi.sub_product_id = s.id
-                                LIMIT 1)                           AS images,
-                               s.article_number                    AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name)        AS name,
-                               p2.data_of_issue                    AS dateOfCreation,
-                               s.quantity                          AS quantity,
-                               CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
-                               SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount
-                        FROM sub_products s
-                                 LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                 LEFT JOIN products p2 ON s.product_id = p2.id
-                                 LEFT JOIN brands b ON p2.brand_id = b.id
-                        GROUP BY s.id, s.article_number, p2.data_of_issue, s.quantity, s.price, d.sale, b.name, p2.name, s.rating order by s.rating desc;
-                        """;
-            } else if (productTyp.equalsIgnoreCase("По увеличению цены")) {
-                sql = """
-                        SELECT s.id                                AS subProductId,
-                               (SELECT spi.images
-                                FROM sub_product_images spi
-                                WHERE spi.sub_product_id = s.id
-                                LIMIT 1)                           AS images,
-                               s.article_number                    AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name)        AS name,
-                               p2.data_of_issue                    AS dateOfCreation,
-                               s.quantity                          AS quantity,
-                               CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
-                               SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount
-                        FROM sub_products s
-                                 LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                 LEFT JOIN products p2 ON s.product_id = p2.id
-                                 LEFT JOIN brands b ON p2.brand_id = b.id
-                        GROUP BY s.id, s.article_number, p2.data_of_issue, s.quantity, s.price, d.sale, b.name, p2.name, s.rating order by s.price desc;
-                        """;
-            } else if (productTyp.equalsIgnoreCase("По уменьшению цены")) {
-                sql = """
-                        SELECT s.id                                AS subProductId,
-                               (SELECT spi.images
-                                FROM sub_product_images spi
-                                WHERE spi.sub_product_id = s.id
-                                LIMIT 1)                           AS images,
-                               s.article_number                    AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name)        AS name,
-                               p2.data_of_issue                    AS dateOfCreation,
-                               s.quantity                          AS quantity,
-                               CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
-                               SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount
-                        FROM sub_products s
-                                 LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                 LEFT JOIN products p2 ON s.product_id = p2.id
-                                 LEFT JOIN brands b ON p2.brand_id = b.id
-                        GROUP BY s.id, s.article_number, p2.data_of_issue, s.quantity, s.price, d.sale, b.name, p2.name, s.rating order by s.price asc;
-                        """;
-            }
-        } else {
-            log.error("Product type is not correct");
-            throw new BadRequestException("Product type is not correct");
-        }
-
-
-        List<SubProductCatalogAdminResponse> catalogAdminResponseList = jdbcTemplate.query(sql,
-                (rs, rowNum) ->
-                        SubProductCatalogAdminResponse
-                                .builder()
-                                .subProductId(rs.getLong("subProductId"))
-                                .images(rs.getString("images"))
-                                .productNameAndBrandName(rs.getString("name"))
-                                .articleNumber(rs.getLong("articleNumber"))
-                                .dateOfCreation(rs.getDate("dateOfCreation").toLocalDate())
-                                .quantity(rs.getInt("quantity"))
-                                .price_and_sale(rs.getString("price_and_sale"))
-                                .total_with_discount(rs.getBigDecimal("total_with_discount"))
-                                .build()
-        );
-
-        log.info("Successfully");
-        return new
-
-                SubProductPaginationCatalogAdminResponse(pageSize, pageNumber, catalogAdminResponseList);
+        return jdbcTemplate.query(sql, (resulSet, i) -> new InfographicsResponse(
+                                resulSet.getBigDecimal("delivered_total_price"),
+                                resulSet.getInt("delivered_quantity"),
+                                resulSet.getBigDecimal("waiting_total_price"),
+                                resulSet.getInt("waiting_quantity"),
+                                resulSet.getBigDecimal("current_period"),
+                                resulSet.getBigDecimal("previous_period")),
+                        period, period, period, period, period, period)
+                .stream().findFirst().orElseThrow(() -> {
+                    log.error("This answer is not found!");
+                    return new NotFoundException("This answer is not found!");
+                });
     }
 }

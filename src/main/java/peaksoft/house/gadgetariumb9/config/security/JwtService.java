@@ -19,32 +19,32 @@ import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 @RequiredArgsConstructor
 public class JwtService {
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  @Value("${spring.jwt.secret_key}")
-  private String SECRET_KEY;
+    @Value("${spring.jwt.secret_key}")
+    private String SECRET_KEY;
 
-  public String generateToken(UserDetails userDetails) {
-    return JWT.create()
-        .withClaim("username", userDetails.getUsername())
-        .withIssuedAt(new Date())
-        .withExpiresAt(Date.from(ZonedDateTime.now().plusWeeks(3).toInstant()))
-        .sign(Algorithm.HMAC512(SECRET_KEY));
-  }
+    public String generateToken(UserDetails userDetails) {
+        return JWT.create()
+                .withClaim("username", userDetails.getUsername())
+                .withIssuedAt(new Date())
+                .withExpiresAt(Date.from(ZonedDateTime.now().plusWeeks(3).toInstant()))
+                .sign(Algorithm.HMAC512(SECRET_KEY));
+    }
 
-  public String validateToken(String token) {
-    JWTVerifier jwtVerifier =
-        JWT
-            .require(Algorithm.HMAC512(SECRET_KEY))
-            .build();
-    DecodedJWT jwt = jwtVerifier.verify(token);
+    public String validateToken(String token) {
+        JWTVerifier jwtVerifier =
+                JWT
+                        .require(Algorithm.HMAC512(SECRET_KEY))
+                        .build();
+        DecodedJWT jwt = jwtVerifier.verify(token);
 
-    return jwt.getClaim("username").asString();
-  }
+        return jwt.getClaim("username").asString();
+    }
 
-  public User getAuthentication() {
-    String email = SecurityContextHolder.getContext().getAuthentication().getName();
-    return userRepository.getUserByEmail(email)
-        .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
-  }
+    public User getAuthentication() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.getUserByEmail(email)
+                .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
+    }
 }

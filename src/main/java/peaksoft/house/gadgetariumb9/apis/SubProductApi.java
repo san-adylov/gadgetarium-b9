@@ -5,8 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductPaginationCatalogAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -19,6 +25,7 @@ import peaksoft.house.gadgetariumb9.services.SubProductService;
 public class SubProductApi {
 
     private final SubProductService subProductService;
+
     @PostMapping("/filter")
     @Operation(summary = "Filter catalog", description = "Method for filtering products")
     @PermitAll
@@ -28,19 +35,11 @@ public class SubProductApi {
             @RequestParam(defaultValue = "1") int pageNumber) {
         return subProductService.getSubProductCatalogs(subProductCatalogRequest, pageSize, pageNumber);
     }
-    @GetMapping
-    @Operation(summary = "get all")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public SubProductPaginationCatalogAdminResponse getAll(@RequestParam(defaultValue = "Все товары") String productType,
-            @RequestParam(defaultValue = "6") int pageSize,
-            @RequestParam(defaultValue = "1") int pageNumber) {
-        return subProductService.getGetAllSubProductAdmin( productType, pageSize, pageNumber);
-    }
 
-    @DeleteMapping("/{subProductId}")
-    @Operation(summary = "delete subProduct")
+    @GetMapping("/info")
+    @Operation(summary = "Get infographics", description = "Getting infographics of orders for all time")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse deleteSubProduct(@PathVariable Long subProductId){
-        return subProductService.deleteSubProduct(subProductId);
+    public InfographicsResponse infographics(@RequestParam(defaultValue = "day") String period) {
+        return subProductService.infographics(period);
     }
 }
