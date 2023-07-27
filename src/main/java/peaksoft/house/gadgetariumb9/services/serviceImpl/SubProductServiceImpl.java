@@ -33,7 +33,7 @@ public class SubProductServiceImpl implements SubProductService, SubProductHisto
 
     @Override
     public InfographicsResponse infographics(String period) {
-        return null;
+        return subProductTemplate.infographics(period);
     }
 
     @Override
