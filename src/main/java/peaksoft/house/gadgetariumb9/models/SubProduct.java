@@ -6,7 +6,6 @@ import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
