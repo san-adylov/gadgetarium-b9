@@ -43,8 +43,6 @@ public class User implements UserDetails {
 
     private String image;
 
-    private String resetToken;
-
     @ElementCollection
     private List<Long> comparison;
 
