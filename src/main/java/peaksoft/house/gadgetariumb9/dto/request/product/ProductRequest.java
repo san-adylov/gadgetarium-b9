@@ -26,4 +26,10 @@ public class ProductRequest {
 
     private List<SubProductRequest> subProductRequests;
 
+    private String videoLink;
+
+    private String pdf;
+
+    private String description;
+
 }
