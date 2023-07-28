@@ -6,7 +6,7 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination
 
 public interface SubProductService {
 
- SubProductPagination getSubProductCatalogs(SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber);
+    SubProductPagination getSubProductCatalogs(SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber);
 
- InfographicsResponse infographics(String period);
+    InfographicsResponse infographics(String period);
 }

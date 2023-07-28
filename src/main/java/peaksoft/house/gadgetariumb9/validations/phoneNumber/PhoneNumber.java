@@ -12,10 +12,10 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = PhoneNumberValidator.class)
 public @interface PhoneNumber {
 
-  String message() default " ";
+    String message() default " ";
 
-  Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-  Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 
 }

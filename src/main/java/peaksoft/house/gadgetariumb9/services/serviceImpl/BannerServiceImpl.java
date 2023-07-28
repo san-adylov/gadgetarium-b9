@@ -10,15 +10,14 @@ import peaksoft.house.gadgetariumb9.exceptions.InvalidBannerException;
 import peaksoft.house.gadgetariumb9.models.Banner;
 import peaksoft.house.gadgetariumb9.repositories.BannerRepository;
 import peaksoft.house.gadgetariumb9.services.BannerService;
-
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class BannerServiceImpl implements BannerService {
-
 
     private final BannerRepository bannerRepository;
 

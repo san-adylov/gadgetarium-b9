@@ -4,5 +4,6 @@ import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductRe
 import java.util.List;
 
 public interface FavoriteTemplate {
+
     List<SubProductResponse> getAllFavorite();
 }
