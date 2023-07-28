@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.service.serviceImpl;
+package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
@@ -26,11 +26,7 @@ import peaksoft.house.gadgetariumb9.repositories.MailingRepository;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.services.MailingService;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @Service
