@@ -24,15 +24,13 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.cors(cors -> {
-                    cors.configurationSource(request -> {
-                        var corsConfiguration = new CorsConfiguration();
-                        corsConfiguration.addAllowedOrigin("*");
-                        corsConfiguration.addAllowedMethod("*");
-                        corsConfiguration.addAllowedHeader("*");
-                        return corsConfiguration;
-                    });
-                })
+        http.cors(cors -> cors.configurationSource(request -> {
+                    var corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.addAllowedOrigin("*");
+                    corsConfiguration.addAllowedMethod("*");
+                    corsConfiguration.addAllowedHeader("*");
+                    return corsConfiguration;
+                }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
@@ -50,7 +48,7 @@ public class SecurityConfig {
                         sessionManagement
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 }

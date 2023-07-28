@@ -6,11 +6,11 @@ import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 
 public interface AuthenticationService {
 
-  String signUp(SignUpRequest signUpRequest);
+    String signUp(SignUpRequest signUpRequest);
 
-  String signIn(SignInRequest signInRequest);
+    String signIn(SignInRequest signInRequest);
 
-  SimpleResponse forgotPassword(String email,String link);
+    SimpleResponse forgotPassword(String email, String link);
 
-  SimpleResponse resetPassword(String password,Long userId);
+    SimpleResponse resetPassword(String password, Long userId);
 }

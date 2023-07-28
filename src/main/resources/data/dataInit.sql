@@ -1,6 +1,6 @@
 insert into users(is_subscription, role, id, address, email, first_name, image, last_name, password, phone_number)
-values (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldoshabev',
-        '$2a$12$rfe2c6WJHa3aq4DDIq0eBO/z9oKNiqcW.lrkSHRd7qPQ9updpsJzy', '0995665528'), --davran2005
+values (false, 'ADMIN', 1, 'Asia 7', 'admin@gmail.com', 'Davran', 'img', 'Joldoshabev',
+        '$2a$12$5jp6EvdGIlzGIYRrmUFOx.gLH35BSm7aVUKhQq3mKHDyIcxKRyEAi', '0995665528'), --Admin123
        (true, 'USER', 2, 'Красный речка', 'salymbek@gmail.com', 'Salymbek', 'img', ' Khadzhakeldyev',
         '$2a$12$obECYf/JcKcxdFVc4w57we64ZSiU9.RfZ/uV/l3D/.oa72NerEj7y',
         '0700020206'),                                                                 --salymbek2006
@@ -67,12 +67,12 @@ values (1, 1),
        (5, 5);
 
 insert into sub_products (article_number, price, quantity, ram, rom, id, product_id, additional_features, code_color,
-                          screen_resolution,rating)
-values (322323, 78000, 1, 4, 5, 1, 1, 'asc', 'red', '2532×1170',2.5),
-       (123454, 74000, 1, 4, 5, 2, 2, 'rte', 'red', '1920x1200',5),
-       (987665, 79000, 1, 4, 5, 3, 3, 'bvcb', 'red', '2000x1200 ',1.3),
-       (878787, 71000, 1, 4, 5, 4, 4, 'dfsdf', 'red', '352х430',4.3),
-       (343434, 75000, 1, 4, 5, 5, 5, 'gtbgf', 'red', '2532х1170',3.4);
+                          screen_resolution, rating)
+values (322323, 78000, 1, 4, 5, 1, 1, 'asc', 'red', '2532×1170', 2.5),
+       (123454, 74000, 1, 4, 5, 2, 2, 'rte', 'red', '1920x1200', 5),
+       (987665, 79000, 1, 4, 5, 3, 3, 'bvcb', 'red', '2000x1200 ', 1.3),
+       (878787, 71000, 1, 4, 5, 4, 4, 'dfsdf', 'red', '352х430', 4.3),
+       (343434, 75000, 1, 4, 5, 5, 5, 'gtbgf', 'red', '2532х1170', 3.4);
 
 
 insert into baskets_sub_products (baskets_id, sub_products_id)

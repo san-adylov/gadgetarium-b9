@@ -22,22 +22,22 @@ import peaksoft.house.gadgetariumb9.services.SubProductService;
 @Tag(name = "Sub product", description = "API for working with sub product")
 public class SubProductApi {
 
-  private final SubProductService subProductService;
+    private final SubProductService subProductService;
 
-  @PostMapping("/filter")
-  @Operation(summary = "Filter catalog", description = "Method for filtering products")
-  @PermitAll
-  public SubProductPagination filter(
-      @RequestBody SubProductCatalogRequest subProductCatalogRequest,
-      @RequestParam(defaultValue = "6") int pageSize,
-      @RequestParam(defaultValue = "1") int pageNumber) {
-    return subProductService.getSubProductCatalogs(subProductCatalogRequest, pageSize, pageNumber);
-  }
+    @PostMapping("/filter")
+    @Operation(summary = "Filter catalog", description = "Method for filtering products")
+    @PermitAll
+    public SubProductPagination filter(
+            @RequestBody SubProductCatalogRequest subProductCatalogRequest,
+            @RequestParam(defaultValue = "6") int pageSize,
+            @RequestParam(defaultValue = "1") int pageNumber) {
+        return subProductService.getSubProductCatalogs(subProductCatalogRequest, pageSize, pageNumber);
+    }
 
-  @GetMapping("/info")
-  @Operation(summary = "Get infographics", description = "Getting infographics of orders for all time")
-  @PreAuthorize("hasAuthority('ADMIN')")
-  public InfographicsResponse infographics(@RequestParam(defaultValue = "day") String period){
-    return subProductService.infographics(period);
-  }
+    @GetMapping("/info")
+    @Operation(summary = "Get infographics", description = "Getting infographics of orders for all time")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public InfographicsResponse infographics(@RequestParam(defaultValue = "day") String period) {
+        return subProductService.infographics(period);
+    }
 }

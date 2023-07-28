@@ -14,7 +14,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/favorite")
 @Tag(name = "Favorite API", description = "API for favorite CRUD management")
-@CrossOrigin(origins = "*", maxAge = 3600)
 @PreAuthorize("hasAnyAuthority('USER')")
 public class FavoriteApi {
 
