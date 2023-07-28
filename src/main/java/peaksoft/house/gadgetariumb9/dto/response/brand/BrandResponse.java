@@ -1,6 +1,4 @@
 package peaksoft.house.gadgetariumb9.dto.response.brand;
-
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
