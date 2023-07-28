@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.entities;
+package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
 import lombok.*;
