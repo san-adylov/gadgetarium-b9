@@ -9,9 +9,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("SELECT COUNT(r) FROM Review r JOIN r.subProduct s WHERE s.id = :subProductId AND r.grade = :rating")
     int countReviewRating(@Param("subProductId") Long subProductId, @Param("rating") int rating);
-
-
-
-
-
 }
