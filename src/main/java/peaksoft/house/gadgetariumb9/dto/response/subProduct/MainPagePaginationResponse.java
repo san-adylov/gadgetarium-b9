@@ -2,15 +2,12 @@ package peaksoft.house.gadgetariumb9.dto.response.subProduct;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-    @Setter
-    @NoArgsConstructor
-
+@Setter
     public class MainPagePaginationResponse {
 
         private List<SubProductMainPageResponse> subProductMainPageResponses;

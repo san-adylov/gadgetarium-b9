@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class SubProductMainPageResponse {
-    private long id;
+    private long subProductId;
     private String name;
     private String prodName;
     private BigDecimal price;

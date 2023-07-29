@@ -234,7 +234,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
 
         List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse
                         .builder()
-                        .id(resultSet.getLong("id"))
+                        .subProductId(resultSet.getLong("id"))
                         .name(resultSet.getString("name"))
                         .prodName(resultSet.getString("prodName"))
                         .quantity(resultSet.getInt("quantity"))
@@ -300,7 +300,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
 
         List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse
                         .builder()
-                        .id(resultSet.getLong("id"))
+                        .subProductId(resultSet.getLong("id"))
                         .name(resultSet.getString("name"))
                         .prodName(resultSet.getString("prodName"))
                         .quantity(resultSet.getInt("quantity"))
@@ -364,7 +364,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
 
         List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse
                         .builder()
-                        .id(resultSet.getLong("id"))
+                        .subProductId(resultSet.getLong("id"))
                         .name(resultSet.getString("name"))
                         .prodName(resultSet.getString("prodName"))
                         .quantity(resultSet.getInt("quantity"))
