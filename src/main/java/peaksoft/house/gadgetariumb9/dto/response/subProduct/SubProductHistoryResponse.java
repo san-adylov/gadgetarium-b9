@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SubProductHistoryResponse {
 
-  private Long id;
+  private Long subProductId;
 
   private String image;
 
@@ -21,9 +21,9 @@ public class SubProductHistoryResponse {
   private BigDecimal price;
 
   @Builder
-  public SubProductHistoryResponse(Long id, String image, String name, double rating,
+  public SubProductHistoryResponse(Long subProductId, String image, String name, double rating,
       BigDecimal price) {
-    this.id = id;
+    this.subProductId = subProductId;
     this.image = image;
     this.name = name;
     this.rating = rating;
