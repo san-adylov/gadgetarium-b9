@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
+import peaksoft.house.gadgetariumb9.dto.response.basket.BasketInfographicResponse;
 import peaksoft.house.gadgetariumb9.dto.response.basket.BasketResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
@@ -16,6 +17,7 @@ import peaksoft.house.gadgetariumb9.repositories.BasketRepository;
 import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
 import peaksoft.house.gadgetariumb9.services.BasketService;
 import peaksoft.house.gadgetariumb9.template.BasketTemplate;
+
 import java.util.List;
 
 @Slf4j
@@ -77,5 +79,10 @@ public class BasketServiceImpl implements BasketService {
                 .builder()
                 .status(HttpStatus.OK)
                 .build();
+    }
+
+    @Override
+    public BasketInfographicResponse getInfographic() {
+        return basketTemplate.getInfographic();
     }
 }

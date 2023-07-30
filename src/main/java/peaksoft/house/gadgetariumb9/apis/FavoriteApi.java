@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/favorite")
+@RequestMapping("/api/v1/favorite")
 @Tag(name = "Favorite API", description = "API for favorite CRUD management")
 @PreAuthorize("hasAnyAuthority('USER')")
 public class FavoriteApi {

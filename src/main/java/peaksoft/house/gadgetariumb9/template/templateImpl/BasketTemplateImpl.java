@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
+import peaksoft.house.gadgetariumb9.dto.response.basket.BasketInfographicResponse;
 import peaksoft.house.gadgetariumb9.dto.response.basket.BasketResponse;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.template.BasketTemplate;
@@ -52,7 +53,7 @@ public class BasketTemplateImpl implements BasketTemplate {
                 (rs, rowNum) ->
                         BasketResponse
                                 .builder()
-                                .id(rs.getLong("id"))
+                                .subProductId(rs.getLong("id"))
                                 .image(rs.getString("image"))
                                 .title(rs.getString("name"))
                                 .rating(rs.getInt("rating"))
@@ -62,6 +63,34 @@ public class BasketTemplateImpl implements BasketTemplate {
                                 .price(rs.getBigDecimal("total_price"))
                                 .theNumberOfOrders(rs.getInt("the_number_of_orders"))
                                 .build(),
+                user.getId()
+        );
+    }
+
+    @Override
+    public BasketInfographicResponse getInfographic() {
+        User user = jwtService.getAuthentication();
+        String sql = """             
+                   SELECT COUNT(bsp.sub_products_id)                            AS quantity,
+                       SUM(sp.price * COALESCE(d.sale, 100)) / 100              AS sale,
+                       SUM(sp.price)                                            AS price,
+                       SUM(sp.price - (sp.price * COALESCE(d.sale, 100)) / 100) AS total_sum
+                FROM baskets b
+                         JOIN users u ON b.user_id = u.id
+                         JOIN baskets_sub_products bsp ON b.id = bsp.baskets_id
+                         JOIN sub_products sp ON bsp.sub_products_id = sp.id
+                         LEFT JOIN discounts d ON sp.id = d.sub_product_id
+                WHERE u.id = ?
+                   """;
+        return jdbcTemplate.queryForObject(
+                sql,
+                (rs, rowNum) -> BasketInfographicResponse
+                        .builder()
+                        .quantitySubProducts(rs.getInt("quantity"))
+                        .totalDiscount(rs.getInt("sale"))
+                        .totalPrice(rs.getBigDecimal("price"))
+                        .toPay(rs.getBigDecimal("total_sum"))
+                        .build(),
                 user.getId()
         );
     }

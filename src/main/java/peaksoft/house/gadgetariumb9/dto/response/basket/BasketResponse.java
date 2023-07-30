@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BasketResponse {
-    private Long id;
+    private Long subProductId;
 
     private String image;
 
