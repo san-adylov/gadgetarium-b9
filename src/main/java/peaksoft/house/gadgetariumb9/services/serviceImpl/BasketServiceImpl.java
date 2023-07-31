@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.response.basket.BasketInfographicResponse;
-import peaksoft.house.gadgetariumb9.dto.response.basket.BasketResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.Basket;
@@ -37,7 +36,7 @@ public class BasketServiceImpl implements BasketService {
 
     @Override
     public SimpleResponse saveBasket(Long subProductId) {
-        User user = jwtService.getAuthentication();
+        User user = jwtService.getAuthenticationUser();
         SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
             log.error("Sub product with id: %s not found".formatted(subProductId));
             return new NotFoundException("Sub product with id: %s not found".formatted(subProductId));
@@ -57,13 +56,13 @@ public class BasketServiceImpl implements BasketService {
     }
 
     @Override
-    public List<BasketResponse> getAllByProductsFromTheBasket() {
-        return basketTemplate.getAllByProductsFromTheBasket();
+    public BasketInfographicResponse getAllByProductsFromTheBasket() {
+        return basketTemplate.getInfographic();
     }
 
     @Override
     public SimpleResponse deleteProductByIds(List<Long> subProductIds) {
-        User user = jwtService.getAuthentication();
+        User user = jwtService.getAuthenticationUser();
         basketRepository.deleteAll(basketRepository.getBasketByUserId(user.getId()));
         return SimpleResponse
                 .builder()
@@ -85,8 +84,4 @@ public class BasketServiceImpl implements BasketService {
                 .build();
     }
 
-    @Override
-    public BasketInfographicResponse getInfographic() {
-        return basketTemplate.getInfographic();
-    }
 }

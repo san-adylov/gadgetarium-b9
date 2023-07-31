@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.response.basket.BasketInfographicResponse;
-import peaksoft.house.gadgetariumb9.dto.response.basket.BasketResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.BasketService;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/v1/basket")
 @Tag(name = "Basket API", description = "Endpoints for managing user's shopping basket")
 public class BasketApi {
-    
+
     private final BasketService basketService;
 
     @PostMapping("/{sub-product-id}")
@@ -26,17 +25,10 @@ public class BasketApi {
         return basketService.saveBasket(subProductId);
     }
 
-    @GetMapping("/get-infographic")
-    @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "Get infographic", description = "Method of obtaining information about the quantity and price of goods")
-    public BasketInfographicResponse getInfographic() {
-        return basketService.getInfographic();
-    }
-
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get all basket", description = "Method to get information about products in the user's basket")
-    public List<BasketResponse> getBasket() {
+    public BasketInfographicResponse getBasket() {
         return basketService.getAllByProductsFromTheBasket();
     }
 

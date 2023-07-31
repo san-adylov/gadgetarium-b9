@@ -24,7 +24,7 @@ public class BasketTemplateImpl implements BasketTemplate {
 
     @Override
     public List<BasketResponse> getAllByProductsFromTheBasket() {
-        User user = jwtService.getAuthentication();
+        User user = jwtService.getAuthenticationUser();
         String sql = """
                  SELECT sp.id,
                         (SELECT spi.images
@@ -70,7 +70,7 @@ public class BasketTemplateImpl implements BasketTemplate {
 
     @Override
     public BasketInfographicResponse getInfographic() {
-        User user = jwtService.getAuthentication();
+        User user = jwtService.getAuthenticationUser();
         String sql = """             
                    SELECT COUNT(bsp.sub_products_id)                            AS quantity,
                        SUM(sp.price * COALESCE(d.sale, 100)) / 100              AS sale,
@@ -83,7 +83,7 @@ public class BasketTemplateImpl implements BasketTemplate {
                          LEFT JOIN discounts d ON sp.id = d.sub_product_id
                 WHERE u.id = ?
                    """;
-        return jdbcTemplate.queryForObject(
+        BasketInfographicResponse basketInfographicResponse = jdbcTemplate.queryForObject(
                 sql,
                 (rs, rowNum) -> BasketInfographicResponse
                         .builder()
@@ -94,5 +94,9 @@ public class BasketTemplateImpl implements BasketTemplate {
                         .build(),
                 user.getId()
         );
+        if (basketInfographicResponse != null) {
+            basketInfographicResponse.setBasketResponses(getAllByProductsFromTheBasket());
+        }
+        return basketInfographicResponse;
     }
 }

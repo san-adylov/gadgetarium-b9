@@ -28,4 +28,5 @@ public class BasketResponse {
     private BigDecimal price;
 
     private int theNumberOfOrders;
+
 }
