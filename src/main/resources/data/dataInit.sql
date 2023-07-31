@@ -1,13 +1,14 @@
 insert into users(is_subscription, role, id, address, email, first_name, image, last_name, password, phone_number)
-values (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldoshabev',
-        '$2a$12$rfe2c6WJHa3aq4DDIq0eBO/z9oKNiqcW.lrkSHRd7qPQ9updpsJzy', '0995665528'), --davran2005
+values (false, 'ADMIN', 1, 'Asia 7', 'admin@gmail.com', 'Davran', 'img', 'Joldoshabev',
+        '$2a$12$5jp6EvdGIlzGIYRrmUFOx.gLH35BSm7aVUKhQq3mKHDyIcxKRyEAi', '0995665528'), --Admin123
        (true, 'USER', 2, 'Красный речка', 'salymbek@gmail.com', 'Salymbek', 'img', ' Khadzhakeldyev',
         '$2a$12$obECYf/JcKcxdFVc4w57we64ZSiU9.RfZ/uV/l3D/.oa72NerEj7y',
         '0700020206'),                                                                 --salymbek2006
        (false, 'USER', 3, 'Ибраимова 3', 'gulira@gmail.com', 'Gulira', 'img', ' Abdukerim kyzy',
         '$2a$12$KMfRpt80J70ZllO4C4thouR/NV.1QIVrEvY74VqMCS/yTZeMQgQJW',
         '0700020206'),                                                                 --gulira2002
-       (true, 'USER', 4, 'Арча бешик ', 'sanjarabdymomunov@gmail.com', 'Sanzhar', 'img', '  Abdymomunov',
+       (true, 'USER', 4, 'Арча бешик ', 'sanjarabdymomunov@gmail.com', 'Sanzhar', 'img',
+        '  Abdymomunov',
         '$2a$12$pBVBShiP3FroQBWzcZxedun38JGBzpStTDLaenL1BnGhWYANXzH.G',
         '0700020206'),                                                                 --sanzhar2003
        (false, 'USER', 5, 'Аламидин-1', 'erjan@gmail.com', 'Erjan', 'img', '  Taalaibekov',
@@ -32,9 +33,11 @@ values (1, 'img', 'Apple'),
        (4, 'img', 'Sony'),
        (5, 'img', 'htc');
 
-insert into products(guarantee, brand_id, created_at, data_of_issue, id, sub_category_id, description, name, pdf,
+insert into products(guarantee, brand_id, created_at, data_of_issue, id, sub_category_id,
+                     description, name, pdf,
                      video_link, category_id)
-values (3, 1, '2023-07-29T12:59:00+00:00', '2023-08-14T00:00:00+00:00', 1, 1, 'The beast', 'Iphone 14', 'img', 'link',
+values (3, 1, '2023-07-14T12:59:00+00:00', '2023-08-14T00:00:00+00:00', 1, 1, 'The beast',
+        'Iphone 14', 'img', 'link',
         1),
        (4, 2, '2023-07-29T12:59:00+00:00', '2023-08-24T00:00:00+00:00', 2, 2, 'The beast', 'ThinkPad X1 Carbon Gen 11.',
         'img', 'link', 2),
@@ -95,7 +98,8 @@ values ('2023-08-14T00:00:00+00:00', 1, '2023-07-14T12:59:00+00:00', 'The beast'
        ('2023-07-30T00:00:00+00:00', 4, '2023-07-14T12:59:00+00:00', 'The Beast', 'img', 'lkj'),
        ('2023-07-30T00:00:00+00:00', 5, '2023-07-14T12:59:00+00:00', 'The Beast', 'img', 'wer');
 
-insert into orders(order_number, quantity, total_discount, total_price, date_of_order, id, user_id, status,
+insert into orders(order_number, quantity, total_discount, total_price, date_of_order, id, user_id,
+                   status,
                    type_delivery, type_payment)
 values (1, 1, 12, 23, '2023-07-14T12:59:00+00:00', 1, 1, 'EXPECTATION', 'PICKUP', 'CASH'),
        (2, 1, 13, 23, '2023-07-14T12:59:00+00:00', 2, 2, 'PROCESSING', 'PICKUP', 'CASH'),

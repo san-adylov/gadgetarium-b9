@@ -21,15 +21,15 @@ public class SubProduct {
     @SequenceGenerator(name = "sub_product_gen", sequenceName = "sub_product_seq", allocationSize = 1, initialValue = 4)
     private Long id;
 
-    private int ram;
+  private int ram;
 
-    private String screenResolution;
+  private String screenResolution;
 
-    private int rom;
+  private int rom;
 
-    private String additionalFeatures;
+  private String additionalFeatures;
 
-    private BigDecimal price;
+  private BigDecimal price;
 
     private int quantity;
 
