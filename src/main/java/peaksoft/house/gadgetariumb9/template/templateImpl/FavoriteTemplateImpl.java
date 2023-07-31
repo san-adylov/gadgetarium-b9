@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
-import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductResponse;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.template.FavoriteTemplate;
 import java.util.List;
@@ -68,8 +68,8 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
                         rs.getLong("article_number"),
                         rs.getString("image"),
                         rs.getInt("sale")),
-
                 user.getId());
+
     }
 }
 
