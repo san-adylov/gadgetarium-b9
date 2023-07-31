@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -73,6 +74,13 @@ public class SubProduct {
             mappedBy = "subProduct",
             cascade = {MERGE, DETACH, REFRESH, PERSIST})
     private List<Review> reviews;
+
+    public void addReviews (Review review) {
+        if (reviews == null) {
+            reviews = new ArrayList<>();
+        }
+        reviews.add(review);
+    }
 
     @ManyToMany(
             mappedBy = "subProducts",
