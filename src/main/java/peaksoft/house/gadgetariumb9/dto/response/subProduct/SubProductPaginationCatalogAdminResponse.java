@@ -3,9 +3,8 @@ package peaksoft.house.gadgetariumb9.dto.response.subProduct;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogAdminResponse;
-
 import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor

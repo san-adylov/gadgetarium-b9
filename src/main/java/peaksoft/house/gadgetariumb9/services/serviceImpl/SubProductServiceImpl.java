@@ -17,7 +17,6 @@ import peaksoft.house.gadgetariumb9.models.*;
 import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
-
 import java.util.List;
 import java.util.Objects;
 

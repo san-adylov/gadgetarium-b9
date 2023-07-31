@@ -13,8 +13,6 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
-
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -24,6 +22,7 @@ import java.util.List;
 public class SubProductApi {
 
     private final SubProductService subProductService;
+
     @PostMapping("/filter")
     @Operation(summary = "Filter catalog", description = "Method for filtering products")
     @PermitAll
@@ -63,6 +62,7 @@ public class SubProductApi {
     public SimpleResponse multiDeleteSubProduct(@RequestBody List<Long> subProductId) {
         return subProductService.multiDelete(subProductId);
     }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "edit", description = "The method updates the object")
     @PutMapping("/{id}")
