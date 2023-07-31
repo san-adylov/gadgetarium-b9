@@ -6,5 +6,4 @@ import peaksoft.house.gadgetariumb9.models.SubProduct;
 
 @Repository
 public interface SubProductRepository extends JpaRepository<SubProduct, Long> {
-
 }

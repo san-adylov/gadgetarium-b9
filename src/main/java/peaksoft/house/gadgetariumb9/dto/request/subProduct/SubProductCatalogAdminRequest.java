@@ -1,53 +1,41 @@
 package peaksoft.house.gadgetariumb9.dto.request.subProduct;
 
-import lombok.Builder;
+import jakarta.persistence.ElementCollection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
+import peaksoft.house.gadgetariumb9.enums.*;
+
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class SubProductCatalogAdminRequest {
-    private String gadgetType;
 
-    private List<Long> brandIds;
+    private LocalDate startDate;
 
-    private BigDecimal priceStart;
+    private LocalDate endDate;
 
-    private BigDecimal priceEnd;
+    private int ram;
 
-    private List<String> codeColor;
+    private String screenResolution;
 
-    private List<Integer> rom;
+    private int rom;
 
-    private List<Integer> ram;
+    private String additionalFeatures;
 
-    private List<Integer> sim;
+    private int sale;
 
-    private List<String> processors;
+    private int quantity;
 
-    private List<String> screenResolution;
+    private String codeColor;
 
-    private List<String> purposes;
+    private double rating;
 
-    private List<Integer> videoMemory;
-
-    private List<Double> screenSize;
-
-    private List<String> screenDiagonal;
-
-    private List<String> batteryCapacity;
-
-    private List<String> housingMaterials;
-
-    private List<String> materialBracelets;
-
-    private List<String> genders;
-
-    private List<String> interfaces;
-
-    private List<String> hullShapes;
+    private List<String> images;
 
 }

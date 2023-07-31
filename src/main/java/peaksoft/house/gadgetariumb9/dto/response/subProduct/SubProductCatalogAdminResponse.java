@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.dto.response.subProductResponse;
+package peaksoft.house.gadgetariumb9.dto.response.subProduct;
 
 import lombok.*;
 
@@ -7,6 +7,8 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
+@Setter
+
 public class SubProductCatalogAdminResponse {
 
     private Long subProductId;
@@ -14,8 +16,6 @@ public class SubProductCatalogAdminResponse {
     private String images;
 
     private String productNameAndBrandName;
-
-    private int productCount;
 
     private Long articleNumber;
 
@@ -27,14 +27,13 @@ public class SubProductCatalogAdminResponse {
 
     private BigDecimal total_with_discount;
 
-    private int rating;
+    private double rating;
     @Builder
 
-    public SubProductCatalogAdminResponse(Long subProductId, String images, String productNameAndBrandName, int productCount, Long articleNumber, LocalDate dateOfCreation, int quantity, String price_and_sale, BigDecimal total_with_discount, int rating) {
+    public SubProductCatalogAdminResponse(Long subProductId, String images, String productNameAndBrandName, Long articleNumber, LocalDate dateOfCreation, int quantity, String price_and_sale, BigDecimal total_with_discount, double rating) {
         this.subProductId = subProductId;
         this.images = images;
         this.productNameAndBrandName = productNameAndBrandName;
-        this.productCount = productCount;
         this.articleNumber = articleNumber;
         this.dateOfCreation = dateOfCreation;
         this.quantity = quantity;
