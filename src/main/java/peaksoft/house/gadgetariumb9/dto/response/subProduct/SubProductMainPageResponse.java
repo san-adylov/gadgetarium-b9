@@ -1,14 +1,11 @@
 package peaksoft.house.gadgetariumb9.dto.response.subProduct;
 
 import lombok.*;
-import lombok.extern.slf4j.Slf4j;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Slf4j
 @Getter
 @Builder
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class SubProductMainPageResponse {
     private long subProductId;
