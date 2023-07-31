@@ -42,7 +42,7 @@ public class JwtService {
         return jwt.getClaim("username").asString();
     }
 
-    public User getAuthentication() {
+    public User getAuthenticationUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.getUserByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
