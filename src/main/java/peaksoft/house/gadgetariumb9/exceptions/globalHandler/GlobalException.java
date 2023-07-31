@@ -1,11 +1,17 @@
-package peaksoft.house.gadgetariumb9.exceptions;
+package peaksoft.house.gadgetariumb9.exceptions.globalHandler;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import peaksoft.house.gadgetariumb9.exceptions.AlreadyExistException;
+import peaksoft.house.gadgetariumb9.exceptions.BadCredentialException;
+import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
+import peaksoft.house.gadgetariumb9.exceptions.InvalidBannerException;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.exceptions.exceptionResponse.ExceptionResponse;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -85,14 +91,25 @@ public class GlobalException {
                 .build();
     }
 
-    @ExceptionHandler(InvalidBannerException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionResponse handleInvalidBannerException(InvalidBannerException e) {
-        return ExceptionResponse
-                .builder()
-                .message(e.getMessage())
-                .status(HttpStatus.BAD_REQUEST)
-                .className(e.getClass().getSimpleName())
-                .build();
-    }
+  @ExceptionHandler(InvalidBannerException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ExceptionResponse handleInvalidBannerException(InvalidBannerException e) {
+    return ExceptionResponse
+        .builder()
+        .message(e.getMessage())
+        .status(HttpStatus.BAD_REQUEST)
+        .className(e.getClass().getSimpleName())
+        .build();
+  }
+
+  @ExceptionHandler(AccessDeniedException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public ExceptionResponse handleAccessDenied(AccessDeniedException e) {
+    return ExceptionResponse
+        .builder()
+        .message("Required token")
+        .status(HttpStatus.FORBIDDEN)
+        .className(e.getClass().getSimpleName())
+        .build();
+  }
 }
