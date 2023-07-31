@@ -19,6 +19,7 @@ import java.util.List;
 public class BasketTemplateImpl implements BasketTemplate {
 
     private final JdbcTemplate jdbcTemplate;
+
     private final JwtService jwtService;
 
     @Override

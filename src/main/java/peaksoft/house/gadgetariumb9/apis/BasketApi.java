@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/api/v1/basket")
 @Tag(name = "Basket API", description = "Endpoints for managing user's shopping basket")
 public class BasketApi {
+    
     private final BasketService basketService;
 
     @PostMapping("/{sub-product-id}")
@@ -38,7 +39,6 @@ public class BasketApi {
     public List<BasketResponse> getBasket() {
         return basketService.getAllByProductsFromTheBasket();
     }
-
 
     @DeleteMapping
     @PreAuthorize("isAuthenticated()")

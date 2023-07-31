@@ -23,6 +23,7 @@ import java.util.List;
 public class ProductApi {
 
     private final ProductService productService;
+
     private final SubProductService subProductService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -49,7 +50,6 @@ public class ProductApi {
             @RequestParam(defaultValue = "1") int pageNumber) {
         return subProductService.getSubProductCatalogs(subProductCatalogRequest, pageSize, pageNumber);
     }
-
 
     @GetMapping("/info")
     @Operation(summary = "Get infographics", description = "Getting infographics of orders for all time")
