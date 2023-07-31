@@ -134,12 +134,12 @@ values (1.0, 2, 1, 1, '2400-4799mah', '0-2'),
        (4.0, 1, 4, 4, '9600-12000mah', '9-11'),
        (5.0, 1, 5, 5, '0-2399mah', '12-15');
 
-insert into reviews (grade, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment)
-values (4, '2023-07-14T12:59:00+00:00', 1, 1, 1, 'comm', 'ok'),
-       (2, '2023-07-14T12:59:00+00:00', 2, 2, 2, 'comm', 'ok'),
-       (1, '2023-07-14T12:59:00+00:00', 3, 3, 3, 'comm', 'ok'),
-       (4, '2023-07-14T12:59:00+00:00', 4, 4, 4, 'comm', 'ok'),
-       (3, '2023-07-14T12:59:00+00:00', 5, 5, 5, 'comm', 'ok');
+insert into reviews (grade, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment,image_link)
+values (4, '2023-07-14T12:59:00+00:00', 1, 1, 1, 'comm', 'ok','img'),
+       (2, '2023-07-14T12:59:00+00:00', 2, 2, 2, 'comm', 'ok','img'),
+       (1, '2023-07-14T12:59:00+00:00', 3, 3, 3, 'comm', 'ok','img'),
+       (4, '2023-07-14T12:59:00+00:00', 4, 4, 4, 'comm', 'ok','img'),
+       (3, '2023-07-14T12:59:00+00:00', 5, 5, 5, 'comm', 'ok','img');
 
 insert into smart_watches (display_discount, waterproof, id, sub_product_id, an_interface, gender, hull_shape,
                            housing_material, material_bracelet)
