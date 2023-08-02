@@ -5,6 +5,7 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
+@Builder
 public class ReviewPagination {
 
   private List<ReviewResponse> responseList;
@@ -13,7 +14,7 @@ public class ReviewPagination {
 
   private int numberPage;
 
-  @Builder
+
   public ReviewPagination(List<ReviewResponse> responseList, int pageSize,
       int numberPage) {
     this.responseList = responseList;

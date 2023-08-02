@@ -172,29 +172,19 @@ public class ReviewServiceImpl implements ReviewService {
           String.format("Review with id: %s not found!", answerRequest.getReviewId()));
     });
 
-    User user = jwtService.getAuthenticationUser();
-
-    if (user.getRole().equals(Role.ADMIN)) {
-      if (review.getReplyToComment() == null) {
-        review.setReplyToComment(answerRequest.getReplyToComment());
-        reviewRepository.save(review);
-        log.info("Reply to comment successfully save!");
-        return SimpleResponse.builder()
-            .status(HttpStatus.OK)
-            .message("Reply to comment successfully saved!")
-            .build();
-      } else {
-        log.info("Review with id: " + answerRequest.getReviewId() + " has already been answered!");
-        return SimpleResponse.builder()
-            .status(HttpStatus.FOUND)
-            .message("The review has already been answered!")
-            .build();
-      }
-    } else {
-      log.error("Only admin can make changes!");
+    if (review.getReplyToComment() == null) {
+      review.setReplyToComment(answerRequest.getReplyToComment());
+      reviewRepository.save(review);
+      log.info("Reply to comment successfully save!");
       return SimpleResponse.builder()
-          .status(HttpStatus.BAD_REQUEST)
-          .message("Only admin can make changes!")
+          .status(HttpStatus.OK)
+          .message("Reply to comment successfully saved!")
+          .build();
+    } else {
+      log.info("Review with id: " + answerRequest.getReviewId() + " has already been answered!");
+      return SimpleResponse.builder()
+          .status(HttpStatus.FOUND)
+          .message("The review has already been answered!")
           .build();
     }
   }
@@ -207,33 +197,23 @@ public class ReviewServiceImpl implements ReviewService {
           return new NotFoundException(String.format("Отзыв с id: %s не найден", reviewId));
         });
 
-    User user = jwtService.getAuthenticationUser();
+    if (!review.getReplyToComment().isEmpty()) {
+      if (!text.isBlank()) {
+        review.setReplyToComment(text);
+        reviewRepository.save(review);
 
-    if (user.getRole().equals(Role.ADMIN)) {
-      if (!review.getReplyToComment().isEmpty()) {
-        if (!text.isBlank()) {
-          review.setReplyToComment(text);
-          reviewRepository.save(review);
-
-          return SimpleResponse.builder()
-              .status(HttpStatus.OK)
-              .message("Answer successfully updated!")
-              .build();
-        } else {
-          log.error("Answer is empty!");
-          throw new BadCredentialException("Answer is empty!");
-        }
-      } else {
         return SimpleResponse.builder()
-            .status(HttpStatus.BAD_REQUEST)
-            .message("Сomment has no response!")
+            .status(HttpStatus.OK)
+            .message("Answer successfully updated!")
             .build();
+      } else {
+        log.error("Answer is empty!");
+        throw new BadCredentialException("Answer is empty!");
       }
-    }else {
-      log.error("Only admin can make changes!");
+    } else {
       return SimpleResponse.builder()
           .status(HttpStatus.BAD_REQUEST)
-          .message("Only admin can make changes!")
+          .message("Сomment has no response!")
           .build();
     }
   }

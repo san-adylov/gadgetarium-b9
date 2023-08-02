@@ -24,7 +24,7 @@ public class ReviewApi {
     private final ReviewService service;
 
     @Operation(summary = "Rating of reviews", description = "Get the rating summary of reviews for a specific product..")
-    @GetMapping()
+    @GetMapping("/rating")
     public ReviewRatingResponse countReviewsRating(@RequestParam  Long subProductId) {
         return service.countReviewsRating(subProductId);
     }
@@ -38,21 +38,21 @@ public class ReviewApi {
         return service.getAllReviews(id,pageSize,numberPage);
     }
 
-    @PostMapping("/save")
+    @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @Operation(summary = "Save review", description = "Leave a review if the user bought this product")
     public SimpleResponse saveReview (@RequestBody ReviewRequest reviewRequest){
         return service.saveReview(reviewRequest);
     }
 
-    @DeleteMapping("/delete/{review_id}")
+    @DeleteMapping("/{review_id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Delete review", description = "Delete review by id")
     public SimpleResponse deleteReview (@PathVariable Long review_id){
         return service.deleteReview(review_id);
     }
 
-    @PutMapping("/update")
+    @PutMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Update answer", description = "Update the answer to the question that the ADMIN left")
     public SimpleResponse updateAnswer (@RequestBody AnswerRequest answerRequest){
@@ -67,7 +67,7 @@ public class ReviewApi {
     }
 
     @PermitAll
-    @GetMapping("/feedback")
+    @GetMapping
     @Operation(summary = "Get feedback", description = "Output of general statistics of reviews")
     public ReviewGradeInfo getFeedback(@RequestParam Long id){
         return service.getFeedback(id);
