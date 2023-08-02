@@ -24,4 +24,5 @@ public class OrderResponseAdmin {
 
     private String status;
 
+
 }
