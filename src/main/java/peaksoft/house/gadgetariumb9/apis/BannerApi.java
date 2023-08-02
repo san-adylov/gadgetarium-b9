@@ -10,9 +10,9 @@ import peaksoft.house.gadgetariumb9.dto.request.banner.BannerRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.serviceImpl.BannerServiceImpl;
 
-@RequiredArgsConstructor
 @RestController
-@RequestMapping("/banners")
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/banners")
 @Tag(name = "Banner API", description = "API for banner management")
 public class BannerApi {
 

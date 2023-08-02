@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/brand")
+@RequestMapping("/api/v1/brand")
 @PreAuthorize("hasAuthority('ADMIN')")
 @Tag(name = "Brand", description = "API for working with brand")
 public class BrandApi {

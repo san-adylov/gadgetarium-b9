@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.authentication.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authentication.SignUpRequest;
+import peaksoft.house.gadgetariumb9.dto.response.authentication.AuthenticationResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.AuthenticationService;
 import peaksoft.house.gadgetariumb9.validations.password.Password;
@@ -29,13 +30,13 @@ public class AuthenticationApi {
 
     @PostMapping("/sign-up")
     @Operation(summary = "Sign up", description = "Register new users")
-    public String signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
+    public AuthenticationResponse signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         return authenticationService.signUp(signUpRequest);
     }
 
     @PostMapping("/sign-in")
     @Operation(summary = "Sign in", description = "Login for existing users")
-    public String signIn(@RequestBody @Valid SignInRequest signInRequest) {
+    public AuthenticationResponse signIn(@RequestBody @Valid SignInRequest signInRequest) {
         return authenticationService.signIn(signInRequest);
     }
 
