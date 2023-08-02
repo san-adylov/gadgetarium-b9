@@ -13,19 +13,21 @@ import peaksoft.house.gadgetariumb9.services.ProductService;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 import peaksoft.house.gadgetariumb9.services.SubProductHistory;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
+import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
+import peaksoft.house.gadgetariumb9.services.ProductService;
+import peaksoft.house.gadgetariumb9.services.SubProductService;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/products")
+@RequestMapping("/api/v1/products")
 @Tag(name = "Products API", description = "API for product CRUD management")
 public class ProductApi {
 
     private final ProductService productService;
-    private final SubProductService subProductService;
     private final SubProductService subProductService;
     private final SubProductHistory subProductHistory;
 
@@ -78,7 +80,7 @@ public class ProductApi {
     @Operation(summary = "Get sub product", description = "Get sub product by id id")
     @PreAuthorize("hasAuthority('USER')")
     public void getSubProductId(@PathVariable("sub-product-id") Long productId) {
-        subProductHistory.addRecentlyViewedProduct(productId);
+        subProductService.addRecentlyViewedProduct(productId);
     }
 
     @GetMapping("/info")
@@ -92,6 +94,6 @@ public class ProductApi {
     @Operation(summary = "Get products by recently viewed", description = "Browsing history method")
     @PreAuthorize("hasAuthority('USER')")
     public List<SubProductHistoryResponse> getRecentlyViewedProducts() {
-        return subProductHistory.getRecentlyViewedProduct();
+        return subProductService.getRecentlyViewedProduct();
     }
 }

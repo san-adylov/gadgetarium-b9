@@ -1,12 +1,13 @@
 package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
-import java.util.Collection;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import peaksoft.house.gadgetariumb9.enums.Role;
+
+import java.util.Collection;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -45,10 +46,8 @@ public class User implements UserDetails {
 
   private String image;
 
-  private String resetToken;
-
-  @ElementCollection
-  private List<Long> comparison;
+    @ElementCollection
+    private List<Long> comparison;
 
   @ElementCollection
   private List<Long> favorite;
