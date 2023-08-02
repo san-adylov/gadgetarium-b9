@@ -7,18 +7,11 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder    
+@AllArgsConstructor    
 public class MainPagePaginationResponse {
 
     private List<SubProductMainPageResponse> subProductMainPageResponses;
     private int page;
     private int pageSize;
-
-    @Builder
-    public MainPagePaginationResponse(List<SubProductMainPageResponse> subProductMainPageResponses, int page, int pageSize) {
-        this.subProductMainPageResponses = subProductMainPageResponses;
-        this.page = page;
-        this.pageSize = pageSize;
-    }
 }
-
-
