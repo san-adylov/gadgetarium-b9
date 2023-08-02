@@ -32,7 +32,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public SimpleResponse addAndDeleteFavorite(Long subProductId) {
-        User user = jwtService.getAuthentication();
+        User user = jwtService.getAuthenticationUser();
         List<Long> favorites = user.getFavorite();
         boolean hasChanges = false;
 
@@ -51,10 +51,8 @@ public class FavoriteServiceImpl implements FavoriteService {
             hasChanges = true;
         }
 
-        if (hasChanges) {
-            user.setFavorite(favorites);
-            userRepository.save(user);
-        }
+        user.setFavorite(favorites);
+        userRepository.save(user);
 
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
@@ -64,7 +62,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     @Override
     public SimpleResponse clearFavorite() {
-        User user = jwtService.getAuthentication();
+        User user = jwtService.getAuthenticationUser();
         List<Long> favorites = user.getFavorite();
         favorites.clear();
         userRepository.save(user);

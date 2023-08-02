@@ -30,28 +30,29 @@ public class JwtFilter extends OncePerRequestFilter {
             @NotNull HttpServletResponse response,
             @NotNull FilterChain filterChain) throws ServletException, IOException {
 
-        final String tokenHeader = request.getHeader("Authorization");
-        if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
-            String token = tokenHeader.substring(7);
-            if (StringUtils.hasText(token)) {
-                try {
-                    String username = jwtService.validateToken(token);
-                    User user = userRepository.getUserByEmail(username)
-                            .orElseThrow(() ->
-                                    new NotFoundException("User with email: %s not found".formatted(username)));
-                    SecurityContextHolder.getContext()
-                            .setAuthentication(
-                                    new UsernamePasswordAuthenticationToken(
-                                            user.getUsername(),
-                                            null,
-                                            user.getAuthorities()
-                                    ));
-                } catch (JWTVerificationException e) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST,
-                            "Invalid token");
-                }
-            }
+    final String tokenHeader = request.getHeader("Authorization");
+    if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
+
+      String token = tokenHeader.substring(7);
+      if (StringUtils.hasText(token)) {
+        try {
+          String username = jwtService.validateToken(token);
+          User user = userRepository.getUserByEmail(username)
+              .orElseThrow(() ->
+                  new NotFoundException("User with email: %s not found".formatted(username)));
+          SecurityContextHolder.getContext()
+              .setAuthentication(
+                  new UsernamePasswordAuthenticationToken(
+                      user.getUsername(),
+                      null,
+                      user.getAuthorities()
+                  ));
+        } catch (JWTVerificationException e) {
+          response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+              "Invalid token");
         }
-        filterChain.doFilter(request, response);
+      }
     }
+    filterChain.doFilter(request, response);
+  }
 }

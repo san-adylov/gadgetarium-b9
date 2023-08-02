@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.authentication.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authentication.SignUpRequest;
+import peaksoft.house.gadgetariumb9.dto.response.authentication.AuthenticationResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.enums.Role;
 import peaksoft.house.gadgetariumb9.exceptions.AlreadyExistException;
@@ -41,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String EMAIL_FROM;
 
     @Override
-    public String signUp(SignUpRequest signUpRequest) {
+    public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             log.error("User with email: %s already exist".formatted(signUpRequest.getEmail()));
             throw new AlreadyExistException(
@@ -60,11 +61,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         log.info("User successfully saved");
         userRepository.save(user);
         log.info("Generation of a token for a new user");
-        return jwtService.generateToken(user);
+        return AuthenticationResponse
+                .builder()
+                .token(jwtService.generateToken(user))
+                .role(user.getRole().name())
+                .build();
     }
 
     @Override
-    public String signIn(SignInRequest signInRequest) {
+    public AuthenticationResponse signIn(SignInRequest signInRequest) {
         User user = userRepository.getUserByEmail(signInRequest.getEmail())
                 .orElseThrow(() -> {
                     log.error("User with email: %s not found".formatted(signInRequest.getEmail()));
@@ -80,7 +85,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new BadCredentialException("Wrong password!");
         }
         log.info("Generation of a token for a registered user");
-        return jwtService.generateToken(user);
+        return AuthenticationResponse
+                .builder()
+                .token(jwtService.generateToken(user))
+                .role(user.getRole().name())
+                .build();
     }
 
     @Override
