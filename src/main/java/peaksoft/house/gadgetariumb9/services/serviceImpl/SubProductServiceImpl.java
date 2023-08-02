@@ -21,7 +21,6 @@ import peaksoft.house.gadgetariumb9.models.*;
 import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
-import java.util.List;
 import java.util.Objects;
 @Slf4j
 @Service
@@ -465,12 +464,6 @@ public class SubProductServiceImpl implements SubProductService {
                 .status(HttpStatus.OK)
                 .message("Successfully updated")
                 .build();
-    }
-
-    @Override
-    public List<SubProductHistoryResponse> getRecentlyViewedProduct() {
-        log.info("Get recently viewed products");
-        return subProductTemplate.getRecentlyViewedProducts();
     }
 }
 

@@ -13,6 +13,8 @@ public interface SubProductTemplate {
 
     InfographicsResponse infographics(String period);
 
+  List<SubProductHistoryResponse> getRecentlyViewedProducts ();
+
     SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, int pageSize, int pageNumber);
 
 

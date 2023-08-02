@@ -15,6 +15,7 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogAdm
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
+import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.List;
 public class SubProductTemplateImpl implements SubProductTemplate {
 
   private final JdbcTemplate jdbcTemplate;
+
   private final JwtService jwtService;
 
     @Override
@@ -202,6 +204,34 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     }
 
     @Override
+    public List<SubProductHistoryResponse> getRecentlyViewedProducts() {
+        User user = jwtService.getAuthenticationUser();
+        String sql = """
+        SELECT s.id,
+               (SELECT spi.images
+                FROM sub_product_images spi
+                WHERE spi.sub_product_id = s.id
+                LIMIT 1)                    AS image,
+               CONCAT(c.title, ' ', p.name) AS name,
+               s.rating,
+               s.price
+        FROM sub_products s
+                 JOIN products p ON s.product_id = p.id
+                 JOIN categories c ON p.category_id = c.id
+                 JOIN user_recently_viewed_products urvp ON urvp.recently_viewed_products = s.id
+                 JOIN users u on urvp.user_id = u.id
+        WHERE u.id = ?
+        """;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductHistoryResponse(
+                rs.getLong("id"),
+                rs.getString("image"),
+                rs.getString("name"),
+                rs.getDouble("rating"),
+                rs.getBigDecimal("price")
+        ), user.getId());
+    }
+
+    @Override
     public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, int pageSize, int pageNumber) {
         String query = "SELECT sum(s.quantity) from sub_products s";
         String query2 = "SELECT sum(o.quantity) from orders o";
@@ -209,7 +239,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         Integer subProductQuantityCount = jdbcTemplate.queryForObject(query, Integer.class);
         Integer orderQuantityCount = jdbcTemplate.queryForObject(query2, Integer.class);
 
-        int difference = (subProductQuantityCount != null ? subProductQuantityCount : 0) - (orderQuantityCount != null ? orderQuantityCount : 0);
+        int difference =(orderQuantityCount != null ? orderQuantityCount : 0) -  (subProductQuantityCount != null ? subProductQuantityCount : 0);
 
         String sql = "";
 
