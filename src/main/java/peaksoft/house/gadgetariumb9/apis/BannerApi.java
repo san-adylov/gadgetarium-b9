@@ -14,7 +14,6 @@ import peaksoft.house.gadgetariumb9.services.serviceImpl.BannerServiceImpl;
 @RestController
 @RequestMapping("/banners")
 @Tag(name = "Banner API", description = "API for banner management")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class BannerApi {
 
     private final BannerServiceImpl bannerService;

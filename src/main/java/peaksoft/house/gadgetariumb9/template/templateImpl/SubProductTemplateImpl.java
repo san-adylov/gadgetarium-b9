@@ -5,8 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
+import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 import java.math.BigDecimal;
@@ -19,7 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubProductTemplateImpl implements SubProductTemplate {
 
-    private final JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
+  private final JwtService jwtService;
 
     @Override
     public SubProductPagination getProductFilter(SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber) {
@@ -174,7 +181,6 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         });
     }
 
-
     @Override
     public MainPagePaginationResponse getNewProducts(int page, int pageSize) {
         log.info("Getting all the new products!");
@@ -305,4 +311,31 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         return MainPagePaginationResponse.builder().subProductMainPageResponses(products).page(page).pageSize(pageSize).build();
     }
 
+    @Override
+    public List<SubProductHistoryResponse> getRecentlyViewedProducts() {
+        User user = jwtService.getAuthenticationUser();
+        String sql = """
+        SELECT s.id,
+               (SELECT spi.images
+                FROM sub_product_images spi
+                WHERE spi.sub_product_id = s.id
+                LIMIT 1)                    AS image,
+               CONCAT(c.title, ' ', p.name) AS name,
+               s.rating,
+               s.price
+        FROM sub_products s
+                 JOIN products p ON s.product_id = p.id
+                 JOIN categories c ON p.category_id = c.id
+                 JOIN user_recently_viewed_products urvp ON urvp.recently_viewed_products = s.id
+                 JOIN users u on urvp.user_id = u.id
+        WHERE u.id = ?
+        """;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductHistoryResponse(
+                rs.getLong("id"),
+                rs.getString("image"),
+                rs.getString("name"),
+                rs.getDouble("rating"),
+                rs.getBigDecimal("price")
+        ), user.getId());
+    }
 }
