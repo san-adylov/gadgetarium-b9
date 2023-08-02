@@ -49,16 +49,6 @@ public class ReviewTemplateImpl implements ReviewTemplate {
             rs.getString("image")),
         subProductId);
     return new ReviewPagination(reviewResponses,pageSize,numberPage);
-//        jdbcTemplate.query(
-//        sql,(rs, rowNum) -> new ReviewResponse(
-//            rs.getString("user_name"),
-//            rs.getString("user_image"),
-//            rs.getInt("grade"),
-//            rs.getString("comment"),
-//            rs.getString("answer"),
-//            rs.getString("date"),
-//            rs.getString("image")),
-//        subProductId);
   }
 
   @Override
