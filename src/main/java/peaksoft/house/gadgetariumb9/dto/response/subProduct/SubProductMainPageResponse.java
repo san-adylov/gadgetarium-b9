@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 public class SubProductMainPageResponse {
-    private long subProductId;
+    private Long subProductId;
     private String name;
     private String prodName;
     private BigDecimal price;
