@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 @NoArgsConstructor
-
 public class OrderProductResponse {
 
     private int orderNumber;

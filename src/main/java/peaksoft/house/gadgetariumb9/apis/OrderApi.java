@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/order")
 @Tag(name = "Order API", description = "API for order CRUD management")
 @PreAuthorize("hasAuthority('ADMIN')")
-
 public class OrderApi {
 
     private final OrderService orderService;
