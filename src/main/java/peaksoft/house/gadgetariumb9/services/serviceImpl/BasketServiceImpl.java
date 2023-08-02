@@ -63,6 +63,9 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public SimpleResponse deleteProductByIds(List<Long> subProductIds) {
         User user = jwtService.getAuthenticationUser();
+        if (basketRepository.getBasketByUserId(user.getId()) == null || basketRepository.getBasketByUserId(user.getId()).isEmpty()) {
+            throw new NotFoundException("Baskets not found");
+        }
         basketRepository.deleteAll(basketRepository.getBasketByUserId(user.getId()));
         return SimpleResponse
                 .builder()

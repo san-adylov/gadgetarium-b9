@@ -3,7 +3,6 @@ package peaksoft.house.gadgetariumb9.dto.response.basket;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -20,5 +19,5 @@ public class BasketInfographicResponse {
 
     private BigDecimal toPay;
 
-    List<BasketResponse> basketResponses;
+    private List<BasketResponse> basketResponses;
 }

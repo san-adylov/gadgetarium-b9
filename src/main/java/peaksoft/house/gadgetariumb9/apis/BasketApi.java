@@ -20,15 +20,15 @@ public class BasketApi {
 
     @PostMapping("/{sub-product-id}")
     @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "Save basket", description = "Method to add a sub product to the user's basket")
-    public SimpleResponse saveBasket(@PathVariable("sub-product-id") Long subProductId) {
+    @Operation(summary = "Add Subproduct to Basket", description = "Add a subproduct to the user's shopping basket")
+    public SimpleResponse addSubproductToBasket(@PathVariable("sub-product-id") Long subProductId) {
         return basketService.saveBasket(subProductId);
     }
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "Get all basket", description = "Method to get information about products in the user's basket")
-    public BasketInfographicResponse getBasket() {
+    @Operation(summary = "Retrieve User's Basket", description = "Get information about the products in the user's shopping basket")
+    public BasketInfographicResponse getUserBasket() {
         return basketService.getAllByProductsFromTheBasket();
     }
 
