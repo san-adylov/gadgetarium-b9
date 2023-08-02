@@ -3,6 +3,7 @@ package peaksoft.house.gadgetariumb9.services;
 import java.util.List;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
+import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -19,6 +20,8 @@ public interface ReviewService {
 
     SimpleResponse replyToComment(AnswerRequest answerRequest);
 
-    SimpleResponse updateAnswer(AnswerRequest answerRequest);
+    SimpleResponse updateAnswer(Long reviewId, String text);
+
+    ReviewGradeInfo getFeedback(Long subProductId);
 
 }
