@@ -34,9 +34,13 @@ import peaksoft.house.gadgetariumb9.template.ReviewTemplate;
 public class ReviewServiceImpl implements ReviewService {
 
   private final SubProductRepository subProductRepository;
+
   private final ReviewRepository reviewRepository;
+
   private final ReviewTemplate reviewTemplate;
+
   private final JdbcTemplate jdbcTemplate;
+
   private final JwtService jwtService;
 
 
