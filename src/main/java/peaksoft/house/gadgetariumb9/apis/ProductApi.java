@@ -7,18 +7,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
-import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
-import peaksoft.house.gadgetariumb9.services.ProductService;
-import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
-import peaksoft.house.gadgetariumb9.services.SubProductHistory;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.ProductService;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
+
 import java.util.List;
 
 @RestController
@@ -29,7 +26,6 @@ public class ProductApi {
 
     private final ProductService productService;
     private final SubProductService subProductService;
-    private final SubProductHistory subProductHistory;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "save Product", description = "Creating a new product")
@@ -65,6 +61,8 @@ public class ProductApi {
     public MainPagePaginationResponse getAllDiscountProducts(@RequestParam(defaultValue = "1") int page,
                                                              @RequestParam(defaultValue = "5") int pageSize) {
         return subProductService.getAllDiscountProducts(page, pageSize);
+
+    }
 
     @PostMapping("/filter")
     @Operation(summary = "Filter catalog", description = "Method for filtering products")

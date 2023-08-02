@@ -15,8 +15,6 @@ public interface SubProductTemplate {
 
   InfographicsResponse infographics(String period);
 
-  InfographicsResponse infographics(String period);
-
   MainPagePaginationResponse getNewProducts(int page, int pageSize);
 
   MainPagePaginationResponse getRecommendedProducts(int page, int pageSize);

@@ -1,7 +1,9 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.transaction.Transactional;
+
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -51,18 +53,6 @@ public class SubProductServiceImpl implements SubProductService {
         return subProductTemplate.getAllDiscountProducts(page, pageSize);
     }
 
-  public void addRecentlyViewedProduct(Long productId) {
-    User user = jwtService.getAuthenticationUser();
-    user.getRecentlyViewedProducts().add(productId);
-    log.info("Product added recently viewed");
-  }
-
-  @Override
-  public List<SubProductHistoryResponse> getRecentlyViewedProduct() {
-    log.info("Get recently viewed products");
-    return subProductTemplate.getRecentlyViewedProducts();
-  }
-  
     public void addRecentlyViewedProduct(Long productId) {
         User user = jwtService.getAuthenticationUser();
         user.getRecentlyViewedProducts().add(productId);
