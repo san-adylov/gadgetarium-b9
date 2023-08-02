@@ -9,10 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
+import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -92,6 +94,14 @@ public class ReviewServiceImpl implements ReviewService {
       }
     }
 
+    if (reviewRequest.getGrade() > 5){
+      log.error("Grade cannot exceed 5!");
+      throw new BadCredentialException("Grade cannot exceed 5!");
+    } else if (reviewRequest.getGrade() < 0){
+      log.error("Grade cannot be negative!");
+      throw new BadCredentialException("Grade cannot be negative!");
+    }
+
     Review review = Review.builder()
         .subProduct(subProduct)
         .comment(reviewRequest.getComment())
@@ -136,8 +146,10 @@ public class ReviewServiceImpl implements ReviewService {
   }
 
   @Override
-  public List<ReviewResponse> getAllReviews(Long subProductId) {
-    return reviewTemplate.getAll(subProductId);
+  public ReviewPagination getAllReviews(Long subProductId,
+                                        int pageSize,
+                                        int numberPage) {
+    return reviewTemplate.getAll(subProductId,pageSize,numberPage);
   }
 
   @Override

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
+import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -33,8 +34,10 @@ public class ReviewApi {
     @PermitAll
     @GetMapping("/get-all")
     @Operation(summary = "All reviews", description = "Get all reviews by subProduct id")
-    public List<ReviewResponse> getAllReview (@RequestParam Long id){
-        return service.getAllReviews(id);
+    public ReviewPagination getAllReview (@RequestParam Long id,
+                                              @RequestParam int pageSize,
+                                              @RequestParam int numberPage){
+        return service.getAllReviews(id,pageSize,numberPage);
     }
 
     @PostMapping("/save")

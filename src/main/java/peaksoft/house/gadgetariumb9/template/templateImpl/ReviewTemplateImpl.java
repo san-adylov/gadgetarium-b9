@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
+import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewResponse;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.template.ReviewTemplate;
@@ -20,7 +21,7 @@ public class ReviewTemplateImpl implements ReviewTemplate {
   private final JdbcTemplate jdbcTemplate;
 
   @Override
-  public List<ReviewResponse> getAll(Long subProductId) {
+  public ReviewPagination getAll(Long subProductId, int pageSize, int numberPage) {
     log.info("Get all comments");
     String sql = """
         SELECT DISTINCT CONCAT(u.first_name, ' ', u.last_name)                                       AS user_name,
@@ -37,7 +38,7 @@ public class ReviewTemplateImpl implements ReviewTemplate {
                  WHERE sp.id = ?
         """;
 
-    return jdbcTemplate.query(
+    List<ReviewResponse> reviewResponses = jdbcTemplate.query(
         sql,(rs, rowNum) -> new ReviewResponse(
             rs.getString("user_name"),
             rs.getString("user_image"),
@@ -47,6 +48,17 @@ public class ReviewTemplateImpl implements ReviewTemplate {
             rs.getString("date"),
             rs.getString("image")),
         subProductId);
+    return new ReviewPagination(reviewResponses,pageSize,numberPage);
+//        jdbcTemplate.query(
+//        sql,(rs, rowNum) -> new ReviewResponse(
+//            rs.getString("user_name"),
+//            rs.getString("user_image"),
+//            rs.getInt("grade"),
+//            rs.getString("comment"),
+//            rs.getString("answer"),
+//            rs.getString("date"),
+//            rs.getString("image")),
+//        subProductId);
   }
 
   @Override
