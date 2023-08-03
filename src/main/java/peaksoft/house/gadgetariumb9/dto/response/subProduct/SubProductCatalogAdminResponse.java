@@ -7,7 +7,6 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @Setter
-
 public class SubProductCatalogAdminResponse {
 
     private Long subProductId;
