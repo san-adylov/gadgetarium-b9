@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import lombok.*;
 import org.springframework.lang.Nullable;
-
 import java.math.BigDecimal;
 import java.util.List;
 import static jakarta.persistence.CascadeType.*;
@@ -20,7 +19,8 @@ public class SubProduct {
 
     @Id
     @GeneratedValue(generator = "sub_product_gen", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "sub_product_gen", sequenceName = "sub_product_seq", allocationSize = 1, initialValue = 6)
+    @SequenceGenerator(name = "sub_product_gen", sequenceName = "sub_product_seq", allocationSize = 1, initialValue = 4)
+
     private Long id;
 
     private int ram;
@@ -52,17 +52,17 @@ public class SubProduct {
 
     @OneToOne(
             mappedBy = "subProduct",
-            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+            cascade = {ALL})
     private Laptop laptop;
 
     @OneToOne(
             mappedBy = "subProduct",
-            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+            cascade = {ALL})
     private Phone phone;
 
     @OneToOne(
             mappedBy = "subProduct",
-            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+            cascade = {ALL})
     private SmartWatch smartWatch;
 
     @ManyToMany(
@@ -72,14 +72,14 @@ public class SubProduct {
 
     @OneToMany(
             mappedBy = "subProduct",
-            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+            cascade = {ALL})
     private List<Review> reviews;
-
+  
     public void addReviews (Review review) {
-        if (reviews == null) {
-            reviews = new ArrayList<>();
-        }
-        reviews.add(review);
+          if (reviews == null) {
+              reviews = new ArrayList<>();
+          }
+          reviews.add(review);
     }
 
     @ManyToMany(

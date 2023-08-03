@@ -16,7 +16,7 @@ public class Review {
 
     @Id
     @GeneratedValue(generator = "review_gen", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "review_gen", sequenceName = "review_seq", allocationSize = 1, initialValue = 6)
+    @SequenceGenerator(name = "review_gen", sequenceName = "review_seq", allocationSize = 1, initialValue = 4)
     private Long id;
 
     private ZonedDateTime dateCreatAd;

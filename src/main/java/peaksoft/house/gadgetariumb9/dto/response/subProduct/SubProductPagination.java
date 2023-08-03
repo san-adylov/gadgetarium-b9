@@ -1,12 +1,13 @@
 package peaksoft.house.gadgetariumb9.dto.response.subProduct;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import java.util.List;
 
 @Getter
+@Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class SubProductPagination {
 
     private List<SubProductCatalogResponse> responseList;
@@ -15,11 +16,4 @@ public class SubProductPagination {
 
     private int numberPage;
 
-    @Builder
-    public SubProductPagination(List<SubProductCatalogResponse> responseList, int pageSize,
-                                int numberPage) {
-        this.responseList = responseList;
-        this.pageSize = pageSize;
-        this.numberPage = numberPage;
-    }
 }
