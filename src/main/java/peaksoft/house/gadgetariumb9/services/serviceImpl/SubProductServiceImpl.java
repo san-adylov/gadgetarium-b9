@@ -10,6 +10,7 @@ import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 import peaksoft.house.gadgetariumb9.models.User;
@@ -59,6 +60,20 @@ public class SubProductServiceImpl implements SubProductService {
     }
 
     @Override
+    public MainPagePaginationResponse getNewProducts(int page, int pageSize) {
+        return subProductTemplate.getNewProducts(page, pageSize);
+    }
+
+    @Override
+    public MainPagePaginationResponse getRecommendedProducts(int page, int pageSize) {
+        return subProductTemplate.getRecommendedProducts(page, pageSize);
+    }
+
+    @Override
+    public MainPagePaginationResponse getAllDiscountProducts(int page, int pageSize) {
+        return subProductTemplate.getAllDiscountProducts(page, pageSize);
+    }
+
     public void addRecentlyViewedProduct(Long productId) {
         User user = jwtService.getAuthenticationUser();
         user.getRecentlyViewedProducts().add(productId);
