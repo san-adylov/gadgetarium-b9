@@ -32,7 +32,7 @@ public class Order {
 
     private BigDecimal totalPrice;
 
-    private BigDecimal orderNumber;
+    private int orderNumber;
 
     @Enumerated(EnumType.STRING)
     private TypeDelivery typeDelivery;

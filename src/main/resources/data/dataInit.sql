@@ -1,7 +1,8 @@
 insert into users(is_subscription, role, id, address, email, first_name, image, last_name, password, phone_number)
 values (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldoshabev',
-        '$2a$12$GkXzm16k70qEZxz7sVU4MOu2uqdkUkM6Qi5BsWk.e7u3nlPTnF0Ta', '0995665528'), --davran2005
-       (true, 'USER', 2, 'Красный речка', 'salymbek@gmail.com', 'Salymbek', 'img', ' Khadzhakeldyev',
+
+        '$2a$12$5jp6EvdGIlzGIYRrmUFOx.gLH35BSm7aVUKhQq3mKHDyIcxKRyEAi', '0995665528'), --Admin123
+      (true, 'USER', 2, 'Красный речка', 'salymbek@gmail.com', 'Salymbek', 'img', ' Khadzhakeldyev',
         '$2a$12$obECYf/JcKcxdFVc4w57we64ZSiU9.RfZ/uV/l3D/.oa72NerEj7y',
         '0700020206'),                                                                 --salymbek2006
        (false, 'USER', 3, 'Ибраимова 3', 'gulira@gmail.com', 'Gulira', 'img', ' Abdukerim kyzy',
@@ -101,11 +102,11 @@ values ('2023-08-14T00:00:00+00:00', 1, '2023-07-14T12:59:00+00:00', 'The beast'
 insert into orders(order_number, quantity, total_discount, total_price, date_of_order, id, user_id,
                    status,
                    type_delivery, type_payment)
-values (1, 1, 12, 23, '2023-07-14T12:59:00+00:00', 1, 1, 'EXPECTATION', 'PICKUP', 'CASH'),
-       (2, 1, 13, 23, '2023-07-14T12:59:00+00:00', 2, 2, 'PROCESSING', 'PICKUP', 'CASH'),
-       (3, 1, 14, 23, '2023-07-14T12:59:00+00:00', 3, 3, 'COURIER_ON_THE_WAY', 'PICKUP', 'CASH'),
-       (4, 1, 15, 23, '2023-07-14T12:59:00+00:00', 4, 4, 'DELIVERED', 'PICKUP', 'CASH'),
-       (5, 1, 16, 23, '2023-07-14T12:59:00+00:00', 5, 5, 'CANCELED', 'PICKUP', 'CASH');
+values (1, 1, 12, 23, '2023-07-14T12:59:00+00:00', 1, 1, 'PENDING', 'PICKUP', 'CASH'),
+       (2, 1, 13, 23, '2023-07-14T12:59:00+00:00', 2, 2, 'READY_FOR_DELIVERY', 'DELIVERY', 'CASH'),
+       (3, 1, 14, 23, '2023-07-14T12:59:00+00:00', 3, 3, 'IN_PROCESSING', 'PICKUP', 'CASH'),
+       (4, 1, 15, 23, '2023-07-14T12:59:00+00:00', 4, 4, 'RECEIVED', 'PICKUP', 'CASH'),
+       (5, 1, 16, 23, '2023-07-14T12:59:00+00:00', 5, 5, 'DELIVERED', 'PICKUP', 'CASH');
 
 insert into orders_sub_products (orders_id, sub_products_id)
 values (1, 1),
