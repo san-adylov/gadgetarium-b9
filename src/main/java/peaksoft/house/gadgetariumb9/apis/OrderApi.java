@@ -32,13 +32,13 @@ public class OrderApi {
     }
 
     @PostMapping("/{orderId}")
-    @Operation(summary = "update status", description = "User Order Status Changes")
-    public SimpleResponse updateStatus(@PathVariable Long orderId, @RequestParam String status) {
+    @Operation(summary = "Change status", description = "Change status of orders")
+    public SimpleResponse Changestatus(@PathVariable Long orderId, @RequestParam String status) {
         return orderService.updateStatus(orderId, status);
     }
 
-    @GetMapping("/get-order-by-id/{orderId}")
-    @Operation(summary = "get-order-by-id", description = "Purchase information output")
+    @GetMapping("/{orderId}")
+    @Operation(summary = "Get order by id", description = "Order info by id")
     public OrderInfoResponse getOrderInfo(@PathVariable Long orderId) {
         return orderService.getOrderInfo(orderId);
     }

@@ -26,7 +26,6 @@ public class OrderPaginationAdmin {
     private List<OrderResponseAdmin> responseAdminList;
 
     @Builder
-
     public OrderPaginationAdmin(int pageSize, int pageNumber, int quantity, int IN_PROCESSING , int READY_FOR_DELIVERY, int DELIVERED, List<OrderResponseAdmin> responseAdminList) {
         this.pageSize = pageSize;
         this.pageNumber = pageNumber;
