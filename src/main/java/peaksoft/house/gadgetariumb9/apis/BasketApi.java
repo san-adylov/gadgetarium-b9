@@ -18,10 +18,10 @@ public class BasketApi {
 
     private final BasketService basketService;
 
-    @PostMapping("/{sub-product-id}")
+    @PostMapping("/{subProductId}")
     @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "Add Subproduct to Basket", description = "Add a subproduct to the user's shopping basket")
-    public SimpleResponse addSubproductToBasket(@PathVariable("sub-product-id") Long subProductId) {
+    @Operation(summary = "Add Sub product to Basket", description = "Add a sub product to the user's shopping basket")
+    public SimpleResponse addSubProductToBasket(@PathVariable Long subProductId) {
         return basketService.saveBasket(subProductId);
     }
 
@@ -39,10 +39,10 @@ public class BasketApi {
         return basketService.deleteProductByIds(subProductIds);
     }
 
-    @DeleteMapping("/{sub-product-id}")
+    @DeleteMapping("/{subProductId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Delete sub product", description = "Method to delete a sub product from the user's basket")
-    public SimpleResponse deleteBySubProductId(@PathVariable("sub-product-id") Long subProductId) {
+    public SimpleResponse deleteBySubProductId(@PathVariable Long subProductId) {
         return basketService.deleteProductById(subProductId);
     }
 }
