@@ -83,21 +83,21 @@ public class ProductApi {
     }
 
     @DeleteMapping("/single-delete/{subProductId}")
-    @Operation(summary = "single delete ",description = "single delete subProduct")
+    @Operation(summary = "single delete get by subProductId",description = "single delete subProduct get by subProductId")
     @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse singleDeleteSubProduct(@PathVariable Long subProductId) {
         return subProductService.singleDelete(subProductId);
     }
 
     @DeleteMapping("/multi-delete")
-    @Operation(summary = " multi delete",description = "multi removes subProduct")
+    @Operation(summary = "multi delete get by subProductId", description = "multi delete subProduct get by subProductId")
     @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse multiDeleteSubProduct(@RequestBody List<Long> subProductId) {
         return subProductService.multiDelete(subProductId);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "edit", description = "The method updates the object")
+    @Operation(summary = "edit get by id", description = "The method updates the object")
     @PutMapping("/{id}")
     public SimpleResponse editSubProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
         return subProductService.updateSubProduct(id,productRequest);

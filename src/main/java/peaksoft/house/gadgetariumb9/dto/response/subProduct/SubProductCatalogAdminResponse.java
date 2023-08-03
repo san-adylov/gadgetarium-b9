@@ -27,8 +27,8 @@ public class SubProductCatalogAdminResponse {
     private BigDecimal total_with_discount;
 
     private double rating;
-    @Builder
 
+    @Builder
     public SubProductCatalogAdminResponse(Long subProductId, String images, String productNameAndBrandName, Long articleNumber, LocalDate dateOfCreation, int quantity, String price_and_sale, BigDecimal total_with_discount, double rating) {
         this.subProductId = subProductId;
         this.images = images;
