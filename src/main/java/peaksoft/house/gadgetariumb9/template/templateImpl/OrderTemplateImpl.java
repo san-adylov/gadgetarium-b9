@@ -85,7 +85,7 @@ public class OrderTemplateImpl implements OrderTemplate {
         List<OrderResponseAdmin> orderResponseAdmins = jdbcTemplate.query(sql,
                 (rs, rowNum) ->
                         OrderResponseAdmin.builder()
-                                .id(rs.getLong("id"))
+                                .orderId(rs.getLong("id"))
                                 .fullName(rs.getString("full_name"))
                                 .orderNumber(rs.getInt("order_number"))
                                 .quantity(rs.getInt("quantity"))
