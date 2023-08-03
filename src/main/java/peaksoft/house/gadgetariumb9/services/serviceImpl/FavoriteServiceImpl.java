@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
-import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.SubProduct;
@@ -72,10 +72,8 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .build();
     }
 
-
     @Override
     public List<SubProductResponse> getAllFavorite() {
         return favoriteTemplate.getAllFavorite();
     }
-
 }

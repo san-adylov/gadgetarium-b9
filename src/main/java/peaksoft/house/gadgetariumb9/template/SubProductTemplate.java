@@ -6,14 +6,18 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
 
 public interface SubProductTemplate {
 
   SubProductPagination getProductFilter(SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber);
 
+    InfographicsResponse infographics(String period);
+
   List<SubProductHistoryResponse> getRecentlyViewedProducts ();
 
-  InfographicsResponse infographics(String period);
+    SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, int pageSize, int pageNumber);
+
 
   MainPagePaginationResponse getNewProducts(int page, int pageSize);
 

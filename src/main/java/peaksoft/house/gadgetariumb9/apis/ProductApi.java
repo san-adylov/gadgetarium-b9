@@ -11,11 +11,11 @@ import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequ
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.ProductService;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
-
 import java.util.List;
 
 @RestController
@@ -93,5 +93,35 @@ public class ProductApi {
     @PreAuthorize("hasAuthority('USER')")
     public List<SubProductHistoryResponse> getRecentlyViewedProducts() {
         return subProductService.getRecentlyViewedProduct();
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all subProduct", description = "Displaying the total number of subProduct")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public SubProductPaginationCatalogAdminResponse getAll(@RequestParam(defaultValue = "Все товары", required = false) String productType,
+                                                           @RequestParam(defaultValue = "6") int pageSize,
+                                                           @RequestParam(defaultValue = "1") int pageNumber) {
+        return subProductService.getGetAllSubProductAdmin(productType, pageSize, pageNumber);
+    }
+
+    @DeleteMapping("/single-delete/{subProductId}")
+    @Operation(summary = "single delete get by subProductId",description = "single delete subProduct get by subProductId")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public SimpleResponse singleDeleteSubProduct(@PathVariable Long subProductId) {
+        return subProductService.singleDelete(subProductId);
+    }
+
+    @DeleteMapping("/multi-delete")
+    @Operation(summary = "multi delete get by subProductId", description = "multi delete subProduct get by subProductId")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public SimpleResponse multiDeleteSubProduct(@RequestBody List<Long> subProductId) {
+        return subProductService.multiDelete(subProductId);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "edit get by id", description = "The method updates the object")
+    @PutMapping("/{id}")
+    public SimpleResponse editSubProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
+        return subProductService.updateSubProduct(id,productRequest);
     }
 }
