@@ -2,14 +2,10 @@ package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import peaksoft.house.gadgetariumb9.enums.Status;
-import peaksoft.house.gadgetariumb9.enums.TypeDelivery;
-import peaksoft.house.gadgetariumb9.enums.TypePayment;
-
+import peaksoft.house.gadgetariumb9.enums.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -46,7 +42,8 @@ public class Order {
     private Status status;
 
     @ManyToMany(
-            cascade = {MERGE, DETACH, REFRESH, PERSIST})
+            cascade = {MERGE, DETACH, REFRESH, PERSIST},
+            fetch = FetchType.EAGER)
     private List<SubProduct> subProducts;
 
     @ManyToOne(

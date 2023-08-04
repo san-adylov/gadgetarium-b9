@@ -34,6 +34,7 @@ public class Review {
     private User user;
 
     @ManyToOne(
-            cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+            cascade = {REFRESH, PERSIST, MERGE, DETACH},
+            fetch = FetchType.LAZY)
     private SubProduct subProduct;
 }

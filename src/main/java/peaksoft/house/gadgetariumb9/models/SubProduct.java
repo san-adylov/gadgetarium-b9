@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import lombok.*;
 import org.springframework.lang.Nullable;
 import java.math.BigDecimal;
@@ -19,17 +20,18 @@ public class SubProduct {
     @Id
     @GeneratedValue(generator = "sub_product_gen", strategy = GenerationType.SEQUENCE)
     @SequenceGenerator(name = "sub_product_gen", sequenceName = "sub_product_seq", allocationSize = 1, initialValue = 4)
+
     private Long id;
 
-  private int ram;
+    private int ram;
 
-  private String screenResolution;
+    private String screenResolution;
 
-  private int rom;
+    private int rom;
 
-  private String additionalFeatures;
+    private String additionalFeatures;
 
-  private BigDecimal price;
+    private BigDecimal price;
 
     private int quantity;
 
@@ -72,6 +74,13 @@ public class SubProduct {
             mappedBy = "subProduct",
             cascade = {ALL})
     private List<Review> reviews;
+  
+    public void addReviews (Review review) {
+          if (reviews == null) {
+              reviews = new ArrayList<>();
+          }
+          reviews.add(review);
+    }
 
     @ManyToMany(
             mappedBy = "subProducts",

@@ -9,9 +9,7 @@ import peaksoft.house.gadgetariumb9.enums.Role;
 
 import java.util.Collection;
 import java.util.List;
-
 import static jakarta.persistence.CascadeType.*;
-import static jakarta.persistence.CascadeType.PERSIST;
 
 @Entity
 @Table(name = "users")
@@ -57,7 +55,7 @@ public class User implements UserDetails {
 
   @OneToMany(
       mappedBy = "user",
-      cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+      cascade = {MERGE, DETACH, REFRESH, PERSIST})
   private List<Order> orders;
 
   @OneToMany(
