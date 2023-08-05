@@ -26,8 +26,6 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -62,10 +60,8 @@ public class MailingServiceImpl implements MailingService {
             ZonedDateTime startDateZ = ZonedDateTime.of(mailingRequest.getStartDate().atStartOfDay(), zoneId);
             ZonedDateTime finishDateZ = ZonedDateTime.of(mailingRequest.getFinishDate().atStartOfDay(), zoneId);
 
-            String title = "Акция в магазине Gadgetarium!";
-
             Mailing mailing = Mailing.builder()
-                    .title(title)
+                    .title(mailingRequest.getTitle())
                     .description(mailingRequest.getDescription())
                     .startDate(startDateZ)
                     .finishDate(finishDateZ)
@@ -81,7 +77,7 @@ public class MailingServiceImpl implements MailingService {
             MimeMessage message = getMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
             helper.setPriority(1);
-            helper.setSubject(title);
+            helper.setSubject(mailingRequest.getTitle());
             helper.setFrom("shop.gadgetarium.kg@gmail.com");
             for (String email : emails) {
                 User user = getUserByEmail(email);
