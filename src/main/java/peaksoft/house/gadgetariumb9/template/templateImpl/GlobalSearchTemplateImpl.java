@@ -70,9 +70,8 @@ FROM sub_products s
          JOIN brands b on b.id = p.brand_id
 WHERE CAST(s.code_color AS TEXT) ILIKE (concat('%' || ? || '%'))
    OR CAST(s.price AS TEXT) ILIKE (concat('%' || ? || '%'))
-   OR CAST(s.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
-                                                                        
-                """;
+   OR CAST(s.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))                                                                        
+ """;
 
         List<SubProductResponse> subProductResponses = jdbcTemplate.query(
                 sql3,
@@ -92,7 +91,6 @@ WHERE CAST(s.code_color AS TEXT) ILIKE (concat('%' || ? || '%'))
                         .build(),
                 keyword, keyword, keyword
         );
-
 
         return GlobalSearchResponse.builder()
                 .brandList(brandResponses)
