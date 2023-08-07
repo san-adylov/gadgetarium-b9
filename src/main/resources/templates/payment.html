@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Payment intent</th>
+        <th scope="col">Client secret</th>
+        <th scope="col">status</th>
+        <th scope="col">url</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:object="${response}">
+        <td th:text="${response.getPayment_intent()}"></td>
+        <td th:text="${response.getPayment_intent_client_secret()}"></td>
+        <td th:text="${response.getRedirect_status()}"></td>
+        <td><a href="https://dashboard.stripe.com/test/payments">stripe</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

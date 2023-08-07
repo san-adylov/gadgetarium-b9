@@ -137,7 +137,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @PostConstruct
-    private void addAdmin() {
+    public void addAdmin() {
         if (!userRepository.existsByEmail(EMAIL)) {
             User user = User
                     .builder()
@@ -152,5 +152,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             userRepository.save(user);
             log.info("Admin saved");
         }
+        PaymentServiceImpl.setup();
     }
 }
