@@ -8,6 +8,9 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryRes
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
+
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public interface SubProductService {
@@ -26,7 +29,7 @@ public interface SubProductService {
 
     List<SubProductHistoryResponse> getRecentlyViewedProduct();
 
-    SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, int pageSize, int pageNumber);
+    SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, Date startDate, Date endDate, int pageSize, int pageNumber);
 
     SimpleResponse singleDelete(Long subProductId);
 

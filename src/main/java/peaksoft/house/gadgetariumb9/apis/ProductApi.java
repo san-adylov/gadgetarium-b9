@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
@@ -16,6 +17,9 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.ProductService;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
+
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -98,11 +102,22 @@ public class ProductApi {
     @GetMapping
     @Operation(summary = "Get all subProduct", description = "Displaying the total number of subProduct")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SubProductPaginationCatalogAdminResponse getAll(@RequestParam(defaultValue = "Все товары", required = false) String productType,
-                                                           @RequestParam(defaultValue = "6") int pageSize,
-                                                           @RequestParam(defaultValue = "1") int pageNumber) {
-        return subProductService.getGetAllSubProductAdmin(productType, pageSize, pageNumber);
+    public SubProductPaginationCatalogAdminResponse getAll(
+            @RequestParam(defaultValue = "Все товары", required = false) String productType,
+            @RequestParam(defaultValue = "6") int pageSize,
+            @RequestParam(defaultValue = "1") int pageNumber,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+
+        return subProductService.getGetAllSubProductAdmin(productType, startDate, endDate, pageSize, pageNumber);
     }
+//    public SubProductPaginationCatalogAdminResponse getAll(@RequestParam(defaultValue = "Все товары", required = false) String productType,
+//                                                           @RequestParam(defaultValue = "6") int pageSize,
+//                                                           @RequestParam(defaultValue = "1") int pageNumber,
+//                                                           @RequestParam(required = false) Date startDate,
+//                                                           @RequestParam(required = false)Date endDate) {
+//        return subProductService.getGetAllSubProductAdmin(productType,startDate,endDate, pageSize, pageNumber);
+//    }
 
     @DeleteMapping("/single-delete/{subProductId}")
     @Operation(summary = "single delete get by subProductId",description = "single delete subProduct get by subProductId")

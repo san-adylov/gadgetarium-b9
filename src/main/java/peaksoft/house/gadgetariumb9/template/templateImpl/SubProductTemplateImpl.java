@@ -19,7 +19,9 @@ import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -345,37 +347,41 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     }
 
     @Override
-    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, int pageSize, int pageNumber) {
+    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, Date startDate, Date endDate, int pageSize, int pageNumber) {
+
         String query = "SELECT sum(s.quantity) from sub_products s";
         String query2 = "SELECT sum(o.quantity) from orders o";
 
         Integer subProductQuantityCount = jdbcTemplate.queryForObject(query, Integer.class);
         Integer orderQuantityCount = jdbcTemplate.queryForObject(query2, Integer.class);
 
-        int difference =(orderQuantityCount != null ? orderQuantityCount : 0) -  (subProductQuantityCount != null ? subProductQuantityCount : 0);
+        int difference = (orderQuantityCount != null ? orderQuantityCount : 0) - (subProductQuantityCount != null ? subProductQuantityCount : 0);
 
         String sql = "";
 
         if (productTyp != null) {
             if (productTyp.equalsIgnoreCase("Все товары")) {
                 sql = """
-                        SELECT s.id                                                                     AS subProductId,
-                               (SELECT spi.images
-                                FROM sub_product_images spi
-                                WHERE spi.sub_product_id = s.id
-                                LIMIT 1)                                                                AS images,
-                               s.article_number                                                         AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name) AS name,
-                               p2.created_at                                                         AS dateOfCreation,
-                               s.quantity                                                               AS quantity,
-                               CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
-                               SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount  ,
-                               s.rating                                                       
-                        FROM sub_products s
-                                 LEFT JOIN discounts d ON s.id = d.sub_product_id
-                                 LEFT JOIN products p2 ON s.product_id = p2.id
-                                 LEFT JOIN brands b ON p2.brand_id = b.id
-                        GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name,s.rating
+                       SELECT
+                           s.id AS subProductId,
+                           (SELECT spi.images FROM sub_product_images spi WHERE spi.sub_product_id = s.id LIMIT 1) AS images,
+                           s.article_number AS articleNumber,
+                           CONCAT(b.name, ' ', p2.name) AS brandName,
+                           p2.created_at AS dateOfCreation,
+                           s.quantity AS quantity,
+                           CONCAT(s.price, ', ', d.sale) AS price_and_sale,
+                           SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
+                           s.rating AS rating
+                       FROM
+                           sub_products s
+                           LEFT JOIN discounts d ON s.id = d.sub_product_id
+                           LEFT JOIN products p2 ON s.product_id = p2.id
+                           LEFT JOIN brands b ON p2.brand_id = b.id
+                       GROUP BY
+                           s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating
+                       LIMIT ? OFFSET ?;
+             
+                       
                         """;
             } else if (productTyp.equalsIgnoreCase("В продаже")) {
                 sql = """
@@ -385,12 +391,12 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 WHERE spi.sub_product_id = s.id
                                 LIMIT 1)                                                                AS images,
                                s.article_number                                                         AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name) AS name,
+                               CONCAT(b.name, ' ', p2.name) AS brandName,
                                p2.created_at                                                         AS dateOfCreation,
                                s.quantity                                                               AS quantity,
                                CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount     ,
-                               s.rating                                                    
+                               s.rating     as rating                                               
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
@@ -398,7 +404,55 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  where s.quantity>0
                         GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating
                         """;
-            } else if (productTyp.equalsIgnoreCase("Новинки")) {
+            } else if (productTyp.equalsIgnoreCase("В избранном")) {
+                sql = """
+        SELECT s.id AS subProductId,
+               (SELECT spi.images
+                FROM sub_product_images spi
+                WHERE spi.sub_product_id = s.id
+                LIMIT 1) AS images,
+               s.article_number AS articleNumber,
+               CONCAT(b.name, ' ', p2.name) AS brandName,
+               p2.created_at AS dateOfCreation,
+               s.quantity AS quantity,
+               CONCAT(s.price, ', ', d.sale) AS price_and_sale,
+               SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
+               s.rating as rating
+        FROM sub_products s
+        LEFT JOIN discounts d ON s.id = d.sub_product_id
+        LEFT JOIN products p2 ON s.product_id = p2.id
+        LEFT JOIN brands b ON p2.brand_id = b.id
+        JOIN user_favorite f ON f.user_id = p2.id
+        GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating
+    """;
+            }
+            else if (productTyp.equalsIgnoreCase("В корзине")) {
+                sql = """
+       SELECT s.id AS subProductId,
+              (SELECT spi.images
+               FROM sub_product_images spi
+               WHERE spi.sub_product_id = s.id
+               LIMIT 1) AS images,
+              s.article_number AS articleNumber,
+              CONCAT(b.name, ' ', p2.name) AS brandName,
+              p2.created_at AS dateOfCreation,
+              s.quantity AS quantity,
+              CONCAT(s.price, ', ', d.sale) AS price_and_sale,
+              SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
+              s.rating as rating
+       FROM sub_products s
+                LEFT JOIN discounts d ON s.id = d.sub_product_id
+                LEFT JOIN products p2 ON s.product_id = p2.id
+                LEFT JOIN brands b ON p2.brand_id = b.id
+                JOIN baskets_sub_products bsp ON s.id = bsp.sub_products_id
+                JOIN baskets bas ON bsp.baskets_id = bas.id
+                JOIN users u ON bas.user_id = u.id
+       GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating
+    """;
+            }
+
+
+            else if (productTyp.equalsIgnoreCase("Новинки")) {
                 sql = """
                          SELECT s.id                                                                     AS subProductId,
                                                        (SELECT spi.images
@@ -406,19 +460,19 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                                         WHERE spi.sub_product_id = s.id
                                                         LIMIT 1)                                                                AS images,
                                                        s.article_number                                                         AS articleNumber,
-                                                       CONCAT(b.name, ' ', p2.name) AS name,
+                                                       CONCAT(b.name, ' ', p2.name) AS brandName,
                                                        p2.created_at                                                         AS dateOfCreation,
                                                        s.quantity                                                               AS quantity,
                                                        CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                                        SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount  ,
-                                                       s.rating                                                       
+                                                       s.rating       as rating                                                
                                                 FROM sub_products s
                                                          LEFT JOIN discounts d ON s.id = d.sub_product_id
                                                          LEFT JOIN products p2 ON s.product_id = p2.id
                                                          LEFT JOIN brands b ON p2.brand_id = b.id
                                                 GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating ORDER BY s.id desc 
                         """;
-            } else if (productTyp.equalsIgnoreCase("По акции")) {
+            } else if (productTyp.equalsIgnoreCase("Все акции")) {
                 sql = """
                         SELECT s.id                                                                     AS subProductId,
                                                       (SELECT spi.images
@@ -426,12 +480,12 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                                        WHERE spi.sub_product_id = s.id
                                                        LIMIT 1)                                                                AS images,
                                                       s.article_number                                                         AS articleNumber,
-                                                      CONCAT(b.name, ' ', p2.name) AS name,
+                                                      CONCAT(b.name, ' ', p2.name) AS brandName,
                                                       p2.created_at                                                         AS dateOfCreation,
                                                       s.quantity                                                               AS quantity,
                                                       CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                                       SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount,
-                                                      s.rating                                                       
+                                                      s.rating   as rating                                                    
                                                FROM sub_products s
                                                         LEFT JOIN discounts d ON s.id = d.sub_product_id
                                                         LEFT JOIN products p2 ON s.product_id = p2.id
@@ -446,12 +500,12 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 WHERE spi.sub_product_id = s.id
                                 LIMIT 1)                           AS images,
                                s.article_number                    AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name)        AS name,
+                               CONCAT(b.name, ' ', p2.name)        AS brandName,
                                p2.created_at                    AS dateOfCreation,
                                s.quantity                          AS quantity,
                                CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
-                               s.rating
+                               s.rating as rating
                                                  
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
@@ -469,12 +523,12 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 WHERE spi.sub_product_id = s.id
                                 LIMIT 1)                           AS images,
                                s.article_number                    AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name)        AS name,
+                               CONCAT(b.name, ' ', p2.name)        AS brandName,
                                p2.data_of_issue                    AS dateOfCreation,
                                s.quantity                          AS quantity,
                                CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
-                               s.rating
+                               s.rating as rating
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
@@ -490,12 +544,12 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 WHERE spi.sub_product_id = s.id
                                 LIMIT 1)                           AS images,
                                s.article_number                    AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name)        AS name,
+                               CONCAT(b.name, ' ', p2.name)        AS brandName,
                                p2.created_at                    AS dateOfCreation,
                                s.quantity                          AS quantity,
                                CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
-                               s.rating
+                               s.rating as rating
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
@@ -510,12 +564,12 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 WHERE spi.sub_product_id = s.id
                                 LIMIT 1)                           AS images,
                                s.article_number                    AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name)        AS name,
+                               CONCAT(b.name, ' ', p2.name)        AS brandName,
                                p2.created_at                    AS dateOfCreation,
                                s.quantity                          AS quantity,
                                CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
-                               s.rating
+                               s.rating as rating
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
@@ -530,12 +584,12 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 WHERE spi.sub_product_id = s.id
                                 LIMIT 1)                           AS images,
                                s.article_number                    AS articleNumber,
-                               CONCAT(b.name, ' ', p2.name)        AS name,
+                               CONCAT(b.name, ' ', p2.name)        AS brandName,
                                p2.created_at                    AS dateOfCreation,
                                s.quantity                          AS quantity,
                                CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
-                               s.rating
+                               s.rating as rating
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
@@ -548,27 +602,35 @@ public class SubProductTemplateImpl implements SubProductTemplate {
             throw new BadRequestException("Product type is not correct");
         }
 
-        int offset = (pageNumber - 1) * pageSize;
-        sql += " LIMIT ? OFFSET ?";
 
-        List<SubProductCatalogAdminResponse> catalogAdminResponseList = jdbcTemplate.query(sql,
-                (rs, rowNum) ->
-                        SubProductCatalogAdminResponse
-                                .builder()
-                                .subProductId(rs.getLong("subProductId"))
-                                .images(rs.getString("images"))
-                                .productNameAndBrandName(rs.getString("name"))
-                                .articleNumber(rs.getLong("articleNumber"))
-                                .dateOfCreation(rs.getDate("dateOfCreation").toLocalDate())
-                                .quantity(rs.getInt("quantity"))
-                                .price_and_sale(rs.getString("price_and_sale"))
-                                .total_with_discount(rs.getBigDecimal("total_with_discount"))
-                                .rating(rs.getDouble("rating"))
-                                .build(),
-                pageSize, offset
+        int offset = (pageNumber - 1) * pageSize;
+        List<Object> queryParams = new ArrayList<>();
+        queryParams.add(startDate);
+        queryParams.add(endDate);
+        queryParams.add(pageSize);
+        queryParams.add(offset);
+/*SELECT *
+FROM your_table
+WHERE EXTRACT(epoch FROM TO_TIMESTAMP('2023-07-14 00:00:00+06', 'YYYY-MM-DD HH24:MI:SSOF')) * 1000 <= your_date_column -- умножаем на 1000, чтобы перевести секунды в миллисекунды
+LIMIT ? OFFSET ?;
+*/
+        List<SubProductCatalogAdminResponse> catalogAdminResponseList = jdbcTemplate.query(
+                sql + " LIMIT ? OFFSET ?", // Append LIMIT and OFFSET clauses to the SQL query
+                (rs, rowNum) -> SubProductCatalogAdminResponse.builder()
+                        .subProductId(rs.getLong("subProductId"))
+                        .images(rs.getString("images"))
+                        .productNameAndBrandName(rs.getString("brandName")) // Use the correct alias "brandName"
+                        .articleNumber(rs.getLong("articleNumber"))
+                        .dateOfCreation(rs.getDate("dateOfCreation").toLocalDate())
+                        .quantity(rs.getInt("quantity"))
+                        .price_and_sale(rs.getString("price_and_sale"))
+                        .total_with_discount(rs.getBigDecimal("total_with_discount"))
+                        .rating(rs.getDouble("rating"))
+                        .build(),
+                queryParams.toArray() // Pass the query parameters as an array
         );
 
         log.info("Successfully");
         return new SubProductPaginationCatalogAdminResponse(pageSize, pageNumber, difference, catalogAdminResponseList);
     }
-}
+    }
