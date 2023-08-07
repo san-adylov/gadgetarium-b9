@@ -8,9 +8,9 @@ import peaksoft.house.gadgetariumb9.services.PaymentService;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
+
     @Value("${stripe.apikey}")
     private static String STRIPE_API_KEY;
-
 
     public static void setup() {
         Stripe.apiKey = STRIPE_API_KEY;

@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreatePayment {
+
     private Integer amount;
 
     private String featureResponse;

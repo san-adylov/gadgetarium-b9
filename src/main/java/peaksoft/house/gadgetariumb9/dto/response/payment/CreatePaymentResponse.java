@@ -3,8 +3,9 @@ package peaksoft.house.gadgetariumb9.dto.response.payment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public class CreatePaymentResponse {
+
     private String clientSecret;
 }

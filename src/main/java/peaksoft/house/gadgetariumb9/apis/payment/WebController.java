@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import peaksoft.house.gadgetariumb9.dto.request.payment.CheckoutForm;
 import peaksoft.house.gadgetariumb9.services.PaymentService;
 
-
 @Controller
 @RequiredArgsConstructor
-
 public class WebController {
+
     private final PaymentService paymentServices;
 
     @GetMapping("/")

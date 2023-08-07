@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @Slf4j
+@RestController
 public class StripeWebhookController {
+
     @Value("${stripe.webhook.secret}")
     private String endpointSecret;
+
     private final Logger logger = LoggerFactory.getLogger(StripeWebhookController.class);
 
     @PostMapping("/stripe/events")
