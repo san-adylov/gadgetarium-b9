@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.template;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
@@ -18,7 +19,7 @@ public interface SubProductTemplate {
 
   List<SubProductHistoryResponse> getRecentlyViewedProducts ();
 
-    SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, Date startDate,Date endDate, int pageSize, int pageNumber);
+ //   SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 
 
   MainPagePaginationResponse getNewProducts(int page, int pageSize);
@@ -26,5 +27,6 @@ public interface SubProductTemplate {
   MainPagePaginationResponse getRecommendedProducts(int page, int pageSize);
 
   MainPagePaginationResponse getAllDiscountProducts(int page, int pageSize);
-  
+
+  SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, LocalDateTime startDate, LocalDateTime endDate, int pageSize, int pageNumber);
 }

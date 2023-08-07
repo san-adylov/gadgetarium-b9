@@ -20,8 +20,8 @@ import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -346,8 +346,8 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         ), user.getId());
     }
 
-    @Override
-    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, Date startDate, Date endDate, int pageSize, int pageNumber) {
+/*    @Override
+    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
 
         String query = "SELECT sum(s.quantity) from sub_products s";
         String query2 = "SELECT sum(o.quantity) from orders o";
@@ -450,7 +450,6 @@ public class SubProductTemplateImpl implements SubProductTemplate {
        GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating
     """;
             }
-
 
             else if (productTyp.equalsIgnoreCase("Новинки")) {
                 sql = """
@@ -602,24 +601,31 @@ public class SubProductTemplateImpl implements SubProductTemplate {
             throw new BadRequestException("Product type is not correct");
         }
 
-
         int offset = (pageNumber - 1) * pageSize;
-        List<Object> queryParams = new ArrayList<>();
-        queryParams.add(startDate);
-        queryParams.add(endDate);
-        queryParams.add(pageSize);
-        queryParams.add(offset);
-/*SELECT *
-FROM your_table
-WHERE EXTRACT(epoch FROM TO_TIMESTAMP('2023-07-14 00:00:00+06', 'YYYY-MM-DD HH24:MI:SSOF')) * 1000 <= your_date_column -- умножаем на 1000, чтобы перевести секунды в миллисекунды
-LIMIT ? OFFSET ?;
-*/
+        sql += " LIMIT ? OFFSET ?";
+
+        String dateCondition = "";
+        if (startDate != null && endDate != null) {
+            dateCondition = "AND p.created_at BETWEEN '%s' AND '%s' ".formatted(startDate, endDate);
+        } else if (startDate != null) {
+            dateCondition = "AND p.created_at >= '%s' ".formatted(startDate);
+        } else if (endDate != null) {
+            dateCondition = "AND p.data_of_issue <= '%s' ".formatted(endDate);
+        }
+
+        sql = String.format(sql, dateCondition);
+
+
+
+
+
+
         List<SubProductCatalogAdminResponse> catalogAdminResponseList = jdbcTemplate.query(
-                sql + " LIMIT ? OFFSET ?", // Append LIMIT and OFFSET clauses to the SQL query
+                sql ,
                 (rs, rowNum) -> SubProductCatalogAdminResponse.builder()
                         .subProductId(rs.getLong("subProductId"))
                         .images(rs.getString("images"))
-                        .productNameAndBrandName(rs.getString("brandName")) // Use the correct alias "brandName"
+                        .productNameAndBrandName(rs.getString("brandName"))
                         .articleNumber(rs.getLong("articleNumber"))
                         .dateOfCreation(rs.getDate("dateOfCreation").toLocalDate())
                         .quantity(rs.getInt("quantity"))
@@ -627,10 +633,129 @@ LIMIT ? OFFSET ?;
                         .total_with_discount(rs.getBigDecimal("total_with_discount"))
                         .rating(rs.getDouble("rating"))
                         .build(),
-                queryParams.toArray() // Pass the query parameters as an array
+                startDate, endDate,
+                pageSize, offset
+        );
+
+        log.info("Successfully");
+        return new SubProductPaginationCatalogAdminResponse(pageSize, pageNumber, difference, catalogAdminResponseList);
+    }*/
+
+
+
+    @Override
+    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, LocalDateTime startDate, LocalDateTime endDate, int pageSize, int pageNumber) {
+        String countSubProductQuery = "SELECT COUNT(s.id) FROM sub_products s";
+        String countOrderQuery = "SELECT COUNT(o.id) FROM orders o";
+
+        Integer subProductQuantityCount = jdbcTemplate.queryForObject(countSubProductQuery, Integer.class);
+        Integer orderQuantityCount = jdbcTemplate.queryForObject(countOrderQuery, Integer.class);
+
+        int difference = (orderQuantityCount != null ? orderQuantityCount : 0) - (subProductQuantityCount != null ? subProductQuantityCount : 0);
+
+        String baseSql = """
+            SELECT
+                s.id AS subProductId,
+                (SELECT spi.images FROM sub_product_images spi WHERE spi.sub_product_id = s.id LIMIT 1) AS images,
+                s.article_number AS articleNumber,
+                CONCAT(b.name, ' ', p2.name) AS brandName,
+                p2.created_at AS dateOfCreation,
+                s.quantity AS quantity,
+                CONCAT(s.price, ', ', d.sale) AS price_and_sale,
+                SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
+                s.rating AS rating
+            FROM
+                sub_products s
+                LEFT JOIN discounts d ON s.id = d.sub_product_id
+                LEFT JOIN products p2 ON s.product_id = p2.id
+                LEFT JOIN brands b ON p2.brand_id = b.id
+            """;
+
+        StringBuilder sqlBuilder = new StringBuilder(baseSql);
+
+        if (productTyp != null) {
+            switch (productTyp) {
+                case "Все товары":
+                    break;
+                case "В продаже":
+                    sqlBuilder.append("WHERE s.quantity > 0 ");
+                    break;
+                case "В избранном":
+                    sqlBuilder.append("JOIN user_favorite f ON f.user_id = p2.id ");
+                    break;
+                case "В корзине":
+                    sqlBuilder.append("JOIN baskets_sub_products bsp ON s.id = bsp.sub_products_id ");
+                    sqlBuilder.append("JOIN baskets bas ON bsp.baskets_id = bas.id ");
+                    sqlBuilder.append("JOIN users u ON bas.user_id = u.id ");
+                    break;
+                case "Новинки":
+                    sqlBuilder.append("ORDER BY s.id DESC ");
+                    break;
+                case "Все акции":
+                    break;
+                case "До 50%":
+                    sqlBuilder.append("WHERE d.sale < 50 ");
+                    break;
+                case "Свыше 50%":
+                    sqlBuilder.append("WHERE d.sale >= 50 ");
+                    break;
+                case "Рекомендуемые":
+                    sqlBuilder.append("ORDER BY s.rating DESC ");
+                    break;
+                case "По увеличению цены":
+                    sqlBuilder.append("ORDER BY s.price DESC ");
+                    break;
+                case "По уменьшению цены":
+                    sqlBuilder.append("ORDER BY s.price ASC ");
+                    break;
+                default:
+                    log.error("Product type is not correct");
+                    throw new BadRequestException("Product type is not correct");
+            }
+        }
+
+        int offset = (pageNumber - 1) * pageSize;
+        sqlBuilder.append("GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating ");
+        sqlBuilder.append("LIMIT ? OFFSET ?");
+
+        if (productTyp != null) {
+            // ... (your existing code for handling different product types)
+
+            if (startDate != null && endDate != null) {
+                baseSql += " AND p.created_at BETWEEN ? AND ?";
+            } else if (startDate != null) {
+                baseSql += " AND p.created_at >= ?";
+            } else if (endDate != null) {
+                baseSql += " AND p.created_at <= ?";
+            }
+
+            baseSql += " LIMIT ? OFFSET ?";
+        }
+
+
+
+        List<SubProductCatalogAdminResponse> catalogAdminResponseList = jdbcTemplate.query(
+                sqlBuilder.toString(),
+                (rs, rowNum) -> SubProductCatalogAdminResponse.builder()
+                        .subProductId(rs.getLong("subProductId"))
+                        .images(rs.getString("images"))
+                        .productNameAndBrandName(rs.getString("brandName"))
+                        .articleNumber(rs.getLong("articleNumber"))
+                        .dateOfCreation(LocalDate.from(rs.getTimestamp("dateOfCreation").toLocalDateTime()))
+                        .quantity(rs.getInt("quantity"))
+                        .price_and_sale(rs.getString("price_and_sale"))
+                        .total_with_discount(rs.getBigDecimal("total_with_discount"))
+                        .rating(rs.getDouble("rating"))
+                        .build(),
+                pageSize, offset
         );
 
         log.info("Successfully");
         return new SubProductPaginationCatalogAdminResponse(pageSize, pageNumber, difference, catalogAdminResponseList);
     }
-    }
+
+
+
+
+
+}
