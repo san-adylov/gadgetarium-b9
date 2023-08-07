@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
+import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
@@ -123,5 +124,13 @@ public class ProductApi {
     @PutMapping("/{id}")
     public SimpleResponse editSubProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
         return subProductService.updateSubProduct(id,productRequest);
+    }
+
+    @GetMapping("/get-by-id")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "To get by product id the product.", description = "This method to get by product id the product.")
+    public ProductUserAndAdminResponse getByProductId(@RequestParam Long productId,
+                                                      @RequestParam(defaultValue = "", required = false) String colour) {
+        return productService.getByProductId(productId, colour);
     }
 }
