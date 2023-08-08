@@ -1,8 +1,10 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.transaction.Transactional;
+
 import java.time.LocalDate;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 import java.util.Objects;
+
 @Slf4j
 @Service
 @Transactional
@@ -31,6 +34,7 @@ import java.util.Objects;
 public class SubProductServiceImpl implements SubProductService {
 
     private final SubProductTemplate subProductTemplate;
+
     private final JwtService jwtService;
 
     private final SubProductRepository subProductRepository;
@@ -81,18 +85,16 @@ public class SubProductServiceImpl implements SubProductService {
         log.info("Product added recently viewed");
     }
 
-  @Override
-  public List<SubProductHistoryResponse> getRecentlyViewedProduct() {
-    log.info("Get recently viewed products");
-    return subProductTemplate.getRecentlyViewedProducts();
-  }
-
+    @Override
+    public List<SubProductHistoryResponse> getRecentlyViewedProduct() {
+        log.info("Get recently viewed products");
+        return subProductTemplate.getRecentlyViewedProducts();
+    }
 
 
     @Override
-    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
-        return subProductTemplate.getGetAllSubProductAdmin(productTyp, startDate, endDate,
-                pageSize, pageNumber);
+    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
+        return subProductTemplate.getGetAllSubProductAdmin(productType, startDate, endDate, pageSize, pageNumber);
     }
 
     @Override
