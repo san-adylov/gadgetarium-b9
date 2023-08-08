@@ -69,7 +69,7 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                          JOIN brands b on b.id = p.brand_id
                 WHERE CAST(s.code_color AS TEXT) ILIKE (concat('%' || ? || '%'))
                    OR CAST(s.price AS TEXT) ILIKE (concat('%' || ? || '%'))
-                   OR CAST(s.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))                                                                        
+                   OR CAST(s.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))                                                                       \s
                  """;
 
         List<SubProductResponse> subProductResponses = jdbcTemplate.query(
