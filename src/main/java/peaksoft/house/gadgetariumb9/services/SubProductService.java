@@ -1,6 +1,5 @@
 package peaksoft.house.gadgetariumb9.services;
 
-import org.joda.time.LocalDate;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
@@ -10,6 +9,7 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,9 +30,7 @@ public interface SubProductService {
     List<SubProductHistoryResponse> getRecentlyViewedProduct();
 
 
-   // SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, java.time.LocalDate startDate, java.time.LocalDate endDate, int pageSize, int pageNumber);
-
-    SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, LocalDateTime startDate, LocalDateTime endDate, int pageSize, int pageNumber);
+    SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, java.time.LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 
     SimpleResponse singleDelete(Long subProductId);
 

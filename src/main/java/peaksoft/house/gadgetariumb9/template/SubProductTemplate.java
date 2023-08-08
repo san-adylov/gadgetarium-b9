@@ -19,7 +19,6 @@ public interface SubProductTemplate {
 
   List<SubProductHistoryResponse> getRecentlyViewedProducts ();
 
- //   SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 
 
   MainPagePaginationResponse getNewProducts(int page, int pageSize);
@@ -28,5 +27,6 @@ public interface SubProductTemplate {
 
   MainPagePaginationResponse getAllDiscountProducts(int page, int pageSize);
 
-  SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, LocalDateTime startDate, LocalDateTime endDate, int pageSize, int pageNumber);
+
+  SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 }

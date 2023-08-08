@@ -2,7 +2,6 @@ package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,17 +87,13 @@ public class SubProductServiceImpl implements SubProductService {
     return subProductTemplate.getRecentlyViewedProducts();
   }
 
+
+
     @Override
-    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, LocalDateTime startDate, LocalDateTime endDate, int pageSize, int pageNumber) {
+    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
         return subProductTemplate.getGetAllSubProductAdmin(productTyp, startDate, endDate,
                 pageSize, pageNumber);
     }
-
- /*   @Override
-    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
-        return subProductTemplate.getGetAllSubProductAdmin(productType, startDate, endDate,
-                pageSize, pageNumber);
-    }*/
 
     @Override
     @Transactional
