@@ -26,11 +26,11 @@ public class OrderPaginationAdmin {
     private List<OrderResponseAdmin> responseAdminList;
 
     @Builder
-    public OrderPaginationAdmin(int pageSize, int pageNumber, int quantity, int IN_PROCESSING , int READY_FOR_DELIVERY, int DELIVERED, List<OrderResponseAdmin> responseAdminList) {
+    public OrderPaginationAdmin(int pageSize, int pageNumber, int quantity, int IN_PROCESSING, int READY_FOR_DELIVERY, int DELIVERED, List<OrderResponseAdmin> responseAdminList) {
         this.pageSize = pageSize;
         this.pageNumber = pageNumber;
         this.quantity = quantity;
-        this.IN_PROCESSING = IN_PROCESSING ;
+        this.IN_PROCESSING = IN_PROCESSING;
         this.READY_FOR_DELIVERY = READY_FOR_DELIVERY;
         this.DELIVERED = DELIVERED;
         this.responseAdminList = responseAdminList;

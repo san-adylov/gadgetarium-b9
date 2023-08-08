@@ -8,11 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.ProductService;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
@@ -46,7 +42,7 @@ public class ProductApi {
     public MainPagePaginationResponse getNewProducts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "5") int pageSize) {
-        return subProductService.getNewProducts(page,pageSize);
+        return subProductService.getNewProducts(page, pageSize);
     }
 
     @GetMapping("/recommended")
@@ -105,7 +101,7 @@ public class ProductApi {
     }
 
     @DeleteMapping("/single-delete/{subProductId}")
-    @Operation(summary = "single delete get by subProductId",description = "single delete subProduct get by subProductId")
+    @Operation(summary = "single delete get by subProductId", description = "single delete subProduct get by subProductId")
     @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse singleDeleteSubProduct(@PathVariable Long subProductId) {
         return subProductService.singleDelete(subProductId);
@@ -122,6 +118,6 @@ public class ProductApi {
     @Operation(summary = "edit get by id", description = "The method updates the object")
     @PutMapping("/{id}")
     public SimpleResponse editSubProduct(@PathVariable Long id, @RequestBody ProductRequest productRequest) {
-        return subProductService.updateSubProduct(id,productRequest);
+        return subProductService.updateSubProduct(id, productRequest);
     }
 }

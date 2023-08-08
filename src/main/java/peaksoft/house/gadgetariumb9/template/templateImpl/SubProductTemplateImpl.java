@@ -8,12 +8,6 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogAdminResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
@@ -28,9 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubProductTemplateImpl implements SubProductTemplate {
 
-  private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-  private final JwtService jwtService;
+    private final JwtService jwtService;
 
     @Override
     public SubProductPagination getProductFilter(SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber) {
@@ -320,21 +314,21 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     public List<SubProductHistoryResponse> getRecentlyViewedProducts() {
         User user = jwtService.getAuthenticationUser();
         String sql = """
-        SELECT s.id,
-               (SELECT spi.images
-                FROM sub_product_images spi
-                WHERE spi.sub_product_id = s.id
-                LIMIT 1)                    AS image,
-               CONCAT(c.title, ' ', p.name) AS name,
-               s.rating,
-               s.price
-        FROM sub_products s
-                 JOIN products p ON s.product_id = p.id
-                 JOIN categories c ON p.category_id = c.id
-                 JOIN user_recently_viewed_products urvp ON urvp.recently_viewed_products = s.id
-                 JOIN users u on urvp.user_id = u.id
-        WHERE u.id = ?
-        """;
+                SELECT s.id,
+                       (SELECT spi.images
+                        FROM sub_product_images spi
+                        WHERE spi.sub_product_id = s.id
+                        LIMIT 1)                    AS image,
+                       CONCAT(c.title, ' ', p.name) AS name,
+                       s.rating,
+                       s.price
+                FROM sub_products s
+                         JOIN products p ON s.product_id = p.id
+                         JOIN categories c ON p.category_id = c.id
+                         JOIN user_recently_viewed_products urvp ON urvp.recently_viewed_products = s.id
+                         JOIN users u on urvp.user_id = u.id
+                WHERE u.id = ?
+                """;
         return jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductHistoryResponse(
                 rs.getLong("id"),
                 rs.getString("image"),
@@ -352,7 +346,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         Integer subProductQuantityCount = jdbcTemplate.queryForObject(query, Integer.class);
         Integer orderQuantityCount = jdbcTemplate.queryForObject(query2, Integer.class);
 
-        int difference =(orderQuantityCount != null ? orderQuantityCount : 0) -  (subProductQuantityCount != null ? subProductQuantityCount : 0);
+        int difference = (orderQuantityCount != null ? orderQuantityCount : 0) - (subProductQuantityCount != null ? subProductQuantityCount : 0);
 
         String sql = "";
 
@@ -370,7 +364,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                s.quantity                                                               AS quantity,
                                CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount  ,
-                               s.rating                                                       
+                               s.rating
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
@@ -390,7 +384,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                s.quantity                                                               AS quantity,
                                CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount     ,
-                               s.rating                                                    
+                               s.rating
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
@@ -411,13 +405,13 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                                        s.quantity                                                               AS quantity,
                                                        CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                                        SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount  ,
-                                                       s.rating                                                       
+                                                       s.rating
                                                 FROM sub_products s
                                                          LEFT JOIN discounts d ON s.id = d.sub_product_id
                                                          LEFT JOIN products p2 ON s.product_id = p2.id
                                                          LEFT JOIN brands b ON p2.brand_id = b.id
-                                                GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating ORDER BY s.id desc 
-                        """;
+                                                GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating ORDER BY s.id desc
+                                                """;
             } else if (productTyp.equalsIgnoreCase("По акции")) {
                 sql = """
                         SELECT s.id                                                                     AS subProductId,
@@ -431,12 +425,13 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                                       s.quantity                                                               AS quantity,
                                                       CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                                       SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount,
-                                                      s.rating                                                       
+                                                      s.rating
                                                FROM sub_products s
                                                         LEFT JOIN discounts d ON s.id = d.sub_product_id
                                                         LEFT JOIN products p2 ON s.product_id = p2.id
                                                         LEFT JOIN brands b ON p2.brand_id = b.id
-                                               GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating""";
+                                               GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating
+                                               """;
 
             } else if (productTyp.equalsIgnoreCase("До 50%")) {
                 sql = """
@@ -540,7 +535,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
                                  LEFT JOIN brands b ON p2.brand_id = b.id
-                        GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating order by s.price asc;
+                        GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating order by s.price;
                         """;
             }
         } else {
