@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class MailingRequest {
+    private String title;
+
     private String description;
 
     private String image;
