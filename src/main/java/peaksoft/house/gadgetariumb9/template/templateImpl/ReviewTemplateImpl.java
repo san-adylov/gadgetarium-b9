@@ -36,7 +36,11 @@ public class ReviewTemplateImpl implements ReviewTemplate {
                  JOIN sub_products sp ON r.sub_product_id = sp.product_id
                  JOIN users u ON u.id = r.user_id
                  WHERE sp.id = ?
+        ORDER BY r.date_creat_ad DESC
+        LIMIT ? OFFSET ?
         """;
+
+    int offset = (numberPage - 1) * pageSize;
 
     List<ReviewResponse> reviewResponses = jdbcTemplate.query(
         sql,(rs, rowNum) -> new ReviewResponse(
@@ -47,7 +51,7 @@ public class ReviewTemplateImpl implements ReviewTemplate {
             rs.getString("answer"),
             rs.getString("date"),
             rs.getString("image")),
-        subProductId);
+        subProductId,pageSize,offset);
     return new ReviewPagination(reviewResponses,pageSize,numberPage);
   }
 
