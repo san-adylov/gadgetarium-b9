@@ -36,10 +36,10 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
         );
 
         String sql2 = """
-                SELECT c.id, c.title
-               FROM categories c
-               WHERE c.title ILIKE (concat('%' || ? || '%'))
-                          """;
+                 SELECT c.id, c.title
+                FROM categories c
+                WHERE c.title ILIKE (concat('%' || ? || '%'))
+                           """;
         List<CategoryResponse> categoryResponses = jdbcTemplate.query(
                 sql2,
                 (rs, rowNum) -> CategoryResponse.builder()
@@ -48,30 +48,29 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                         .build(),
                 keyword
         );
-
         String sql3 = """
-SELECT p.name,
-       b.name                as brandName,
-       s.id                  as subProductId,
-       s.ram,
-       s.screen_resolution   as screenResolution,
-       s.rom,
-       s.additional_features as additionalFeatures,
-       s.price,
-       s.quantity,
-       s.code_color,
-       (SELECT spi.images
-        FROM sub_product_images spi
-        WHERE spi.sub_product_id = s.id
-        LIMIT 1)             as image,
-       s.article_number
-FROM sub_products s
-         JOIN products p on p.id = s.product_id
-         JOIN brands b on b.id = p.brand_id
-WHERE CAST(s.code_color AS TEXT) ILIKE (concat('%' || ? || '%'))
-   OR CAST(s.price AS TEXT) ILIKE (concat('%' || ? || '%'))
-   OR CAST(s.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))                                                                        
- """;
+                SELECT p.name,
+                       b.name                as brandName,
+                       s.id                  as subProductId,
+                       s.ram,
+                       s.screen_resolution   as screenResolution,
+                       s.rom,
+                       s.additional_features as additionalFeatures,
+                       s.price,
+                       s.quantity,
+                       s.code_color,
+                       (SELECT spi.images
+                        FROM sub_product_images spi
+                        WHERE spi.sub_product_id = s.id
+                        LIMIT 1)             as image,
+                       s.article_number
+                FROM sub_products s
+                         JOIN products p on p.id = s.product_id
+                         JOIN brands b on b.id = p.brand_id
+                WHERE CAST(s.code_color AS TEXT) ILIKE (concat('%' || ? || '%'))
+                   OR CAST(s.price AS TEXT) ILIKE (concat('%' || ? || '%'))
+                   OR CAST(s.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))                                                                        
+                 """;
 
         List<SubProductResponse> subProductResponses = jdbcTemplate.query(
                 sql3,
