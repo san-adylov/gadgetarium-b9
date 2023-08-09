@@ -14,7 +14,6 @@ public class ReviewPagination {
 
   private int numberPage;
 
-
   public ReviewPagination(List<ReviewResponse> responseList, int pageSize,
       int numberPage) {
     this.responseList = responseList;
