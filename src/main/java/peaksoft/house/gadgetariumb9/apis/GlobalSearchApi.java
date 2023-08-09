@@ -21,14 +21,14 @@ public class GlobalSearchApi {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @Operation(summary = "Search", description = "This method gets all products by searching.")
-    GlobalSearchResponse globalSearch(@RequestParam(value = "keyword", required = false) String keyword) {
+    public GlobalSearchResponse globalSearch(@RequestParam(value = "keyword", required = false) String keyword) {
         return globalSearchService.globalSearch(keyword);
     }
 
     @GetMapping("/admin-search")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Admin search", description = "Search for an admin by article, etc.")
-    List<AdminSearchResponse> adminSearch(@RequestParam(value = "keyword", required = false) String keyword) {
+    public List<AdminSearchResponse> adminSearch(@RequestParam(value = "keyword", required = false) String keyword) {
         return globalSearchService.adminSearch(keyword);
     }
 }
