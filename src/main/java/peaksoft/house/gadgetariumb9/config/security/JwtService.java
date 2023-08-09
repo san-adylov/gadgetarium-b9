@@ -4,16 +4,16 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
+import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
+import java.time.ZonedDateTime;
+import java.util.Date;
 
 @Service
 @RequiredArgsConstructor

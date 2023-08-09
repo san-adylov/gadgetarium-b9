@@ -1,7 +1,6 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.transaction.Transactional;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -9,20 +8,20 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
-import peaksoft.house.gadgetariumb9.models.User;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
-import peaksoft.house.gadgetariumb9.models.*;
+import peaksoft.house.gadgetariumb9.models.Category;
+import peaksoft.house.gadgetariumb9.models.SubProduct;
+import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
+
+import java.util.List;
 import java.util.Objects;
+
 @Slf4j
 @Service
 @Transactional
@@ -30,6 +29,7 @@ import java.util.Objects;
 public class SubProductServiceImpl implements SubProductService {
 
     private final SubProductTemplate subProductTemplate;
+
     private final JwtService jwtService;
 
     private final SubProductRepository subProductRepository;
@@ -45,7 +45,6 @@ public class SubProductServiceImpl implements SubProductService {
     private final UserRepository userRepository;
 
     private final CategoryRepository categoryRepository;
-
 
     @Override
     public SubProductPagination getSubProductCatalogs(
@@ -80,11 +79,11 @@ public class SubProductServiceImpl implements SubProductService {
         log.info("Product added recently viewed");
     }
 
-  @Override
-  public List<SubProductHistoryResponse> getRecentlyViewedProduct() {
-    log.info("Get recently viewed products");
-    return subProductTemplate.getRecentlyViewedProducts();
-  }
+    @Override
+    public List<SubProductHistoryResponse> getRecentlyViewedProduct() {
+        log.info("Get recently viewed products");
+        return subProductTemplate.getRecentlyViewedProducts();
+    }
 
     @Override
     public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, int pageSize, int pageNumber) {

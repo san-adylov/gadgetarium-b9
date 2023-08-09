@@ -7,6 +7,8 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.InvalidMimeTypeException;
@@ -20,6 +22,8 @@ import java.util.Objects;
 @Slf4j
 @RequiredArgsConstructor
 public class S3FileService {
+
+    private static final Logger logger = LoggerFactory.getLogger(S3FileService.class);
 
     @Value("${application.bucket.name}")
     private String bucketName;
@@ -39,10 +43,11 @@ public class S3FileService {
         try {
             return IOUtils.toByteArray(inputStream);
         } catch (InvalidMimeTypeException | IOException e) {
-            e.printStackTrace();
+            logger.error("An error occurred while downloading the file: {}", fileName, e);
         }
         return new byte[0];
     }
+
 
     public String deleteFile(String fileName) {
         s3Client.deleteObject(bucketName, fileName);

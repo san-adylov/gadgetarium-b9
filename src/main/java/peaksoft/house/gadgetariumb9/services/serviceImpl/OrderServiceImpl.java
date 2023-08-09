@@ -12,7 +12,6 @@ import peaksoft.house.gadgetariumb9.enums.Status;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.Order;
 import peaksoft.house.gadgetariumb9.repositories.OrderRepository;
-import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.services.OrderService;
 import peaksoft.house.gadgetariumb9.template.OrderTemplate;
 import java.time.LocalDate;
@@ -28,7 +27,6 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
-    private final UserRepository userRepository;
 
     @Override
     public OrderPaginationAdmin getAllOrderAdmin(String status, int pageSize, int pageNumber, LocalDate startDate, LocalDate endDate) {
@@ -39,28 +37,16 @@ public class OrderServiceImpl implements OrderService {
     public SimpleResponse updateStatus(Long orderId, String status) {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> {
             log.error(String.format("Order with id - %s is not found!", orderId));
-            throw new NotFoundException(String.format("Order with id - %s not found!", orderId));
+            return new NotFoundException(String.format("Order with id - %s not found!", orderId));
         });
         Status newStatus;
         switch (status) {
-            case "В ожидании" -> {
-                newStatus = Status.PENDING;
-            }
-            case "Готов к выдаче" -> {
-                newStatus = Status.READY_FOR_DELIVERY;
-            }
-            case "Получен" -> {
-                newStatus = Status.RECEIVED;
-            }
-            case "Отменить" -> {
-                newStatus = Status.CANCEL;
-            }
-            case "Курьер в пути" -> {
-                newStatus = Status.COURIER_ON_THE_WAY;
-            }
-            case "Доставлен" -> {
-                newStatus = Status.DELIVERED;
-            }
+            case "В ожидании" -> newStatus = Status.PENDING;
+            case "Готов к выдаче" -> newStatus = Status.READY_FOR_DELIVERY;
+            case "Получен" -> newStatus = Status.RECEIVED;
+            case "Отменить" -> newStatus = Status.CANCEL;
+            case "Курьер в пути" -> newStatus = Status.COURIER_ON_THE_WAY;
+            case "Доставлен" -> newStatus = Status.DELIVERED;
             default -> {
                 log.error("Статус не соответствует!");
                 return SimpleResponse.builder()
@@ -91,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
                 log.error("Order with %s is not found" + orderId);
                 return new NotFoundException("Order with %s is not found" + orderId);
             });
-            order.getSubProducts().stream().forEach(x -> x.getOrders().remove(order));
+            order.getSubProducts().forEach(x -> x.getOrders().remove(order));
 
             orderRepository.delete(order);
         }
@@ -108,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
             log.error("Order with %s is not found" + orderId);
             return new NotFoundException("Order with %s is not found" + orderId);
         });
-        order.getSubProducts().stream().forEach(x -> x.getOrders().remove(order));
+        order.getSubProducts().forEach(x -> x.getOrders().remove(order));
 
         orderRepository.delete(order);
 
