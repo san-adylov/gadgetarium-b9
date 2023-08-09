@@ -8,9 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
+import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
+import peaksoft.house.gadgetariumb9.dto.response.review.ReviewUserResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.ReviewService;
 
@@ -71,5 +73,19 @@ public class ReviewApi {
     @Operation(summary = "Get feedback", description = "Output of general statistics of reviews")
     public ReviewGradeInfo getFeedback(@RequestParam Long id){
         return service.getFeedback(id);
+    }
+
+    @PutMapping("/update-comment")
+    @PreAuthorize("hasAuthority('USER')")
+    @Operation(summary = "Update user review", description = "Edit your review if not answered yet")
+    public ReviewUserResponse updateComment(@RequestBody ReviewUserRequest request){
+        return service.updateComment(request);
+    }
+
+    @DeleteMapping("/delete-comment/{id}")
+    @PreAuthorize("hasAuthority('USER')")
+    @Operation(summary = "Delete user review",description = "Delete your review if no answer")
+    public ReviewUserResponse deleteComment(@PathVariable Long id){
+        return service.deleteComment(id);
     }
 }
