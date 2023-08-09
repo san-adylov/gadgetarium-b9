@@ -7,7 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
+import peaksoft.house.gadgetariumb9.dto.response.compare.*;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
+import peaksoft.house.gadgetariumb9.enums.*;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
@@ -566,4 +568,148 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         log.info("Successfully");
         return new SubProductPaginationCatalogAdminResponse(pageSize, pageNumber, difference, catalogAdminResponseList);
     }
+
+    public List<CompareProductResponse> getCompareParameters(String productName) {
+        String sql = """
+            SELECT
+                sp.id AS id,
+                p.id AS product_id,
+                b.name AS brand_name,
+                p.name AS product_name,
+                sp.price AS price,
+                sp.code_color AS color,
+                sp.screen_resolution AS screen,
+                sp.rom AS rom,
+                sp.additional_features AS operational_systems,
+                cat.title AS category_title,
+                sc.title AS sub_category_title,
+                ph.sim AS simCardAlias,
+                ph.diagonal_screen,
+                ph.battery_capacity AS battery_capacity,
+                l.processor,
+                l.purpose,
+                l.screen_size AS screen_size,
+                l.video_memory,
+                sm.an_interface AS interface,
+                sm.hull_shape AS hull_shape,
+                sm.material_bracelet AS bracelet_material,
+                sm.housing_material AS housing_material,
+                sm.gender AS gender,
+                sm.waterproof AS waterproof,
+                sm.display_discount AS display_discount,
+                spi.images AS image
+            FROM sub_products sp
+                     JOIN products p ON p.id = sp.product_id
+                     JOIN brands b ON b.id = p.brand_id
+                     JOIN categories cat ON cat.id = p.category_id
+                     JOIN sub_categories sc ON sc.id = p.sub_category_id
+                     LEFT JOIN phones ph ON ph.sub_product_id = sp.id
+                     LEFT JOIN laptops l ON l.sub_product_id = sp.id
+                     LEFT JOIN smart_watches sm ON sm.sub_product_id = sp.id
+                     LEFT JOIN sub_product_images spi ON sp.id = spi.sub_product_id
+            WHERE cat.title LIKE ?
+                     """;
+        if (productName.equalsIgnoreCase("Smartphone") || productName.equalsIgnoreCase("Tablet")) {
+            return jdbcTemplate.query(sql, new Object[]{"%Smartphone%"}, ((rs, rowNum) -> CompareSmartPhoneResponse.builder()
+                    .subProductId(rs.getLong("id"))
+                    .prId(rs.getLong("product_id"))
+                    .brandName(rs.getString("brand_name"))
+                    .prodName(rs.getString("product_name"))
+                    .price(rs.getBigDecimal("price"))
+                    .color(rs.getString("color"))
+                    .screen(rs.getString("screen"))
+                    .rom(rs.getInt("rom"))
+                    .operationalSystems(rs.getString("operational_systems"))
+                    .catTitle(rs.getString("category_title"))
+                    .subCatTitle(rs.getString("sub_category_title"))
+                    .image(rs.getString("image"))
+                    .simCard(rs.getInt("simCardAlias"))
+                    .diagonalScreen(rs.getString("diagonal_screen"))
+                    .batteryCapacity(rs.getString("battery_capacity"))
+                    .screenSize(rs.getDouble("screen_size"))
+                    .build()));
+        } else if (productName.equalsIgnoreCase("Laptop")) {
+            return jdbcTemplate.query(sql, new Object[]{"%Laptop%"}, ((rs, rowNum) -> CompareLaptopResponse.builder()
+                    .subProductId(rs.getLong("id"))
+                    .prId(rs.getLong("product_id"))
+                    .brandName(rs.getString("brand_name"))
+                    .prodName(rs.getString("product_name"))
+                    .price(rs.getBigDecimal("price"))
+                    .color(rs.getString("color"))
+                    .screen(rs.getString("screen"))
+                    .rom(rs.getInt("rom"))
+                    .operationalSystems(rs.getString("operational_systems"))
+                    .catTitle(rs.getString("category_title"))
+                    .subCatTitle(rs.getString("sub_category_title"))
+                    .image(rs.getString("image"))
+                    .processor(Processor.valueOf(rs.getString("processor")))
+                    .purpose(Purpose.valueOf(rs.getString("purpose")))
+                    .screen_size(rs.getDouble("screen_size"))
+                    .video_memory(rs.getInt("video_memory"))
+                    .build()));
+        } else if (productName.equalsIgnoreCase("Smart Watch")) {
+            return jdbcTemplate.query(sql, new Object[]{"%Smart Watch%"}, ((rs, rowNum) -> CompareSmartWatchResponse.builder()
+                    .subProductId(rs.getLong("id"))
+                    .prId(rs.getLong("product_id"))
+                    .brandName(rs.getString("brand_name"))
+                    .prodName(rs.getString("product_name"))
+                    .price(rs.getBigDecimal("price"))
+                    .color(rs.getString("color"))
+                    .screen(rs.getString("screen"))
+                    .rom(rs.getInt("rom"))
+                    .operationalSystems(rs.getString("operational_systems"))
+                    .catTitle(rs.getString("category_title"))
+                    .subCatTitle(rs.getString("sub_category_title"))
+                    .image(rs.getString("image"))
+                    .anInterface(Interface.valueOf(rs.getString("anInterface")))
+                    .hullShape(HullShape.valueOf(rs.getString("hullShape")))
+                    .materialBracelet(MaterialBracelet.valueOf(rs.getString("material_bracelet")))
+                    .housingMaterial(HousingMaterial.valueOf(rs.getString("housing_material")))
+                    .gender(Gender.valueOf(rs.getString("gender")))
+                    .waterproof(rs.getBoolean("waterproof"))
+                    .displayDiscount(rs.getDouble("displayDiscount"))
+                    .build()));
+        }
+        return null;
+    }
+
+    @Override
+    public List<ComparisonCountResponse> countCompareUser(Long userId) {
+        String compare = """
+            SELECT
+                c.title AS categoryTitle,
+                COUNT(uc.comparison) AS comparisonCount
+            FROM user_comparison uc
+                     JOIN sub_products sp ON uc.comparison = sp.id
+                     JOIN users u ON uc.user_id = u.id
+                     JOIN products p ON p.id = sp.product_id
+                     JOIN categories c ON c.id = p.category_id
+            WHERE uc.user_id = ? AND (c.title = 'Smartphone' OR c.title = 'Smart watch' OR c.title = 'Tablet' OR c.title = 'Laptop')
+            GROUP BY c.title;
+            """;
+        return jdbcTemplate.query(compare, new Object[]{userId}, (rs) -> {
+            List<ComparisonCountResponse> responses = new ArrayList<>();
+            while (rs.next()) {
+                String categoryTitle = rs.getString("categoryTitle");
+                int comparisonCount = rs.getInt("comparisonCount");
+                ComparisonCountResponse response = new ComparisonCountResponse();
+                if ("Smartphone".equalsIgnoreCase(categoryTitle)) {
+                    response.setCategoryTitle("Smartphone");
+                    response.setTotalCounter(comparisonCount);
+                } else if ("Smart watch".equalsIgnoreCase(categoryTitle)) {
+                    response.setCategoryTitle("Smart watch");
+                    response.setTotalCounter(comparisonCount);
+                } else if ("Tablet".equalsIgnoreCase(categoryTitle)) {
+                    response.setCategoryTitle("Tablet");
+                    response.setTotalCounter(comparisonCount);
+                } else if ("Laptop".equalsIgnoreCase(categoryTitle)) {
+                    response.setCategoryTitle("Laptop");
+                    response.setTotalCounter(comparisonCount);
+                }
+                responses.add(response);
+            }
+            return responses;
+        });
+    }
+
 }
