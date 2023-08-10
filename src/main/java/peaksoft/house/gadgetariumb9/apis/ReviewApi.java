@@ -82,10 +82,10 @@ public class ReviewApi {
         return service.updateComment(request);
     }
 
-    @DeleteMapping("/delete-comment/{id}")
+    @DeleteMapping("/delete-comment/{reviewId}")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Delete user review",description = "Delete your review if no answer")
-    public ReviewUserResponse deleteComment(@PathVariable Long id){
-        return service.deleteComment(id);
+    public ReviewUserResponse deleteComment(@PathVariable Long reviewId){
+        return service.deleteComment(reviewId);
     }
 }
