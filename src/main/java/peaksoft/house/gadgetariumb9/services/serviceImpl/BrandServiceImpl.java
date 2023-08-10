@@ -1,4 +1,5 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,11 +13,14 @@ import peaksoft.house.gadgetariumb9.models.Brand;
 import peaksoft.house.gadgetariumb9.repositories.BrandRepository;
 import peaksoft.house.gadgetariumb9.services.BrandService;
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class BrandServiceImpl implements BrandService {
+
     private final BrandRepository brandRepository;
+
     @Override
     public SimpleResponse saveBrand(BrandRequest brandRequest) {
         if (brandRepository.existsByName(brandRequest.getName())) {
@@ -32,6 +36,7 @@ public class BrandServiceImpl implements BrandService {
                 .message(String.format("Brand with name : %s successfully saved ...!", brandRequest.getName()))
                 .build();
     }
+
     @Override
     public List<BrandResponse> getAllBrands() {
         List<BrandResponse> brands = brandRepository.getAllBrands();
@@ -40,6 +45,7 @@ public class BrandServiceImpl implements BrandService {
         }
         return brands;
     }
+
     @Override
     public SimpleResponse deleteById(Long id) {
         if (!brandRepository.existsById(id)) {

@@ -6,6 +6,4 @@ import java.util.List;
 public interface FavoriteTemplate {
 
     List<SubProductResponse> getAllFavorite();
-
-
 }

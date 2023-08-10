@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import peaksoft.house.gadgetariumb9.services.serviceImpl.S3FileService;
 
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/files")
@@ -23,13 +22,13 @@ public class S3FileApi {
 
     private final S3FileService s3FileService;
 
-   @Operation(summary = "Upload file", description = "Method to upload a file to the server")
-   @PostMapping(
-           consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-           produces = MediaType.APPLICATION_JSON_VALUE)
-   public ResponseEntity<String> uploadFile(@RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
-       return new ResponseEntity<>(s3FileService.uploadFile(file), HttpStatus.OK);
-   }
+    @Operation(summary = "Upload file", description = "Method to upload a file to the server")
+    @PostMapping(
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> uploadFile(@RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
+        return new ResponseEntity<>(s3FileService.uploadFile(file), HttpStatus.OK);
+    }
 
     @GetMapping("/download/{fileName}")
     @Operation(summary = "Download file", description = "Method to download a file from the server")
