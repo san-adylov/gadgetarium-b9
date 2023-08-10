@@ -22,10 +22,10 @@ public class OrderApi {
     private final OrderService orderService;
 
     @GetMapping
-    @Operation(summary = "get all order" , description = "Displaying the total number of orders of users who bought the product")
-    public OrderPaginationAdmin getAllOrder(@RequestParam(defaultValue = "В обработке",required = false) String status,
+    @Operation(summary = "get all order", description = "Displaying the total number of orders of users who bought the product")
+    public OrderPaginationAdmin getAllOrder(@RequestParam(defaultValue = "В обработке", required = false) String status,
                                             @RequestParam(defaultValue = "6", required = false) int pageSize,
-                                            @RequestParam(defaultValue = "1",required = false) int pageNumber,
+                                            @RequestParam(defaultValue = "1", required = false) int pageNumber,
                                             @RequestParam(required = false) LocalDate startDate,
                                             @RequestParam(required = false) LocalDate endDate) {
         return orderService.getAllOrderAdmin(status, pageSize, pageNumber, startDate, endDate);

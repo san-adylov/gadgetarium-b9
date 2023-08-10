@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class DiscountServiceImpl implements DiscountService {
 
     private final DiscountRepository discountRepository;
+
     private final SubProductRepository subProductRepository;
 
     @Override
