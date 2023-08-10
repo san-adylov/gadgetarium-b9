@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.mailing.MailingRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.BadCredentialException;
@@ -32,11 +33,18 @@ import java.util.stream.Collectors;
 public class MailingServiceImpl implements MailingService {
 
     public static final String EMAIL_TEMPLATE = "emailtemplate";
+
     private final JavaMailSender emailSender;
+
     private final UserRepository userRepository;
+
     private final MailingRepository mailingRepository;
+
     private final EntityManager entityManager;
+
     private final TemplateEngine templateEngine;
+
+    private final JwtService jwtService;
     public static final String UTF_8_ENCODING = "UTF-8";
 
     @Override
@@ -98,6 +106,27 @@ public class MailingServiceImpl implements MailingService {
                 .message("Mailing successfully send!")
                 .build();
     }
+
+    @Override
+    public SimpleResponse followUser(String email) {
+        User user = jwtService.getAuthenticationUser();
+        if (user == null) {
+            return new SimpleResponse("Unauthorized", HttpStatus.UNAUTHORIZED);
+        }
+
+        if (user.getEmail().equalsIgnoreCase(email)) {
+            if (!user.isSubscription()) {
+                user.setSubscription(true);
+                userRepository.save(user);
+                return new SimpleResponse("Subscription successful", HttpStatus.OK);
+            } else {
+                return new SimpleResponse("Already subscribed", HttpStatus.CONFLICT);
+            }
+        } else {
+            return new SimpleResponse("Invalid request", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     private List<String> getUsers() {
         List<User> users = userRepository.findAll();
