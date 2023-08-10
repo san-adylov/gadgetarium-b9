@@ -10,6 +10,4 @@ public interface FavoriteTemplate {
     List<SubProductResponse> getAllFavorite();
 
     List<UserFavoritesResponse> getAllFavoriteByUserId(Long userId);
-
-
 }
