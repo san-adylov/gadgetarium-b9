@@ -10,7 +10,6 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductResponse;
 import peaksoft.house.gadgetariumb9.dto.response.user.UserFavoritesResponse;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.template.FavoriteTemplate;
-
 import java.util.List;
 
 @Slf4j
