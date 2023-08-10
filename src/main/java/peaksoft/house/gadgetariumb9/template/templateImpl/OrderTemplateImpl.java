@@ -9,6 +9,7 @@ import peaksoft.house.gadgetariumb9.dto.response.order.*;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.template.OrderTemplate;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -94,6 +95,9 @@ public class OrderTemplateImpl implements OrderTemplate {
                 pageSize, offset
         );
 
+        if (number1 == null || number2 == null || number3 == null) {
+            throw new NullPointerException("Number is null");
+        }
         log.info("Successfully");
         return new OrderPaginationAdmin(pageSize, pageNumber, difference, number1, number2, number3, orderResponseAdmins);
     }

@@ -27,7 +27,6 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
         User user = jwtService.getAuthenticationUser();
         String query = """
                 SELECT sp.id,
-                b.name,
                     p.name AS prod_name,
                        sp.article_number,
                        sp.price,

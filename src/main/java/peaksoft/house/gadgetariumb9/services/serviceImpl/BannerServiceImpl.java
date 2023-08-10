@@ -13,7 +13,6 @@ import peaksoft.house.gadgetariumb9.services.BannerService;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
