@@ -8,6 +8,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
+import peaksoft.house.gadgetariumb9.dto.response.compare.CompareProductResponse;
+import peaksoft.house.gadgetariumb9.dto.response.compare.ComparisonCountResponse;
 import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -128,5 +130,35 @@ public class ProductApi {
     public ProductUserAndAdminResponse getByProductId(@RequestParam Long productId,
                                                       @RequestParam(defaultValue = "", required = false) String colour) {
         return productService.getByProductId(productId, colour);
+    }
+
+    @GetMapping("/count/{userId}/comparison")
+    @PreAuthorize("hasAuthority('USER')")
+    @Operation(summary = "Get comparison data for a specific user", description = "Retrieves the comparison data for a user with the provided user ID.")
+    public List<ComparisonCountResponse> countCompareUser(@PathVariable Long userId) {
+        return subProductService.countCompareUser(userId);
+    }
+
+    @PostMapping("/save-comparison")
+    @PreAuthorize("hasAuthority('USER')")
+    @Operation(summary = "Save or delete product comparisons for a user", description = "Allows a user to save or delete product comparisons based on the provided parameters.")
+    public SimpleResponse saveComparisonsUser(@RequestParam Long id, @RequestParam boolean addOrDelete) {
+        return subProductService.comparisonAddOrDelete(id, addOrDelete);
+    }
+
+    @Operation(summary = "Compare product parameters", description = "Retrieve a list of products with their parameters based on the provided product name.")
+    @GetMapping("/compare-product")
+    @PreAuthorize("hasAuthority('USER')")
+    public List<CompareProductResponse> compareParameters(@RequestParam String productName) {
+        return subProductService.getCompareParameters(productName);
+    }
+
+    @DeleteMapping
+    @PreAuthorize("hasAuthority('USER')")
+    @Operation(
+            summary = "Clear user's product comparisons",
+            description = "Clears all product comparisons for the authenticated user.")
+    public SimpleResponse cleanCompare() {
+        return subProductService.clearUserCompare();
     }
 }
