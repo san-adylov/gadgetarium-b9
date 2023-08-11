@@ -16,6 +16,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.order.OrderUserRequest;
+import peaksoft.house.gadgetariumb9.dto.response.order.OrderHistoryResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderPaginationAdmin;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderUserResponse;
@@ -56,7 +57,6 @@ public class OrderServiceImpl implements OrderService {
     private final JwtService jwtService;
 
     private final BasketRepository basketRepository;
-
 
     @Override
     public OrderPaginationAdmin getAllOrderAdmin(String status, int pageSize, int pageNumber, LocalDate startDate, LocalDate endDate) {
@@ -232,5 +232,8 @@ public class OrderServiceImpl implements OrderService {
 
     private MimeMessage getMimeMessage() {
         return emailSender.createMimeMessage();
+
+    public List<OrderHistoryResponse> getOrdersByUserId(Long userId) {
+        return orderTemplate.getOrdersByUserId(userId);
     }
 }

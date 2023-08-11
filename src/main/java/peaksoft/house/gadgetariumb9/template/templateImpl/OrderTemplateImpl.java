@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoResponse;
-import peaksoft.house.gadgetariumb9.dto.response.order.OrderPaginationAdmin;
-import peaksoft.house.gadgetariumb9.dto.response.order.OrderProductResponse;
-import peaksoft.house.gadgetariumb9.dto.response.order.OrderResponseAdmin;
+import peaksoft.house.gadgetariumb9.dto.response.order.*;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.template.OrderTemplate;
@@ -153,5 +150,29 @@ public class OrderTemplateImpl implements OrderTemplate {
         );
         orderInfoResponse.setProductResponseList(orderProductResponse);
         return orderInfoResponse;
+    }
+
+    @Override
+    public List<OrderHistoryResponse> getOrdersByUserId(Long userId) {
+        String sql = """
+                SELECT o.id,
+                       o.date_of_order,
+                       o.order_number,
+                       o.status,
+                       o.total_price
+                FROM orders o
+                         JOIN users u ON o.user_id = u.id
+                WHERE u.id = ?
+                """;
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> new OrderHistoryResponse(
+                        rs.getLong("id"),
+                        rs.getDate("date_of_order"),
+                        rs.getInt("order_number"),
+                        rs.getString("status"),
+                        rs.getBigDecimal("total_price"))
+                ,userId
+
+        );
     }
 }
