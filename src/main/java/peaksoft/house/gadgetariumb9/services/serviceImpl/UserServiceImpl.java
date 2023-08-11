@@ -50,8 +50,8 @@ public class UserServiceImpl implements UserService {
                 throw new BadCredentialException("Wrong password!");
             }
         }
-        user.setFirstName(userUpdateRequest.getFirstName().isBlank() || user.getFirstName().equals(userUpdateRequest.getFirstName()) ? user.getFirstName() : userUpdateRequest.getFirstName());
-        user.setLastName(userUpdateRequest.getLastName().isBlank() || user.getLastName().equals(userUpdateRequest.getLastName()) ? user.getLastName() : userUpdateRequest.getLastName());
+        user.setFirstName(userUpdateRequest.getFirstName() == null || userUpdateRequest.getFirstName().isBlank() || user.getFirstName().equals(userUpdateRequest.getFirstName()) ? user.getFirstName() : userUpdateRequest.getFirstName());
+        user.setLastName(userUpdateRequest.getLastName() == null || userUpdateRequest.getLastName().isBlank() || user.getLastName().equals(userUpdateRequest.getLastName()) ? user.getLastName() : userUpdateRequest.getLastName());
         user.setEmail(userUpdateRequest.getEmail() == null || userUpdateRequest.getEmail().isBlank() || user.getEmail().equals(userUpdateRequest.getEmail()) ? user.getEmail() : userUpdateRequest.getEmail());
         user.setPhoneNumber(userUpdateRequest.getPhoneNumber() == null || userUpdateRequest.getPhoneNumber().isBlank() || user.getPhoneNumber().equals(userUpdateRequest.getPhoneNumber()) ? user.getPhoneNumber() : userUpdateRequest.getPhoneNumber());
         user.setAddress(userUpdateRequest.getAddress() == null || userUpdateRequest.getAddress().isBlank() || user.getAddress().equals(userUpdateRequest.getAddress()) ? user.getAddress() : userUpdateRequest.getAddress());

@@ -14,12 +14,8 @@ import peaksoft.house.gadgetariumb9.validations.phoneNumber.PhoneNumber;
 @NoArgsConstructor
 public class UserUpdateRequest {
 
-    @NotBlank(message = "Name must not be empty")
-    @NotNull(message = "Name must not be null")
     private String firstName;
 
-    @NotBlank(message = "Surname must not be empty")
-    @NotNull(message = "Surname must not be null")
     private String lastName;
 
     @Email(message = "Wrong format email")

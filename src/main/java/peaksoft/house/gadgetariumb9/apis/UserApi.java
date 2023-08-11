@@ -22,14 +22,14 @@ public class UserApi {
 
     private final UserService userService;
 
-    @PutMapping("/update")
+    @PutMapping
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Update user information", description = "Updates the user information based on the provided request.")
     public SimpleResponse updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest) {
         return userService.userUpdate(userUpdateRequest);
     }
 
-    @GetMapping("/info")
+    @GetMapping
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Get user information", description = "Retrieves detailed user information.")
     public UserResponse getUserInfo() {

@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UserFavoritesResponse {
 
+    private Long subProductId;
+
     private String name;
 
     private double rating;
