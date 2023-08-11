@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductResponse;
+import peaksoft.house.gadgetariumb9.dto.response.user.UserFavoritesResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
@@ -71,5 +72,10 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public List<SubProductResponse> getAllFavorite() {
         return favoriteTemplate.getAllFavorite();
+    }
+
+    @Override
+    public List<UserFavoritesResponse> getAllFavoriteByUserId(Long userId) {
+        return favoriteTemplate.getAllFavoriteByUserId(userId);
     }
 }

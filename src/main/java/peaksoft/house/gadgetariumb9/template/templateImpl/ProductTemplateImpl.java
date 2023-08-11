@@ -90,9 +90,9 @@ public class ProductTemplateImpl implements ProductTemplate {
     response.setColours(colours);
 
     String imageSql = """
-        SELECT spi.images AS images FROM sub_product_images spi 
-        join sub_products sp on spi.sub_product_id = sp.id 
-        where sp.product_id = ? and  sp.code_color = ?     
+        SELECT spi.images AS images FROM sub_product_images spi
+        join sub_products sp on spi.sub_product_id = sp.id
+        where sp.product_id = ? and  sp.code_color = ?
         """;
     List<String> images = jdbcTemplate.query(imageSql, (rs, i) ->
             rs.getString("images"),
