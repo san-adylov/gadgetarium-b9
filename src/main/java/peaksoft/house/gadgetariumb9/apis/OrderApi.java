@@ -59,7 +59,7 @@ public class OrderApi {
         return orderService.multiDeleteOrder(orderids);
     }
 
-    @PostMapping("/save")
+    @PostMapping
     @Operation(summary = "sending and save order",description = "User submits an order to purchase a product")
     @PreAuthorize("hasAuthority('USER')")
     public OrderUserResponse saveOrder(@RequestBody OrderUserRequest request){
