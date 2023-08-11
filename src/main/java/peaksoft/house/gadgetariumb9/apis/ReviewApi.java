@@ -34,10 +34,10 @@ public class ReviewApi {
     @PermitAll
     @GetMapping("/get-all")
     @Operation(summary = "All reviews", description = "Get all reviews by subProduct id")
-    public ReviewPagination getAllReview(@RequestParam Long id,
+    public ReviewPagination getAllReview(@RequestParam Long subProductId,
                                          @RequestParam int pageSize,
                                          @RequestParam int numberPage) {
-        return service.getAllReviews(id, pageSize, numberPage);
+        return service.getAllReviews(subProductId, pageSize, numberPage);
     }
 
     @PostMapping
