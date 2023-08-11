@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -42,13 +41,12 @@ public class MailingServiceImpl implements MailingService {
 
     private final EntityManager entityManager;
 
-    private final TemplateEngine templateEngine;
 
     private final JwtService jwtService;
+
     public static final String UTF_8_ENCODING = "UTF-8";
 
     @Override
-    @Async
     public SimpleResponse sendHtmlEmail(MailingRequest mailingRequest) {
         List<String> emails = getUsers();
         try {

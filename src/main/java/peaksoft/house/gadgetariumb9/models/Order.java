@@ -2,7 +2,9 @@ package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import peaksoft.house.gadgetariumb9.enums.*;
+import peaksoft.house.gadgetariumb9.enums.Status;
+import peaksoft.house.gadgetariumb9.enums.TypeDelivery;
+import peaksoft.house.gadgetariumb9.enums.TypePayment;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;

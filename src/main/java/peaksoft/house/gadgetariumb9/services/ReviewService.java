@@ -13,7 +13,7 @@ public interface ReviewService {
 
     SimpleResponse saveReview(ReviewRequest reviewRequest);
 
-    ReviewPagination getAllReviews(Long subProductId,int pageSize, int numberPage);
+    ReviewPagination getAllReviews(Long subProductId, int pageSize, int numberPage);
 
     SimpleResponse deleteReview(Long reviewId);
 
