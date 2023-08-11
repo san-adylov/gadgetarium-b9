@@ -1,10 +1,10 @@
 package peaksoft.house.gadgetariumb9.models;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import lombok.*;
 import org.springframework.lang.Nullable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import static jakarta.persistence.CascadeType.*;
 
@@ -74,12 +74,12 @@ public class SubProduct {
             mappedBy = "subProduct",
             cascade = {ALL})
     private List<Review> reviews;
-  
-    public void addReviews (Review review) {
-          if (reviews == null) {
-              reviews = new ArrayList<>();
-          }
-          reviews.add(review);
+
+    public void addReviews(Review review) {
+        if (reviews == null) {
+            reviews = new ArrayList<>();
+        }
+        reviews.add(review);
     }
 
     @ManyToMany(

@@ -1,10 +1,7 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.transaction.Transactional;
-
 import java.time.LocalDate;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,19 +9,19 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.InfographicsResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.MainPagePaginationResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductHistoryResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPagination;
-import peaksoft.house.gadgetariumb9.models.User;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductPaginationCatalogAdminResponse;
+import peaksoft.house.gadgetariumb9.dto.response.compare.CompareProductResponse;
+import peaksoft.house.gadgetariumb9.dto.response.compare.ComparisonCountResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
-import peaksoft.house.gadgetariumb9.models.*;
+import peaksoft.house.gadgetariumb9.models.Category;
+import peaksoft.house.gadgetariumb9.models.SubProduct;
+import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -50,7 +47,6 @@ public class SubProductServiceImpl implements SubProductService {
     private final UserRepository userRepository;
 
     private final CategoryRepository categoryRepository;
-
 
     @Override
     public SubProductPagination getSubProductCatalogs(
@@ -90,8 +86,7 @@ public class SubProductServiceImpl implements SubProductService {
         log.info("Get recently viewed products");
         return subProductTemplate.getRecentlyViewedProducts();
     }
-
-
+  
     @Override
     public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
         return subProductTemplate.getGetAllSubProductAdmin(productType, startDate, endDate, pageSize, pageNumber);
@@ -485,5 +480,43 @@ public class SubProductServiceImpl implements SubProductService {
                 .message("Successfully updated")
                 .build();
     }
-}
 
+    @Override
+    public List<ComparisonCountResponse> countCompareUser(Long userId) {
+        return subProductTemplate.countCompareUser(userId);
+    }
+    @Override
+    public List<CompareProductResponse> getCompareParameters(String productName) {
+        return subProductTemplate.getCompareParameters(productName);
+    }
+    @Override
+    @Transactional
+    public SimpleResponse comparisonAddOrDelete(Long id, boolean addOrDelete) {
+        SubProduct subProduct = subProductRepository.findById(id).orElseThrow(() -> new NotFoundException("This product ID: " + id + " not found!"));
+        User user = jwtService.getAuthenticationUser();
+        if (addOrDelete) {
+            if (user.getComparison().contains(subProduct.getId())) {
+                throw new BadRequestException("The product with the ID %s already exists in comparison!".formatted(id));
+            }
+            user.getComparison().add(subProduct.getId());
+            userRepository.save(user);
+            return SimpleResponse.builder().status(HttpStatus.OK).message("The product has been successfully added to the comparison!").build();
+        } else {
+            if (!user.getComparison().contains(subProduct.getId())) {
+                throw new NotFoundException("The product with the ID %s was not found in the user comparison!".formatted(id));
+            }
+            user.getComparison().remove(subProduct.getId());
+            userRepository.save(user);
+            return SimpleResponse.builder().status(HttpStatus.OK).message("The product has been successfully removed from the comparison!").build();
+        }
+    }
+    @Override
+    public SimpleResponse clearUserCompare() {
+        User user = jwtService.getAuthenticationUser();
+        user.getComparison().clear();
+        userRepository.save(user);
+        log.error("Comparison cleared!");
+        return SimpleResponse.builder().message("Comparison cleared!").status(HttpStatus.OK).build();
+    }
+
+}

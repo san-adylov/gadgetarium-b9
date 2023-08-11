@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface BasketTemplate {
 
-    List<BasketResponse>  getAllByProductsFromTheBasket ();
+    List<BasketResponse> getAllByProductsFromTheBasket();
 
     BasketInfographicResponse getInfographic();
 }

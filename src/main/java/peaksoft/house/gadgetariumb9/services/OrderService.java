@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    OrderPaginationAdmin getAllOrderAdmin(String status, int pageSize, int pageNumber, LocalDate startDate,LocalDate endDate);
+    OrderPaginationAdmin getAllOrderAdmin(String status, int pageSize, int pageNumber, LocalDate startDate, LocalDate endDate);
 
     SimpleResponse updateStatus(Long orderId, String status);
 
