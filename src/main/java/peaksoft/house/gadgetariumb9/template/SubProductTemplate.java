@@ -19,6 +19,5 @@ public interface SubProductTemplate {
 
   MainPagePaginationResponse getAllDiscountProducts(int page, int pageSize);
 
-
   SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 }

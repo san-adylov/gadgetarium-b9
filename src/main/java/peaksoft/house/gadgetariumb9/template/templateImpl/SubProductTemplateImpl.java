@@ -227,21 +227,21 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         sql += " LIMIT ? OFFSET ?";
 
         List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse.builder()
-                .subProductId(resultSet.getLong("id"))
-                .name(resultSet.getString("name"))
-                .prodName(resultSet.getString("prodName"))
-                .quantity(resultSet.getInt("quantity"))
-                .rating(resultSet.getDouble("rating"))
-                .price(resultSet.getBigDecimal("price"))
-                .color(resultSet.getString("color"))
-                .discount(resultSet.getInt("discount"))
-                .image(resultSet.getString("image"))
-                .createdAt(resultSet.getDate("createdAt").toLocalDate())
-                .countOfReviews(resultSet.getInt("countOfReviews"))
-                .subCatTitle(resultSet.getString("subCatTitle"))
-                .catTitle(resultSet.getString("catTitle"))
-                .grade(resultSet.getString("grade"))
-                .build(),
+                        .subProductId(resultSet.getLong("id"))
+                        .name(resultSet.getString("name"))
+                        .prodName(resultSet.getString("prodName"))
+                        .quantity(resultSet.getInt("quantity"))
+                        .rating(resultSet.getDouble("rating"))
+                        .price(resultSet.getBigDecimal("price"))
+                        .color(resultSet.getString("color"))
+                        .discount(resultSet.getInt("discount"))
+                        .image(resultSet.getString("image"))
+                        .createdAt(resultSet.getDate("createdAt").toLocalDate())
+                        .countOfReviews(resultSet.getInt("countOfReviews"))
+                        .subCatTitle(resultSet.getString("subCatTitle"))
+                        .catTitle(resultSet.getString("catTitle"))
+                        .grade(resultSet.getString("grade"))
+                        .build(),
                 pageSize, offset);
 
         return MainPagePaginationResponse.builder().subProductMainPageResponses(products).page(page).pageSize(pageSize).build();
@@ -287,21 +287,21 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         sql += " LIMIT ? OFFSET ?";
 
         List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse.builder()
-                .subProductId(resultSet.getLong("id"))
-                .name(resultSet.getString("name"))
-                .prodName(resultSet.getString("prodName"))
-                .quantity(resultSet.getInt("quantity"))
-                .rating(resultSet.getDouble("rating"))
-                .price(resultSet.getBigDecimal("price"))
-                .color(resultSet.getString("color"))
-                .discount(resultSet.getInt("discount"))
-                .image(resultSet.getString("image"))
-                .createdAt(resultSet.getDate("createdAt").toLocalDate())
-                .countOfReviews(resultSet.getInt("countOfReviews"))
-                .subCatTitle(resultSet.getString("subCatTitle"))
-                .catTitle(resultSet.getString("catTitle"))
-                .grade(resultSet.getString("grade"))
-                .build()
+                        .subProductId(resultSet.getLong("id"))
+                        .name(resultSet.getString("name"))
+                        .prodName(resultSet.getString("prodName"))
+                        .quantity(resultSet.getInt("quantity"))
+                        .rating(resultSet.getDouble("rating"))
+                        .price(resultSet.getBigDecimal("price"))
+                        .color(resultSet.getString("color"))
+                        .discount(resultSet.getInt("discount"))
+                        .image(resultSet.getString("image"))
+                        .createdAt(resultSet.getDate("createdAt").toLocalDate())
+                        .countOfReviews(resultSet.getInt("countOfReviews"))
+                        .subCatTitle(resultSet.getString("subCatTitle"))
+                        .catTitle(resultSet.getString("catTitle"))
+                        .grade(resultSet.getString("grade"))
+                        .build()
                 , pageSize, offset);
 
         return MainPagePaginationResponse.builder().subProductMainPageResponses(products).page(page).pageSize(pageSize).build();
@@ -394,6 +394,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
 
     @Override
     public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
+
         String query = "SELECT sum(s.quantity) from sub_products s";
         String query2 = "SELECT sum(o.quantity) from orders o";
 
