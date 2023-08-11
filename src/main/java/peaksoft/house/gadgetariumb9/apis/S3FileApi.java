@@ -43,7 +43,8 @@ public class S3FileApi {
                 .body(resource);
     }
 
-    @DeleteMapping("/{fileName}")
+    @DeleteMapping("/delete/{fileName}")
+    @Operation(summary = "Delete file", description = "Method to delete a file from the server")
     public ResponseEntity<String> deleteFile(@PathVariable String fileName) {
         boolean deletionSuccessful = s3FileService.deleteFile(fileName);
         if (deletionSuccessful) {
