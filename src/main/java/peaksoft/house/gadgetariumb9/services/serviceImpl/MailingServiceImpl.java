@@ -41,6 +41,7 @@ public class MailingServiceImpl implements MailingService {
 
     private final EntityManager entityManager;
 
+    private final TemplateEngine templateEngine;
 
     private final JwtService jwtService;
 
