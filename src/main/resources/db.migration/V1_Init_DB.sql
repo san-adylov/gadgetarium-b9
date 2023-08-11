@@ -1,47 +1,26 @@
 create schema if not exists migration;
 
 drop table if exists banner_images cascade;
-
 drop table if exists banners cascade;
-
 drop table if exists baskets_sub_products cascade;
-
 drop table if exists baskets cascade;
-
 drop table if exists discounts cascade;
-
 drop table if exists laptops cascade;
-
 drop table if exists mailings cascade;
-
 drop table if exists orders_sub_products cascade;
-
 drop table if exists orders cascade;
-
 drop table if exists phones cascade;
-
 drop table if exists reviews cascade;
-
 drop table if exists smart_watches cascade;
-
 drop table if exists sub_product_images cascade;
-
 drop table if exists sub_products cascade;
-
 drop table if exists products cascade;
-
 drop table if exists brands cascade;
-
 drop table if exists sub_categories cascade;
-
 drop table if exists categories cascade;
-
 drop table if exists user_comparison cascade;
-
 drop table if exists user_favorite cascade;
-
 drop table if exists user_recently_viewed_products cascade;
-
 drop table if exists users cascade;
 
 
