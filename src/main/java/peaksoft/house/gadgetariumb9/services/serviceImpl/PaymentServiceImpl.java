@@ -1,34 +1,34 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
-import com.stripe.Stripe;
-import org.springframework.beans.factory.annotation.Value;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import org.springframework.stereotype.Service;
-import peaksoft.house.gadgetariumb9.dto.response.payment.PaymentResponse;
+import peaksoft.house.gadgetariumb9.dto.request.payment.CreatePaymentRequest;
+import peaksoft.house.gadgetariumb9.dto.response.payment.CreatePaymentResponse;
 import peaksoft.house.gadgetariumb9.services.PaymentService;
+
+import java.util.Arrays;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    @Value("${stripe.apikey}")
-    private static String STRIPE_API_KEY;
-
-    public static void setup() {
-        Stripe.apiKey = STRIPE_API_KEY;
-    }
-
     @Override
-    public PaymentResponse paymentMethod(String token) {
-        String[] payment = token.split("&");
-
-        String[] split1 = payment[0].split("=");
-        String payment_intent = split1[1];
-
-        String[] split2 = payment[1].split("=");
-        String payment_intent_client_secret = split2[1];
-
-        String[] split3 = payment[2].split("=");
-        String redirect_status = split3[1];
-        return new PaymentResponse(payment_intent, payment_intent_client_secret, redirect_status);
+    public CreatePaymentResponse createPaymentIntent(CreatePaymentRequest request) throws StripeException {
+        PaymentIntentCreateParams params =
+                PaymentIntentCreateParams.builder()
+                        .setAmount(request.getAmount() * 100L)
+                        .setCurrency("KGS")
+                        .setPaymentMethodTypes(Arrays.asList("card")) // Указываем тип платежного метода
+                        .setAutomaticPaymentMethods(
+                                PaymentIntentCreateParams.AutomaticPaymentMethods
+                                        .builder()
+                                        .setEnabled(true)
+                                        .build())
+                        .build();
+        PaymentIntent paymentIntent = PaymentIntent.create(params);
+        return new CreatePaymentResponse(paymentIntent.getClientSecret());
     }
+
 
 }

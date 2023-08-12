@@ -1,5 +1,6 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
+import com.stripe.Stripe;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import peaksoft.house.gadgetariumb9.GadgetariumB9Application;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.authentication.SignInRequest;
 import peaksoft.house.gadgetariumb9.dto.request.authentication.SignUpRequest;
@@ -152,6 +154,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             userRepository.save(user);
             log.info("Admin saved");
         }
-        PaymentServiceImpl.setup();
+        setup();
+    }
+
+    private void setup() {
+        Stripe.apiKey = "sk_test_51Nax1gA8iPnSdqal1HWv8ly75aVB8o43B8zdEgwPqOwYJRVDBKdAqkDhmigEs4CZ0U1pWvTODVLB8iKt12cUmAkF00aJiKfTc8";
     }
 }

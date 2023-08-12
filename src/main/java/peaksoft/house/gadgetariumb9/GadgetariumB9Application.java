@@ -1,6 +1,8 @@
 package peaksoft.house.gadgetariumb9;
 
+import com.stripe.Stripe;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ public class GadgetariumB9Application {
     public String greetings() {
         return "index";
     }
+
 
 
 }
