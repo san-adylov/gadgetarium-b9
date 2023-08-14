@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import peaksoft.house.gadgetariumb9.dto.response.order.OrderHistoryResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderPaginationAdmin;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -26,7 +27,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderTemplate orderTemplate;
 
     private final OrderRepository orderRepository;
-
 
     @Override
     public OrderPaginationAdmin getAllOrderAdmin(String status, int pageSize, int pageNumber, LocalDate startDate, LocalDate endDate) {
@@ -102,5 +102,10 @@ public class OrderServiceImpl implements OrderService {
                 .status(HttpStatus.OK)
                 .message("SubProducts with given IDs are deleted")
                 .build();
+    }
+
+    @Override
+    public List<OrderHistoryResponse> getOrdersByUserId(Long userId) {
+        return orderTemplate.getOrdersByUserId(userId);
     }
 }
