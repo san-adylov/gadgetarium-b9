@@ -43,6 +43,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value("${spring.mail.username}")
     private String EMAIL_FROM;
 
+    @Value("${stripe.apikey}")
+    private String API_KEY;
+
     @Override
     public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
@@ -155,9 +158,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.info("Admin saved");
         }
         setup();
+
     }
 
     private void setup() {
-        Stripe.apiKey = "sk_test_51Nax1gA8iPnSdqal1HWv8ly75aVB8o43B8zdEgwPqOwYJRVDBKdAqkDhmigEs4CZ0U1pWvTODVLB8iKt12cUmAkF00aJiKfTc8";
+        Stripe.apiKey = API_KEY;
+        log.info("Api key");
     }
 }
