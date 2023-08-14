@@ -10,8 +10,6 @@ public class ReviewUserResponse {
 
   private String email;
 
-  private boolean isMy;
-
   private String message;
 
 }

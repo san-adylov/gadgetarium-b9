@@ -239,14 +239,14 @@ public class ReviewServiceImpl implements ReviewService {
         review.setGrade(request.getGrade());
         review.setImageLink(request.getImageLink());
         reviewRepository.save(review);
-        return new ReviewUserResponse(user.getEmail(),true,"Your comment successfully updated!");
+        return new ReviewUserResponse(user.getEmail(),"Your comment successfully updated!");
       } else {
         log.error("You can't edit a comment because an admin has already replied to it!");
         throw new BadCredentialException("You can't edit a comment because an admin has already replied to it!");
       }
     } else {
       log.error("Access denied. You are not the owner of this review!");
-      return new ReviewUserResponse(user.getEmail(),false,"Access denied. You are not the owner of this review!");
+      return new ReviewUserResponse(user.getEmail(),"Access denied. You are not the owner of this review!");
     }
 
   }
@@ -264,14 +264,14 @@ public class ReviewServiceImpl implements ReviewService {
       log.info("You are the owner of this review!");
       if (review.getReplyToComment() == null){
         reviewRepository.delete(review);
-        return new ReviewUserResponse(user.getEmail(),true,"Your comment successfully deleted!");
+        return new ReviewUserResponse(user.getEmail(),"Your comment successfully deleted!");
       } else {
         log.error("You can't delete a comment because an admin has already replied to it!");
         throw new BadCredentialException("You can't delete a comment because an admin has already replied to it!");
       }
     } else {
       log.error("Access denied. You are not the owner of this review!");
-      return new ReviewUserResponse(user.getEmail(),false,"Access denied. You are not the owner of this review!");
+      return new ReviewUserResponse(user.getEmail(),"Access denied. You are not the owner of this review!");
     }
   }
 }
