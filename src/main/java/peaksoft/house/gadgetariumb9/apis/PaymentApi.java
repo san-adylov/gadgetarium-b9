@@ -31,7 +31,7 @@ public class PaymentApi {
     }
 
     @PostMapping("/webhook")
-    @Operation()
+    @Operation(summary = "Handle Stripe Webhook Event", description = "Endpoint to handle incoming Stripe webhook events.")
     public String handleWebhookEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader){
         return paymentService.handleWebhookEvent(payload,sigHeader);
     }
