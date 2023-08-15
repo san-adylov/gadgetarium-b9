@@ -7,11 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.payment.CreatePaymentRequest;
-import peaksoft.house.gadgetariumb9.dto.response.payment.CreatePaymentResponse;
+import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.PaymentService;
 
+
 @RestController
-@RequestMapping("/api/user/stripe")
+@RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
 @Tag(name = "Payment Stripe API")
 public class PaymentApi {
@@ -22,16 +23,23 @@ public class PaymentApi {
     @Value("${stripe.public.key}")
     private String stripePublicKey;
 
-    @PostMapping("/create-payment-intent")
+    @PostMapping
     @Operation(summary = "Creating a payment",
             description = "This method creates payment with stripe system.")
-    public CreatePaymentResponse createPaymentIntent(@RequestBody CreatePaymentRequest request) throws  StripeException {
-        return paymentService.createPaymentIntent(request);
+    public SimpleResponse chargeCreditCard(@RequestBody CreatePaymentRequest request) throws  StripeException {
+        return paymentService.chargeCreditCard(request);
     }
 
-    @GetMapping("/public_key")
+    @PostMapping("/webhook")
+    @Operation()
+    public String handleWebhookEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader){
+        return paymentService.handleWebhookEvent(payload,sigHeader);
+    }
+
+    @GetMapping
     public String key() {
         return stripePublicKey;
     }
+
 
 }

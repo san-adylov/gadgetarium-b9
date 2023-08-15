@@ -10,7 +10,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CreatePaymentRequest{
+public class CreatePaymentRequest {
+
+    private String token;
+
+    private String currency;
+
     @Min(1)
-    private Integer amount;
+    private double amount;
 }
