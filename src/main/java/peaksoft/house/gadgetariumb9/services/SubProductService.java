@@ -6,6 +6,7 @@ import peaksoft.house.gadgetariumb9.dto.response.compare.CompareProductResponse;
 import peaksoft.house.gadgetariumb9.dto.response.compare.ComparisonCountResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface SubProductService {
@@ -24,7 +25,7 @@ public interface SubProductService {
 
     List<SubProductHistoryResponse> getRecentlyViewedProduct();
 
-    SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, int pageSize, int pageNumber);
+    SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 
     SimpleResponse singleDelete(Long subProductId);
 
@@ -39,6 +40,6 @@ public interface SubProductService {
     List<CompareProductResponse> getCompareParameters(String productName);
 
     SimpleResponse clearUserCompare();
-
+ 
 
 }

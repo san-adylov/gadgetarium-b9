@@ -3,7 +3,6 @@ package peaksoft.house.gadgetariumb9.dto.response.review;
 import lombok.*;
 
 @NoArgsConstructor
-@Builder
 @Getter
 @Setter
 public class ReviewResponse {
@@ -21,6 +20,8 @@ public class ReviewResponse {
   private String dateOfCreatAd;
 
   private String imageLink;
+
+  private boolean isMy;
 
   public ReviewResponse(String userFullName, String userAvatar,
       int grade, String comment, String answer, String dateOfCreatAd, String imageLink) {

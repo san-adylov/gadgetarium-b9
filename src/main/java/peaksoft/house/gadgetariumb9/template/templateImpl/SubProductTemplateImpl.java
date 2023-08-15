@@ -15,6 +15,7 @@ import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -221,7 +222,23 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         int offset = (page - 1) * pageSize;
         sql += " LIMIT ? OFFSET ?";
 
-        List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse.builder().subProductId(resultSet.getLong("id")).name(resultSet.getString("name")).prodName(resultSet.getString("prodName")).quantity(resultSet.getInt("quantity")).rating(resultSet.getDouble("rating")).price(resultSet.getBigDecimal("price")).color(resultSet.getString("color")).discount(resultSet.getInt("discount")).image(resultSet.getString("image")).createdAt(resultSet.getDate("createdAt").toLocalDate()).countOfReviews(resultSet.getInt("countOfReviews")).subCatTitle(resultSet.getString("subCatTitle")).catTitle(resultSet.getString("catTitle")).grade(resultSet.getString("grade")).build(), pageSize, offset);
+        List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse.builder()
+                        .subProductId(resultSet.getLong("id"))
+                        .name(resultSet.getString("name"))
+                        .prodName(resultSet.getString("prodName"))
+                        .quantity(resultSet.getInt("quantity"))
+                        .rating(resultSet.getDouble("rating"))
+                        .price(resultSet.getBigDecimal("price"))
+                        .color(resultSet.getString("color"))
+                        .discount(resultSet.getInt("discount"))
+                        .image(resultSet.getString("image"))
+                        .createdAt(resultSet.getDate("createdAt").toLocalDate())
+                        .countOfReviews(resultSet.getInt("countOfReviews"))
+                        .subCatTitle(resultSet.getString("subCatTitle"))
+                        .catTitle(resultSet.getString("catTitle"))
+                        .grade(resultSet.getString("grade"))
+                        .build(),
+                pageSize, offset);
 
         return MainPagePaginationResponse.builder().subProductMainPageResponses(products).page(page).pageSize(pageSize).build();
 
@@ -265,10 +282,25 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         int offset = (page - 1) * pageSize;
         sql += " LIMIT ? OFFSET ?";
 
-        List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse.builder().subProductId(resultSet.getLong("id")).name(resultSet.getString("name")).prodName(resultSet.getString("prodName")).quantity(resultSet.getInt("quantity")).rating(resultSet.getDouble("rating")).price(resultSet.getBigDecimal("price")).color(resultSet.getString("color")).discount(resultSet.getInt("discount")).image(resultSet.getString("image")).createdAt(resultSet.getDate("createdAt").toLocalDate()).countOfReviews(resultSet.getInt("countOfReviews")).subCatTitle(resultSet.getString("subCatTitle")).catTitle(resultSet.getString("catTitle")).grade(resultSet.getString("grade")).build(), pageSize, offset);
+        List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse.builder()
+                        .subProductId(resultSet.getLong("id"))
+                        .name(resultSet.getString("name"))
+                        .prodName(resultSet.getString("prodName"))
+                        .quantity(resultSet.getInt("quantity"))
+                        .rating(resultSet.getDouble("rating"))
+                        .price(resultSet.getBigDecimal("price"))
+                        .color(resultSet.getString("color"))
+                        .discount(resultSet.getInt("discount"))
+                        .image(resultSet.getString("image"))
+                        .createdAt(resultSet.getDate("createdAt").toLocalDate())
+                        .countOfReviews(resultSet.getInt("countOfReviews"))
+                        .subCatTitle(resultSet.getString("subCatTitle"))
+                        .catTitle(resultSet.getString("catTitle"))
+                        .grade(resultSet.getString("grade"))
+                        .build()
+                , pageSize, offset);
 
         return MainPagePaginationResponse.builder().subProductMainPageResponses(products).page(page).pageSize(pageSize).build();
-
 
     }
 
@@ -307,7 +339,22 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         int offset = (page - 1) * pageSize;
         sql += " LIMIT ? OFFSET ?";
 
-        List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse.builder().subProductId(resultSet.getLong("id")).name(resultSet.getString("name")).prodName(resultSet.getString("prodName")).quantity(resultSet.getInt("quantity")).rating(resultSet.getDouble("rating")).price(resultSet.getBigDecimal("price")).color(resultSet.getString("color")).discount(resultSet.getInt("discount")).image(resultSet.getString("image")).createdAt(resultSet.getDate("createdAt").toLocalDate()).countOfReviews(resultSet.getInt("countOfReviews")).subCatTitle(resultSet.getString("subCatTitle")).catTitle(resultSet.getString("catTitle")).grade(resultSet.getString("grade")).build(), pageSize, offset);
+        List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse.builder()
+                .subProductId(resultSet.getLong("id"))
+                .name(resultSet.getString("name"))
+                .prodName(resultSet.getString("prodName"))
+                .quantity(resultSet.getInt("quantity"))
+                .rating(resultSet.getDouble("rating"))
+                .price(resultSet.getBigDecimal("price"))
+                .color(resultSet.getString("color"))
+                .discount(resultSet.getInt("discount"))
+                .image(resultSet.getString("image"))
+                .createdAt(resultSet.getDate("createdAt").toLocalDate())
+                .countOfReviews(resultSet.getInt("countOfReviews"))
+                .subCatTitle(resultSet.getString("subCatTitle"))
+                .catTitle(resultSet.getString("catTitle"))
+                .grade(resultSet.getString("grade"))
+                .build(), pageSize, offset);
 
         return MainPagePaginationResponse.builder().subProductMainPageResponses(products).page(page).pageSize(pageSize).build();
     }
@@ -340,8 +387,9 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         ), user.getId());
     }
 
-    @Override
-    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productTyp, int pageSize, int pageNumber) {
+     @Override
+    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
+
         String query = "SELECT sum(s.quantity) from sub_products s";
         String query2 = "SELECT sum(o.quantity) from orders o";
 
@@ -352,8 +400,8 @@ public class SubProductTemplateImpl implements SubProductTemplate {
 
         String sql = "";
 
-        if (productTyp != null) {
-            if (productTyp.equalsIgnoreCase("Все товары")) {
+        if (productType != null) {
+            if (productType.equalsIgnoreCase("Все товары")) {
                 sql = """
                         SELECT s.id                                                                     AS subProductId,
                                (SELECT spi.images
@@ -366,14 +414,15 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                s.quantity                                                               AS quantity,
                                CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount  ,
-                               s.rating
+                               s.rating                                                       
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
                                  LEFT JOIN brands b ON p2.brand_id = b.id
+                                 WHERE  p2.created_at between  ? and  ?
                         GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name,s.rating
                         """;
-            } else if (productTyp.equalsIgnoreCase("В продаже")) {
+            } else if (productType.equalsIgnoreCase("В продаже")) {
                 sql = """
                         SELECT s.id                                                                     AS subProductId,
                                (SELECT spi.images
@@ -386,15 +435,15 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                s.quantity                                                               AS quantity,
                                CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount     ,
-                               s.rating
+                               s.rating                                                    
                         FROM sub_products s
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
                                  LEFT JOIN brands b ON p2.brand_id = b.id
-                                 where s.quantity>0
+                                 where s.quantity>0 and  p2.created_at between  ? and  ?
                         GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating
                         """;
-            } else if (productTyp.equalsIgnoreCase("Новинки")) {
+            } else if (productType.equalsIgnoreCase("Новинки")) {
                 sql = """
                          SELECT s.id                                                                     AS subProductId,
                                                        (SELECT spi.images
@@ -407,14 +456,15 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                                        s.quantity                                                               AS quantity,
                                                        CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                                        SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount  ,
-                                                       s.rating
+                                                       s.rating                                                       
                                                 FROM sub_products s
                                                          LEFT JOIN discounts d ON s.id = d.sub_product_id
                                                          LEFT JOIN products p2 ON s.product_id = p2.id
                                                          LEFT JOIN brands b ON p2.brand_id = b.id
-                                                GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating ORDER BY s.id desc
-                                                """;
-            } else if (productTyp.equalsIgnoreCase("По акции")) {
+                                                         WHERE  p2.created_at between  ? and  ?
+                                                GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating ORDER BY s.id desc 
+                        """;
+            } else if (productType.equalsIgnoreCase("Все акции")) {
                 sql = """
                         SELECT s.id                                                                     AS subProductId,
                                                       (SELECT spi.images
@@ -427,15 +477,64 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                                       s.quantity                                                               AS quantity,
                                                       CONCAT(s.price, ', ', d.sale)                                            AS price_and_sale,
                                                       SUM(s.price * (1 - d.sale / 100.0))                                      AS total_with_discount,
-                                                      s.rating
+                                                      s.rating                                                       
                                                FROM sub_products s
                                                         LEFT JOIN discounts d ON s.id = d.sub_product_id
                                                         LEFT JOIN products p2 ON s.product_id = p2.id
                                                         LEFT JOIN brands b ON p2.brand_id = b.id
-                                               GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating
-                                               """;
+                                                        WHERE  p2.created_at between  ? and  ?
+                                               GROUP BY s.id,s.article_number, p2.created_at,s.quantity, s.price, d.sale, b.name, p2.name, s.rating""";
 
-            } else if (productTyp.equalsIgnoreCase("До 50%")) {
+            } else if (productType.equalsIgnoreCase("В избранном")) {
+                sql = """
+                        SELECT s.id AS subProductId,
+                               (SELECT spi.images
+                                FROM sub_product_images spi
+                                WHERE spi.sub_product_id = s.id
+                                LIMIT 1) AS images,
+                               s.article_number AS articleNumber,
+                               CONCAT(b.name, ' ', p2.name) AS productFullName,
+                               p2.created_at AS dateOfCreation,
+                               s.quantity AS quantity,
+                               CONCAT(s.price, ', ', d.sale) AS price_and_sale,
+                               SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
+                               s.rating
+                        FROM sub_products s
+                                 LEFT JOIN discounts d ON s.id = d.sub_product_id
+                                 LEFT JOIN products p2 ON s.product_id = p2.id
+                                 LEFT JOIN brands b ON p2.brand_id = b.id
+                                 JOIN user_favorite f ON f.user_id = p2.id
+                        where p2.created_at between  ? and  ?
+                        GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating
+                        LIMIT ? ;
+                        """;
+            } else if (productType.equalsIgnoreCase("В корзине")) {
+                sql = """
+                        SELECT s.id AS subProductId,
+                               (SELECT spi.images
+                                FROM sub_product_images spi
+                                WHERE spi.sub_product_id = s.id
+                                LIMIT 1) AS images,
+                               s.article_number AS articleNumber,
+                               CONCAT(b.name, ' ', p2.name) AS productFullName,
+                               p2.created_at AS dateOfCreation,
+                               s.quantity AS quantity,
+                               CONCAT(s.price, ', ', d.sale) AS price_and_sale,
+                               SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
+                               s.rating
+                        FROM sub_products s
+                                 LEFT JOIN discounts d ON s.id = d.sub_product_id
+                                 LEFT JOIN products p2 ON s.product_id = p2.id
+                                 LEFT JOIN brands b ON p2.brand_id = b.id
+                                 JOIN baskets_sub_products bsp ON s.id = bsp.sub_products_id
+                                 JOIN baskets bas ON bsp.baskets_id = bas.id
+                                 JOIN users u ON bas.user_id = u.id
+                        where p2.created_at between  ? and  ?
+                        GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating
+                        ORDER BY s.id
+                        LIMIT ? ;
+                          """;
+            } else if (productType.equalsIgnoreCase("До 50%")) {
                 sql = """
                         SELECT s.id                                AS subProductId,
                                (SELECT spi.images
@@ -454,11 +553,11 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
                                  LEFT JOIN brands b ON p2.brand_id = b.id
-                        where d.sale<50
+                        where d.sale<50 and  p2.created_at between  ? and  ?
                         GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name,s.rating
                         """;
 
-            } else if (productTyp.equalsIgnoreCase("Свыше 50%")) {
+            } else if (productType.equalsIgnoreCase("Свыше 50%")) {
                 sql = """
                         SELECT s.id                                AS subProductId,
                                (SELECT spi.images
@@ -476,10 +575,10 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
                                  LEFT JOIN brands b ON p2.brand_id = b.id
-                        where d.sale>=50
+                        where d.sale>=50 and   p2.created_at between  ? and  ?
                         GROUP BY s.id, s.article_number, p2.data_of_issue, s.quantity, s.price, d.sale, b.name, p2.name,s.rating
                         """;
-            } else if (productTyp.equalsIgnoreCase("Рекомендуемые")) {
+            } else if (productType.equalsIgnoreCase("Рекомендуемые")) {
                 sql = """
                         SELECT s.id                                AS subProductId,
                                (SELECT spi.images
@@ -497,9 +596,10 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
                                  LEFT JOIN brands b ON p2.brand_id = b.id
+                                 WHERE  p2.created_at between  ? and  ?
                         GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating order by s.rating desc;
                         """;
-            } else if (productTyp.equalsIgnoreCase("По увеличению цены")) {
+            } else if (productType.equalsIgnoreCase("По увеличению цены")) {
                 sql = """
                         SELECT s.id                                AS subProductId,
                                (SELECT spi.images
@@ -517,9 +617,10 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
                                  LEFT JOIN brands b ON p2.brand_id = b.id
+                                 WHERE  p2.created_at between  ? and  ?
                         GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating order by s.price desc;
                         """;
-            } else if (productTyp.equalsIgnoreCase("По уменьшению цены")) {
+            } else if (productType.equalsIgnoreCase("По уменьшению цены")) {
                 sql = """
                         SELECT s.id                                AS subProductId,
                                (SELECT spi.images
@@ -537,7 +638,8 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  LEFT JOIN discounts d ON s.id = d.sub_product_id
                                  LEFT JOIN products p2 ON s.product_id = p2.id
                                  LEFT JOIN brands b ON p2.brand_id = b.id
-                        GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating order by s.price;
+                                 WHERE  p2.created_at between  ? and  ?
+                        GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating order by s.price asc;
                         """;
             }
         } else {
@@ -562,7 +664,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 .total_with_discount(rs.getBigDecimal("total_with_discount"))
                                 .rating(rs.getDouble("rating"))
                                 .build(),
-                pageSize, offset
+                startDate, endDate, pageSize, offset
         );
 
         log.info("Successfully");
@@ -711,5 +813,6 @@ public class SubProductTemplateImpl implements SubProductTemplate {
             return responses;
         });
     }
+
 
 }

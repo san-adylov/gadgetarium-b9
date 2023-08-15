@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,6 @@ import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -86,11 +86,10 @@ public class SubProductServiceImpl implements SubProductService {
         log.info("Get recently viewed products");
         return subProductTemplate.getRecentlyViewedProducts();
     }
-
+  
     @Override
-    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, int pageSize, int pageNumber) {
-        return subProductTemplate.getGetAllSubProductAdmin(productType,
-                pageSize, pageNumber);
+    public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
+        return subProductTemplate.getGetAllSubProductAdmin(productType, startDate, endDate, pageSize, pageNumber);
     }
 
     @Override
@@ -521,4 +520,3 @@ public class SubProductServiceImpl implements SubProductService {
     }
 
 }
-
