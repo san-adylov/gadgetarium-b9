@@ -232,6 +232,7 @@ public class OrderServiceImpl implements OrderService {
 
     private MimeMessage getMimeMessage() {
         return emailSender.createMimeMessage();
+    }
 
     public List<OrderHistoryResponse> getOrdersByUserId(Long userId) {
         return orderTemplate.getOrdersByUserId(userId);
