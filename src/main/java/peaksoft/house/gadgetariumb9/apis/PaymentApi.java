@@ -1,15 +1,13 @@
 package peaksoft.house.gadgetariumb9.apis;
 
-import com.stripe.exception.StripeException;
-import io.swagger.v3.oas.annotations.Operation;
+import com.stripe.model.Charge;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
-import peaksoft.house.gadgetariumb9.dto.request.payment.CreatePaymentRequest;
-import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.services.PaymentService;
-
 
 @RestController
 @RequestMapping("/api/v1/payment")
@@ -19,26 +17,12 @@ public class PaymentApi {
 
     private final PaymentService paymentService;
 
+    @PostMapping("/charge")
+    public Charge chargeCard(@RequestHeader(value = "token") String token, @RequestHeader(value = "amount") Double amount) throws Exception {
+        System.out.println(token);
+        System.out.println(amount);
+        return this.paymentService.chargeNewCard(token, amount);
 
-    @Value("${stripe.public.key}")
-    private String stripePublicKey;
-
-    @PostMapping
-    @Operation(summary = "Creating a payment",
-            description = "This method creates payment with stripe system.")
-    public SimpleResponse chargeCreditCard(@RequestBody CreatePaymentRequest request) throws  StripeException {
-        return paymentService.chargeCreditCard(request);
-    }
-
-    @PostMapping("/webhook")
-    @Operation(summary = "Handle Stripe Webhook Event", description = "Endpoint to handle incoming Stripe webhook events.")
-    public String handleWebhookEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader){
-        return paymentService.handleWebhookEvent(payload,sigHeader);
-    }
-
-    @GetMapping
-    public String key() {
-        return stripePublicKey;
     }
 
 
