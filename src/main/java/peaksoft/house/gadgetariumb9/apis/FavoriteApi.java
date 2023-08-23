@@ -5,14 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.FavoriteService;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/favorite")
+@RequestMapping("/api/v1/favorite")
 @Tag(name = "Favorite API", description = "API for favorite CRUD management")
 @PreAuthorize("hasAnyAuthority('USER')")
 public class FavoriteApi {

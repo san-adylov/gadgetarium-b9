@@ -16,7 +16,7 @@ public class Review {
 
     @Id
     @GeneratedValue(generator = "review_gen", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "review_gen", sequenceName = "review_seq", allocationSize = 1, initialValue = 6)
+    @SequenceGenerator(name = "review_gen", sequenceName = "review_seq", allocationSize = 1, initialValue = 4)
     private Long id;
 
     private ZonedDateTime dateCreatAd;
@@ -34,6 +34,7 @@ public class Review {
     private User user;
 
     @ManyToOne(
-            cascade = {MERGE, DETACH, REFRESH, PERSIST, REMOVE})
+            cascade = {REFRESH, PERSIST, MERGE, DETACH},
+            fetch = FetchType.LAZY)
     private SubProduct subProduct;
 }

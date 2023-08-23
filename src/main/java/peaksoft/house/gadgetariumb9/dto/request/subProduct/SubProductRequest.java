@@ -55,4 +55,5 @@ public class SubProductRequest {
     private boolean waterproof;
 
     private double displayDiscount;
+
 }

@@ -2,6 +2,7 @@ package peaksoft.house.gadgetariumb9.apis;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,8 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/brand")
-@PreAuthorize("hasAuthority('ADMIN')")
+@RequestMapping("/api/v1/brand")
 @Tag(name = "Brand", description = "API for working with brand")
 public class BrandApi {
 
@@ -23,18 +23,21 @@ public class BrandApi {
 
     @Operation(summary = "Save brand", description = "Preservation of the new brand")
     @PostMapping("/save")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse saveBrand(@RequestBody @Valid BrandRequest brandRequest) {
         return brandService.saveBrand(brandRequest);
     }
 
     @Operation(summary = "Get all", description = "Getting all brands")
     @GetMapping("/get-all")
+    @PermitAll
     public List<BrandResponse> getAllBrands() {
         return brandService.getAllBrands();
     }
 
     @Operation(summary = "brand delete", description = "Removing a brand")
     @DeleteMapping("/{id}/delete")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse deleteById(@PathVariable Long id) {
         return brandService.deleteById(id);
     }

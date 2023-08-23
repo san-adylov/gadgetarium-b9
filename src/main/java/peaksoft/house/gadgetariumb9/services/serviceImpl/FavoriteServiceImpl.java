@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
-import peaksoft.house.gadgetariumb9.dto.response.subProductResponse.SubProductResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductResponse;
+import peaksoft.house.gadgetariumb9.dto.response.user.UserFavoritesResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
-import peaksoft.house.gadgetariumb9.models.SubProduct;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
@@ -34,9 +34,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     public SimpleResponse addAndDeleteFavorite(Long subProductId) {
         User user = jwtService.getAuthenticationUser();
         List<Long> favorites = user.getFavorite();
-        boolean hasChanges = false;
 
-        SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
+        subProductRepository.findById(subProductId).orElseThrow(() -> {
             log.error("SubProduct with id: " + subProductId + " is not found");
             return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
         });
@@ -44,11 +43,9 @@ public class FavoriteServiceImpl implements FavoriteService {
         if (favorites.contains(subProductId)) {
             favorites.remove(subProductId);
             log.info("Successfully removed the product with id " + subProductId + " from favorites");
-            hasChanges = true;
         } else {
             favorites.add(subProductId);
             log.info("Successfully added the product with id " + subProductId + " to favorites");
-            hasChanges = true;
         }
 
         user.setFavorite(favorites);
@@ -72,10 +69,13 @@ public class FavoriteServiceImpl implements FavoriteService {
                 .build();
     }
 
-
     @Override
     public List<SubProductResponse> getAllFavorite() {
         return favoriteTemplate.getAllFavorite();
     }
 
+    @Override
+    public List<UserFavoritesResponse> getAllFavoriteByUserId(Long userId) {
+        return favoriteTemplate.getAllFavoriteByUserId(userId);
+    }
 }

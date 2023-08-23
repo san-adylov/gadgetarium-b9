@@ -7,6 +7,8 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.InvalidMimeTypeException;
@@ -21,17 +23,34 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class S3FileService {
 
-    @Value("${application.bucket.name}")
+    private static final Logger logger = LoggerFactory.getLogger(S3FileService.class);
+
+    @Value("${aws_bucket_name}")
     private String bucketName;
 
     private final AmazonS3 s3Client;
+
+
 
     public String uploadFile(MultipartFile file) {
         File fileObj = convertMultiPartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
-        return "File uploaded : " + fileName;
+        String url = s3Client.getUrl(bucketName, fileName).toString();
+        return url;
     }
+
+
+    public boolean deleteFile(String fileName) {
+        try {
+            s3Client.deleteObject("gadgetariumb9", fileName);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     public byte[] downloadFile(String fileName) {
         S3Object s3Object = s3Client.getObject(bucketName, fileName);
@@ -39,14 +58,9 @@ public class S3FileService {
         try {
             return IOUtils.toByteArray(inputStream);
         } catch (InvalidMimeTypeException | IOException e) {
-            e.printStackTrace();
+            logger.error("An error occurred while downloading the file: {}", fileName, e);
         }
         return new byte[0];
-    }
-
-    public String deleteFile(String fileName) {
-        s3Client.deleteObject(bucketName, fileName);
-        return fileName + " removed....";
     }
 
     private File convertMultiPartFileToFile(MultipartFile file) {

@@ -5,14 +5,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.banner.BannerRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.serviceImpl.BannerServiceImpl;
 
-@RequiredArgsConstructor
 @RestController
-@RequestMapping("/banners")
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/banners")
 @Tag(name = "Banner API", description = "API for banner management")
 public class BannerApi {
 

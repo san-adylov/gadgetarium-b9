@@ -1,23 +1,25 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
-import java.time.ZoneId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
+import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
-import peaksoft.house.gadgetariumb9.models.color.CodeColor;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.*;
+import peaksoft.house.gadgetariumb9.models.color.CodeColor;
 import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.ProductService;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import peaksoft.house.gadgetariumb9.template.ProductTemplate;
 
 @Slf4j
 @Service
@@ -39,6 +41,8 @@ public class ProductServiceImpl implements ProductService {
     private final PhoneRepository phoneRepository;
 
     private final SmartWatchRepository smartWatchRepository;
+
+    private final ProductTemplate productTemplate;
 
     private final CodeColor codeColor;
 
@@ -62,10 +66,10 @@ public class ProductServiceImpl implements ProductService {
                     return new NotFoundException("Category with id: " + productRequest.getCategoryId() + " is not found");
                 });
 
-      ZoneId zoneId = ZoneId.systemDefault();
-      ZonedDateTime startDateZ = ZonedDateTime.of(productRequest.getDateOfIssue().atStartOfDay(), zoneId);
+        ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime startDateZ = ZonedDateTime.of(productRequest.getDateOfIssue().atStartOfDay(), zoneId);
 
-      Product product = new Product();
+        Product product = new Product();
         product.setCategory(category);
         product.setSubCategory(subCategory);
         product.setBrand(brand);
@@ -164,4 +168,14 @@ public class ProductServiceImpl implements ProductService {
     public List<String> getColor(String name) {
         return new ArrayList<>(Collections.singleton(codeColor.ColorName(name)));
     }
+
+  @Override
+  public ProductUserAndAdminResponse getByProductId(Long productId, String color) {
+    productRepository.findById(productId).orElseThrow(
+        () -> {
+          log.error("Product with id: " + productId + " is not found");
+          return new NotFoundException("Product with id: " + productId + " is not found");
+        });
+    return productTemplate.getByProductId(productId,color);
+  }
 }
