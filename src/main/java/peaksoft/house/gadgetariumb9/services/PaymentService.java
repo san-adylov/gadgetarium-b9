@@ -1,15 +1,11 @@
 package peaksoft.house.gadgetariumb9.services;
 
 import com.stripe.exception.StripeException;
-import com.stripe.model.Charge;
-import com.stripe.model.Customer;
+import peaksoft.house.gadgetariumb9.dto.request.payment.CreatePaymentRequest;
+import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 
 public interface PaymentService {
 
-    Customer createCustomer(String token, String email) throws StripeException;
-
-    Charge chargeNewCard(String token, double amount) throws StripeException;
-
-    Charge chargeCustomerCard(String customerId, int amount) throws Exception;
+    SimpleResponse chargeNewCard(CreatePaymentRequest createPaymentRequest) throws StripeException;
 
 }

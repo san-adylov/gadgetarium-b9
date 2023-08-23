@@ -2,45 +2,32 @@ package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
-import com.stripe.model.Customer;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import peaksoft.house.gadgetariumb9.dto.request.payment.CreatePaymentRequest;
+import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.PaymentService;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class PaymentServiceImpl implements PaymentService {
 
     @Override
-    public Customer createCustomer(String token, String email) throws StripeException {
-        Map<String, Object> customerParams = new HashMap<>();
-        customerParams.put("email", email);
-        customerParams.put("source", token);
-        return Customer.create(customerParams);
-    }
-
-    private Customer getCustomer(String id) throws Exception {
-        return Customer.retrieve(id);
-    }
-
-    @Override
-    public Charge chargeNewCard(String token, double amount) throws StripeException {
+    public SimpleResponse chargeNewCard(CreatePaymentRequest createPaymentRequest) throws StripeException {
         Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("amount", (int) (amount * 100));
+        chargeParams.put("amount", (int) (createPaymentRequest.getAmount() * 100));
         chargeParams.put("currency", "USD");
-        chargeParams.put("source", token);
-        return Charge.create(chargeParams);
-    }
-
-    @Override
-    public Charge chargeCustomerCard(String customerId, int amount) throws Exception {
-        String sourceCard = getCustomer(customerId).getDefaultSource();
-        Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("amount", amount);
-        chargeParams.put("currency", "USD");
-        chargeParams.put("customer", customerId);
-        chargeParams.put("source", sourceCard);
-        return Charge.create(chargeParams);
+        chargeParams.put("source", createPaymentRequest.getToken());
+        Charge charge = Charge.create(chargeParams);
+        return SimpleResponse
+                .builder()
+                .status(HttpStatus.OK)
+                .message(charge.getCustomer())
+                .build();
     }
 
 }

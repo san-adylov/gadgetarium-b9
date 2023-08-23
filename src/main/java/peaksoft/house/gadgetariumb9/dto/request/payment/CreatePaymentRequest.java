@@ -14,8 +14,6 @@ public class CreatePaymentRequest {
 
     private String token;
 
-    private String currency;
-
     @Min(1)
     private double amount;
 }
