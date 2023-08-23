@@ -14,6 +14,7 @@ import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -307,56 +308,65 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     @Override
     public MainPagePaginationResponse getAllDiscountProducts(int page, int pageSize) {
         String sql = """
-                SELECT sp.id as id,
-                       b.name as name,
-                       p.name as prodName,
-                       sp.price as price,
-                       sp.quantity as quantity,
-                       sp.code_color as color,
-                       d.sale as discount,
-                       cat.title as catTitle,
-                       sc.title as subCatTitle,
-                       p.created_at as createdAt,
-                       r.grade as grade,
-                       sp.rating as rating,
-                       (SELECT count(r1) FROM reviews r1 WHERE r1.sub_product_id = sp.id) as countOfReviews,
-                       COALESCE(
-                               (SELECT spi.images
-                                FROM sub_product_images spi
-                                WHERE spi.sub_product_id = sp.id
-                                LIMIT 1), ' ') AS image
-                FROM sub_products sp
-                         JOIN products p on p.id = sp.product_id
-                         JOIN brands b on b.id = p.brand_id
-                         JOIN sub_product_images spi ON sp.id = spi.sub_product_id
-                         JOIN discounts d on sp.id = d.sub_product_id
-                         LEFT JOIN reviews r ON r.sub_product_id=sp.id
-                         JOIN categories cat ON cat.id= p.category_id
-                         JOIN sub_categories sc ON sc.id=p.sub_category_id
-                         WHERE d.sale > 0
-                         """;
+                SELECT DISTINCT
+                               sp.id                                                              as id,
+                               b.name                                                             as name,
+                               p.name                                                             as prodName,
+                               sp.price                                                           as price,
+                               sp.quantity                                                        as quantity,
+                               sp.code_color                                                      as color,
+                               d.sale                                                             as discount,
+                               cat.title                                                          as catTitle,
+                               sc.title                                                           as subCatTitle,
+                               p.created_at                                                       as createdAt,
+                               r.grade                                                            as grade,
+                               sp.rating                                                          as rating,
+                               (SELECT count(r1) FROM reviews r1 WHERE r1.sub_product_id = sp.id) as countOfReviews,
+                               COALESCE(
+                                       (SELECT spi.images
+                                        FROM sub_product_images spi
+                                        WHERE spi.sub_product_id = sp.id
+                                        LIMIT 1), ' ')                                            AS image
+               FROM sub_products sp
+                        JOIN products p on p.id = sp.product_id
+                        JOIN brands b on b.id = p.brand_id
+                        JOIN sub_product_images spi ON sp.id = spi.sub_product_id
+                        JOIN discounts d on sp.id = d.sub_product_id
+                        LEFT JOIN reviews r ON r.sub_product_id = sp.id
+                        JOIN categories cat ON cat.id = p.category_id
+                        JOIN sub_categories sc ON sc.id = p.sub_category_id
+               WHERE d.sale > 0
+               LIMIT ? OFFSET ?
+               """;
 
         int offset = (page - 1) * pageSize;
-        sql += " LIMIT ? OFFSET ?";
 
-        List<SubProductMainPageResponse> products = jdbcTemplate.query(sql, (resultSet, i) -> SubProductMainPageResponse.builder()
-                .subProductId(resultSet.getLong("id"))
-                .name(resultSet.getString("name"))
-                .prodName(resultSet.getString("prodName"))
-                .quantity(resultSet.getInt("quantity"))
-                .rating(resultSet.getDouble("rating"))
-                .price(resultSet.getBigDecimal("price"))
-                .color(resultSet.getString("color"))
-                .discount(resultSet.getInt("discount"))
-                .image(resultSet.getString("image"))
-                .createdAt(resultSet.getDate("createdAt").toLocalDate())
-                .countOfReviews(resultSet.getInt("countOfReviews"))
-                .subCatTitle(resultSet.getString("subCatTitle"))
-                .catTitle(resultSet.getString("catTitle"))
-                .grade(resultSet.getString("grade"))
-                .build(), pageSize, offset);
+        List<SubProductMainPageResponse> products = jdbcTemplate.query(
+                sql,
+                (resultSet, i) -> SubProductMainPageResponse
+                        .builder()
+                        .subProductId(resultSet.getLong("id"))
+                        .name(resultSet.getString("name"))
+                        .prodName(resultSet.getString("prodName"))
+                        .quantity(resultSet.getInt("quantity"))
+                        .rating(resultSet.getDouble("rating"))
+                        .price(resultSet.getBigDecimal("price"))
+                        .color(resultSet.getString("color"))
+                        .discount(resultSet.getInt("discount"))
+                        .image(resultSet.getString("image"))
+                        .createdAt(resultSet.getDate("createdAt").toLocalDate())
+                        .countOfReviews(resultSet.getInt("countOfReviews"))
+                        .subCatTitle(resultSet.getString("subCatTitle"))
+                        .catTitle(resultSet.getString("catTitle"))
+                        .grade(resultSet.getString("grade"))
+                        .build(), pageSize, offset);
 
-        return MainPagePaginationResponse.builder().subProductMainPageResponses(products).page(page).pageSize(pageSize).build();
+        return MainPagePaginationResponse
+                .builder()
+                .subProductMainPageResponses(products)
+                .page(page)
+                .pageSize(pageSize)
+                .build();
     }
 
     @Override
@@ -387,7 +397,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         ), user.getId());
     }
 
-     @Override
+    @Override
     public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
 
         String query = "SELECT sum(s.quantity) from sub_products s";
@@ -673,44 +683,44 @@ public class SubProductTemplateImpl implements SubProductTemplate {
 
     public List<CompareProductResponse> getCompareParameters(String productName) {
         String sql = """
-            SELECT
-                sp.id AS id,
-                p.id AS product_id,
-                b.name AS brand_name,
-                p.name AS product_name,
-                sp.price AS price,
-                sp.code_color AS color,
-                sp.screen_resolution AS screen,
-                sp.rom AS rom,
-                sp.additional_features AS operational_systems,
-                cat.title AS category_title,
-                sc.title AS sub_category_title,
-                ph.sim AS simCardAlias,
-                ph.diagonal_screen,
-                ph.battery_capacity AS battery_capacity,
-                l.processor,
-                l.purpose,
-                l.screen_size AS screen_size,
-                l.video_memory,
-                sm.an_interface AS interface,
-                sm.hull_shape AS hull_shape,
-                sm.material_bracelet AS bracelet_material,
-                sm.housing_material AS housing_material,
-                sm.gender AS gender,
-                sm.waterproof AS waterproof,
-                sm.display_discount AS display_discount,
-                spi.images AS image
-            FROM sub_products sp
-                     JOIN products p ON p.id = sp.product_id
-                     JOIN brands b ON b.id = p.brand_id
-                     JOIN categories cat ON cat.id = p.category_id
-                     JOIN sub_categories sc ON sc.id = p.sub_category_id
-                     LEFT JOIN phones ph ON ph.sub_product_id = sp.id
-                     LEFT JOIN laptops l ON l.sub_product_id = sp.id
-                     LEFT JOIN smart_watches sm ON sm.sub_product_id = sp.id
-                     LEFT JOIN sub_product_images spi ON sp.id = spi.sub_product_id
-            WHERE cat.title LIKE ?
-                     """;
+                SELECT
+                    sp.id AS id,
+                    p.id AS product_id,
+                    b.name AS brand_name,
+                    p.name AS product_name,
+                    sp.price AS price,
+                    sp.code_color AS color,
+                    sp.screen_resolution AS screen,
+                    sp.rom AS rom,
+                    sp.additional_features AS operational_systems,
+                    cat.title AS category_title,
+                    sc.title AS sub_category_title,
+                    ph.sim AS simCardAlias,
+                    ph.diagonal_screen,
+                    ph.battery_capacity AS battery_capacity,
+                    l.processor,
+                    l.purpose,
+                    l.screen_size AS screen_size,
+                    l.video_memory,
+                    sm.an_interface AS interface,
+                    sm.hull_shape AS hull_shape,
+                    sm.material_bracelet AS bracelet_material,
+                    sm.housing_material AS housing_material,
+                    sm.gender AS gender,
+                    sm.waterproof AS waterproof,
+                    sm.display_discount AS display_discount,
+                    spi.images AS image
+                FROM sub_products sp
+                         JOIN products p ON p.id = sp.product_id
+                         JOIN brands b ON b.id = p.brand_id
+                         JOIN categories cat ON cat.id = p.category_id
+                         JOIN sub_categories sc ON sc.id = p.sub_category_id
+                         LEFT JOIN phones ph ON ph.sub_product_id = sp.id
+                         LEFT JOIN laptops l ON l.sub_product_id = sp.id
+                         LEFT JOIN smart_watches sm ON sm.sub_product_id = sp.id
+                         LEFT JOIN sub_product_images spi ON sp.id = spi.sub_product_id
+                WHERE cat.title LIKE ?
+                         """;
         if (productName.equalsIgnoreCase("Smartphone") || productName.equalsIgnoreCase("Tablet")) {
             return jdbcTemplate.query(sql, new Object[]{"%Smartphone%"}, ((rs, rowNum) -> CompareSmartPhoneResponse.builder()
                     .subProductId(rs.getLong("id"))
@@ -778,17 +788,17 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     @Override
     public List<ComparisonCountResponse> countCompareUser(Long userId) {
         String compare = """
-            SELECT
-                c.title AS categoryTitle,
-                COUNT(uc.comparison) AS comparisonCount
-            FROM user_comparison uc
-                     JOIN sub_products sp ON uc.comparison = sp.id
-                     JOIN users u ON uc.user_id = u.id
-                     JOIN products p ON p.id = sp.product_id
-                     JOIN categories c ON c.id = p.category_id
-            WHERE uc.user_id = ? AND (c.title = 'Smartphone' OR c.title = 'Smart watch' OR c.title = 'Tablet' OR c.title = 'Laptop')
-            GROUP BY c.title;
-            """;
+                SELECT
+                    c.title AS categoryTitle,
+                    COUNT(uc.comparison) AS comparisonCount
+                FROM user_comparison uc
+                         JOIN sub_products sp ON uc.comparison = sp.id
+                         JOIN users u ON uc.user_id = u.id
+                         JOIN products p ON p.id = sp.product_id
+                         JOIN categories c ON c.id = p.category_id
+                WHERE uc.user_id = ? AND (c.title = 'Smartphone' OR c.title = 'Smart watch' OR c.title = 'Tablet' OR c.title = 'Laptop')
+                GROUP BY c.title;
+                """;
         return jdbcTemplate.query(compare, new Object[]{userId}, (rs) -> {
             List<ComparisonCountResponse> responses = new ArrayList<>();
             while (rs.next()) {
