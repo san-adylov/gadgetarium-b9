@@ -1,5 +1,6 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
+import com.stripe.Stripe;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Value("${spring.mail.username}")
     private String EMAIL_FROM;
+
+    @Value("${stripe.apikey}")
+    private String API_KEY;
 
     @Override
     public AuthenticationResponse signUp(SignUpRequest signUpRequest) {
@@ -140,7 +144,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @PostConstruct
-    private void addAdmin() {
+    public void addAdmin() {
         if (!userRepository.existsByEmail(EMAIL)) {
             User user = User
                     .builder()
@@ -155,5 +159,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             userRepository.save(user);
             log.info("Admin saved");
         }
+        setup();
+
+    }
+
+    private void setup() {
+        Stripe.apiKey = API_KEY;
+        log.info("Api key");
     }
 }
