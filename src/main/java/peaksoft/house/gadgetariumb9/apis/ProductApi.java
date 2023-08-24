@@ -129,7 +129,7 @@ public class ProductApi {
     }
 
     @GetMapping("/get-by-id")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @PermitAll
     @Operation(summary = "To get by product id the product.", description = "This method to get by product id the product.")
     public ProductUserAndAdminResponse getByProductId(@RequestParam Long productId,
                                                       @RequestParam(defaultValue = "", required = false) String colour) {
