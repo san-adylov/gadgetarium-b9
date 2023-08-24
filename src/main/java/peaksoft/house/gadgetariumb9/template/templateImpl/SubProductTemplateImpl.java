@@ -44,14 +44,14 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                           s.price
                    FROM sub_products s
                             LEFT JOIN discounts d ON s.id = d.sub_product_id
-                            JOIN phones p ON s.id = p.sub_product_id
-                            JOIN laptops l ON s.id = l.sub_product_id
-                            JOIN smart_watches sw ON s.id = sw.sub_product_id
+                            LEFT JOIN phones p ON s.id = p.sub_product_id
+                            LEFT JOIN laptops l ON s.id = l.sub_product_id
+                            LEFT JOIN smart_watches sw ON s.id = sw.sub_product_id
                             LEFT JOIN products p2 ON s.product_id = p2.id
                             LEFT JOIN brands b ON p2.brand_id = b.id
                             JOIN sub_categories sc ON p2.sub_category_id = sc.id
-                            JOIN categories c ON sc.category_id = c.id
-                   WHERE c.title = ?
+                            JOIN categories c ON p2.category_id = c.id
+                   WHERE c.title ILIKE ?
                 """;
         List<Object> params = new ArrayList<>();
 
