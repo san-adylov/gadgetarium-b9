@@ -16,6 +16,7 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.ProductService;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class ProductApi {
     }
 
     @GetMapping("/get-by-id")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @PermitAll
     @Operation(summary = "To get by product id the product.", description = "This method to get by product id the product.")
     public ProductUserAndAdminResponse getByProductId(@RequestParam Long productId,
                                                       @RequestParam(defaultValue = "", required = false) String colour) {

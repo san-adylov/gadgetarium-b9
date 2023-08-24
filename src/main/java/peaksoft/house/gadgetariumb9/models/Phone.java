@@ -15,7 +15,7 @@ public class Phone {
 
     @Id
     @GeneratedValue(generator = "phone_gen", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "phone_gen", sequenceName = "phone_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "phone_gen", sequenceName = "phone_seq", allocationSize = 1, initialValue = 6)
     private Long id;
 
     private int sim;
