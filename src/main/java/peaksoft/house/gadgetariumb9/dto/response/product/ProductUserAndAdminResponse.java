@@ -50,4 +50,6 @@ public class ProductUserAndAdminResponse {
   private boolean isFavorite;
 
   private String description;
+
+  private String videoLink;
 }
