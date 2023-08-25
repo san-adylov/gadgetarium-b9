@@ -42,6 +42,11 @@ public class BannerServiceImpl implements BannerService {
         return null;
     }
 
+    @Override
+    public List<Banner> getAllBanner() {
+        return bannerRepository.findAll();
+    }
+
     private void validateBanners(List<String> images) {
         if (images.size() > 6 || images.stream().anyMatch(String::isBlank)) {
             throw new InvalidBannerException("Invalid banners. The number of banners should not exceed 6 or contain empty elements!");

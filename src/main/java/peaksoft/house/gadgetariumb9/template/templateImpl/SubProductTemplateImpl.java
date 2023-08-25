@@ -683,7 +683,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
 
     public List<CompareProductResponse> getCompareParameters(String productName) {
         String sql = """
-                SELECT
+                SELECT DISTINCT
                     sp.id AS id,
                     p.id AS product_id,
                     b.name AS brand_name,
@@ -721,7 +721,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                          LEFT JOIN sub_product_images spi ON sp.id = spi.sub_product_id
                 WHERE cat.title LIKE ?
                          """;
-        if (productName.equalsIgnoreCase("Smartphone") || productName.equalsIgnoreCase("Tablet")) {
+        if (productName.equalsIgnoreCase("Phone") || productName.equalsIgnoreCase("Tablet")) {
             return jdbcTemplate.query(sql, new Object[]{"%Smartphone%"}, ((rs, rowNum) -> CompareSmartPhoneResponse.builder()
                     .subProductId(rs.getLong("id"))
                     .prId(rs.getLong("product_id"))
