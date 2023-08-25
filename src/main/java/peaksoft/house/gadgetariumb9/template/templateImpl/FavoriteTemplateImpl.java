@@ -26,7 +26,8 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
     public List<SubProductResponse> getAllFavorite() {
         User user = jwtService.getAuthenticationUser();
         String query = """
-                SELECT sp.id,
+                SELECT DISTINCT sp.id,
+                b.name,
                     p.name AS prod_name,
                        sp.article_number,
                        sp.price,

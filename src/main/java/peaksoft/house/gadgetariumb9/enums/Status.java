@@ -9,6 +9,13 @@ public enum Status {
     COURIER_ON_THE_WAY("Курьер в пути"),
     DELIVERED("Доставлен");
 
+    private final String value;
+
     Status(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
     }
 }
