@@ -5,11 +5,14 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewResponse;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.ProductTemplate;
 
 @Slf4j
@@ -17,6 +20,8 @@ import peaksoft.house.gadgetariumb9.template.ProductTemplate;
 @Transactional
 @RequiredArgsConstructor
 public class ProductTemplateImpl implements ProductTemplate {
+
+  private final UserRepository userRepository;
 
   private final JdbcTemplate jdbcTemplate;
 
@@ -31,7 +36,15 @@ public class ProductTemplateImpl implements ProductTemplate {
     List<String> colours = jdbcTemplate.query(colourSql, (rs, i) -> rs.getString("colours"),
         productId);
 
-    User user = jwtService.getAuthenticationUser();
+    User user = null;
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    if (!email.equalsIgnoreCase("anonymousUser")) {
+      user = userRepository.getUserByEmail(email).orElseThrow(
+          () -> {
+            log.error("User with id: " + email + " is not found");
+            return new NotFoundException("Product with id: " + email + " is not found");
+          });
+    }
 
     String sql = """
         SELECT p.id                                                            AS product_id,
@@ -57,7 +70,7 @@ public class ProductTemplateImpl implements ProductTemplate {
         JOIN brands b ON b.id = p.brand_id
         LEFT JOIN discounts d ON sp.id = d.sub_product_id
         LEFT JOIN reviews r ON sp.id = r.sub_product_id
-        LEFT JOIN user_favorite uf ON r.user_id = uf.user_id AND uf.user_id = ?
+        LEFT JOIN user_favorite uf ON r.user_id = uf.user_id AND uf.user_id = ? 
         WHERE p.id = ? AND sp.code_color = ?
         """;
 
@@ -84,7 +97,7 @@ public class ProductTemplateImpl implements ProductTemplate {
           return response;
         },
         productId,
-        user.getId(),
+        user != null ? user.getId() : null,
         productId,
         !color.isBlank() ? color : colours.get(0)
     );
@@ -118,6 +131,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                  JOIN users u ON u.id = r.user_id
                  WHERE p.id = ?
         """;
+
     List<ReviewResponse> reviewResponses = jdbcTemplate.query(
         reviewSql, (rs, rowNum) -> new ReviewResponse(
             rs.getString("user_name"),
