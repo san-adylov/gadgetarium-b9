@@ -51,7 +51,8 @@ public class ProductTemplateImpl implements ProductTemplate {
                sp.rom                                                          AS rom,
                p.guarantee                                                     AS guarantee,
                CASE WHEN uf IS NULL THEN FALSE OR TRUE END                     AS isFavorite,
-               p.description                                                   AS description
+               p.description                                                   AS description,
+               p.video_link                                                    AS video_link
         FROM sub_products sp JOIN products p ON sp.product_id = p.id
         JOIN brands b ON b.id = p.brand_id
         LEFT JOIN discounts d ON sp.id = d.sub_product_id
@@ -79,6 +80,7 @@ public class ProductTemplateImpl implements ProductTemplate {
           response.setGuarantee(rs.getInt("guarantee"));
           response.setFavorite(rs.getBoolean("isFavorite"));
           response.setDescription(rs.getString("description"));
+          response.setVideoLink(rs.getString("video_link"));
           return response;
         },
         productId,

@@ -1,0 +1,91 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Java Techie Mail</title>
+  <style>
+    .main {
+      margin: 20px 10px;
+      background-color: #FFFFFF;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+      border: 1px solid #5E5E5E;
+      border-radius: 6px;
+      min-height: auto;
+      width: 500px;
+
+    }
+
+    .image-holder {
+      width: 500px;
+      height: 130px;
+      font-size: 48px;
+      background-color: #1A1A25;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .image {
+      width: 310px;
+      height: 80px;
+      padding: 35px 100px;
+    }
+
+    .container {
+      padding: 10px 45px;
+    }
+
+    .text-header {
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+      font-weight: 800;
+      font-size: 20px;
+      line-height: 120%;
+      color: black;
+    }
+
+    .description {
+      font-family: 'Inter', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 150%;
+      color: #384255;
+
+    }
+  </style>
+</head>
+
+<body style="padding: 0; margin: 0; color: black">
+<div class="main">
+  <div class="image-holder">
+    <img  src="https://gadgetariumbucket.s3.eu-central-1.amazonaws.com/1683720417266gadget logo.PNG"
+          alt="" class="image">
+  </div>
+  <div class="container">
+    <div class="text-header">
+      <br>Здравствуйте!<br> Ваша заявка на заказ принята<br>
+    </div>
+    <div>
+      <div>
+        <h5 class="description" th:text="'Номер заяки: '+${orderNumber}">orderNumber</h5>
+        <h5 class="description" th:text="'Дата заявки: '+${dateOfOrder}">data</h5>
+      </div>
+      <br>
+      <hr>
+      <br>
+      <div>
+        <h5 class="description" th:text="'Статус заказа: '+${statusOrder}">status</h5>
+        <h5 class="description" th:text="'Ваши данные: '+${user}">user-info</h5>
+        <h5 class="description" th:text="'Телефон: '+${phoneNumber}">phoneNumber</h5>
+        <h5 class="description" th:text="'Доставка: '+${deliveryType}">deliveryType</h5>
+      </div>
+      <br>
+      <hr>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+  </div>
+</div>
+</body>
+</html>

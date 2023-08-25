@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
+import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
+import peaksoft.house.gadgetariumb9.dto.response.review.ReviewUserResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.AlreadyExistException;
 import peaksoft.house.gadgetariumb9.exceptions.BadCredentialException;
@@ -216,8 +218,60 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
-    @Override
-    public ReviewGradeInfo getFeedback(Long subProductId) {
-        return reviewTemplate.getFeedback(subProductId);
+  @Override
+  public ReviewGradeInfo getFeedback(Long subProductId) {
+    return reviewTemplate.getFeedback(subProductId);
+  }
+
+  @Override
+  public ReviewUserResponse updateComment(ReviewUserRequest request) {
+    Review review = reviewRepository.findById(request.getReviewId()).orElseThrow(() -> {
+      log.error(String.format("Review with id %s not found", request.getReviewId()));
+      return new NotFoundException(String.format("Review with id %s not found", request.getReviewId()));
+    });
+
+    User user = jwtService.getAuthenticationUser();
+
+    if (review.getUser().equals(user)){
+      log.info("You are the owner of this review!");
+      if (review.getReplyToComment() == null){
+        review.setComment(request.getComment());
+        review.setGrade(request.getGrade());
+        review.setImageLink(request.getImageLink());
+        reviewRepository.save(review);
+        return new ReviewUserResponse(user.getEmail(),"Your comment successfully updated!");
+      } else {
+        log.error("You can't edit a comment because an admin has already replied to it!");
+        throw new BadCredentialException("You can't edit a comment because an admin has already replied to it!");
+      }
+    } else {
+      log.error("Access denied. You are not the owner of this review!");
+      return new ReviewUserResponse(user.getEmail(),"Access denied. You are not the owner of this review!");
     }
+
+  }
+
+  @Override
+  public ReviewUserResponse deleteComment(Long reviewId) {
+    Review review = reviewRepository.findById(reviewId).orElseThrow(() -> {
+      log.error(String.format("Review with id %s not found", reviewId));
+      return new NotFoundException(String.format("Review with id %s not found", reviewId));
+    });
+
+    User user = jwtService.getAuthenticationUser();
+
+    if (review.getUser().equals(user)){
+      log.info("You are the owner of this review!");
+      if (review.getReplyToComment() == null){
+        reviewRepository.delete(review);
+        return new ReviewUserResponse(user.getEmail(),"Your comment successfully deleted!");
+      } else {
+        log.error("You can't delete a comment because an admin has already replied to it!");
+        throw new BadCredentialException("You can't delete a comment because an admin has already replied to it!");
+      }
+    } else {
+      log.error("Access denied. You are not the owner of this review!");
+      return new ReviewUserResponse(user.getEmail(),"Access denied. You are not the owner of this review!");
+    }
+  }
 }
