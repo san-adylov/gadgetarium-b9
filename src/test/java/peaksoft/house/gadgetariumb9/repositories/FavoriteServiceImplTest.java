@@ -63,7 +63,7 @@ class FavoriteServiceImplTest {
         SimpleResponse deleteResponse = favoritesService.addAndDeleteFavorite(subProductId);
         assertFalse(user.getFavorite().contains(subProductId));
         verify(userRepository, times(2)).save(user);
-        assertEquals(HttpStatus.OK, deleteResponse.getStatus()); // Правильно указываем код состояния
+        assertEquals(HttpStatus.OK, deleteResponse.getStatus());
         assertEquals("Successfully added or removed from favorites.", deleteResponse.getMessage());
     }
 
