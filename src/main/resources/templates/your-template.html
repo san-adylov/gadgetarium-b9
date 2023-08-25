@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>JAVA PDF FILE</title>
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        .image-container {
+            height: 120px;
+            width: 100%;
+            background-color: #1A1A25;
+        }
+
+        .image-box {
+            display: inline-block;
+            margin: 36px 240px;
+        }
+
+        main {
+            width: 100%;
+            color: #1A1A25;
+        }
+
+        .image {
+            width: 210px;
+            height: 40px;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .text-header {
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 19px;
+            line-height: 120%;
+            margin-left: 240px;
+            margin-top: 20px;
+        }
+        .text-header p {
+            margin-left: 60px;
+        }
+
+        .header-text {
+            font-family: 'Inter', sans-serif;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 16px;
+            color: #cb11ab;
+            line-height: 150%;
+            width: 80px;
+        }
+
+
+        .back-text {
+            font-family: 'Inter', sans-serif;
+            /*color: #c1348d;*/
+            font-weight: 500;
+            font-size: 16px;
+            margin-left: 40px;
+            margin-bottom: 5px;
+        }
+       .data-container {
+           display: inline-block;
+       }
+       .name-container {
+           display: inline-block;
+       }
+
+        a {
+            text-decoration: none;
+        }
+
+        .phones-cont {
+            width: 100%;
+            height: 530px;
+            display: flex;
+            justify-content: center;
+            margin: 15px 0 0 0;
+        }
+
+        .phones-img {
+            object-fit: contain;
+            width: 70%;
+            height: 100%;
+            margin-left: 100px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        .best-gadgets {
+            color: #1A1A25;
+            font-family: 'Comfortaa', cursive;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="image-container">
+            <div class="image-box">
+                <img src="https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692874043414_Logo.png" alt="" class="image"/>
+            </div>
+        </div>
+    </header>
+    <main>
+    <div class="container">
+        <div class="text-header">
+            <p>Welcome!</p>
+            Gadgets at your disposal!!
+        </div>
+        <div>
+            <div class="phones-cont"
+            >
+                <img class="phones-img" th:src="*{image}" alt="phone"/>
+            </div>
+        <div class="name-container">
+            <div>
+                <p class="header-text">Name :</p>
+            </div>
+            <div>
+                <p class="header-text">Brand :</p>
+            </div>
+            <div>
+                <p class="header-text">Category :</p>
+            </div>
+            <div>
+                <p class="header-text">Color :</p>
+            </div>
+            <div>
+                <p class="header-text">Price :</p>
+            </div>
+            <div>
+                <p class="header-text">Discount :</p>
+            </div>
+            <div>
+                <p class="header-text">Date :</p>
+            </div>
+            <div>
+                <p class="header-text">Rom :</p>
+            </div>
+            <div>
+                <p class="header-text">Ram :</p>
+            </div>
+        </div>
+        <div class="data-container">
+            <div>
+                <p class="back-text" th:text="${name}"></p>
+            </div>
+            <div>
+                <p class="back-text" th:text="${brand}"></p>
+            </div>
+            <div>
+                <p class="back-text" th:text="${category}"></p>
+            </div>
+            <div>
+                <p class="back-text" th:text="${color}"></p>
+            </div>
+            <div>
+                <p class="back-text" th:text="${price}"></p>
+            </div>
+            <div>
+                <p class="back-text" th:text="${discount}"></p>
+            </div>
+            <div>
+                <p class="back-text" th:text="${created_at}"></p>
+            </div>
+            <div>
+                <p class="back-text"  th:text="${rom}"></p>
+            </div>
+            <div>
+                <p class="back-text" th:text="${ram}"></p>
+            </div>
+        </div>
+            <br/>
+            <hr/>
+            <div>
+                <p class="date-header"><span class="best-gadgets"
+                >The best gadgets and a large selection on<a
+                        href="https://t.me/+FbDNcLnkWwJlZjNi"> in our website</a></span></p>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
