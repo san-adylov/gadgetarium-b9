@@ -69,21 +69,21 @@ class OrderServiceImplTest {
 
     OrderUserRequest request = OrderUserRequest.builder()
         .typeDelivery(TypeDelivery.DELIVERY)
-        .firstName("John")
-        .lastName("Doe")
-        .email("john@example.com")
-        .phoneNumber("123456789")
-        .address("123 Main St")
+        .firstName("Asan")
+        .lastName("Asanov")
+        .email("asan@example.com")
+        .phoneNumber("0770060708")
+        .address("Гражданская 119")
         .typePayment(TypePayment.CARD_ONLINE)
         .build();
 
     User user = User.builder()
         .id(1L)
-        .firstName("John")
-        .lastName("Doe")
-        .email("john@example.com")
-        .phoneNumber("123456789")
-        .address("123 Main St")
+        .firstName("Asan")
+        .lastName("Asanov")
+        .email("asan@example.com")
+        .phoneNumber("0770060708")
+        .address("Гражданская 119")
         .build();
 
     List<SubProduct> subProducts = new ArrayList<>();
