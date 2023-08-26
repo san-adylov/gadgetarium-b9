@@ -46,11 +46,7 @@ public class SubProductResponse {
         this.rom = rom;
         this.additionalFeatures = additionalFeatures;
         this.price = price;
-        if (quantity >= 1) {
-            this.quantity = "В наличии";
-        } else {
-            this.quantity = "Не в наличии";
-        }
+        this.quantity = Integer.toString(quantity);
         this.codeColor = codeColor;
         this.articleNumber = articleNumber;
         this.image = image;
