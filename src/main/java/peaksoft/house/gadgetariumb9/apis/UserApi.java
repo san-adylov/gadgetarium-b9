@@ -53,7 +53,7 @@ public class UserApi {
 
     @GetMapping("/getPhoneNumber")
     @Operation(summary = "Get User Phone Number", description = "Retrieve the user's phone number.")
-    public Map<String,String> getPhoneNumber (){
+    public Map<String, String> getPhoneNumber() {
         return userService.getPhoneNumber();
     }
 }

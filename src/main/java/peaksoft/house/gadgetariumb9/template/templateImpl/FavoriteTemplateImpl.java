@@ -27,31 +27,31 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
         User user = jwtService.getAuthenticationUser();
         String query = """
                 SELECT DISTINCT sp.id,
-                b.name,
-                    p.name AS prod_name,
-                       sp.article_number,
-                       sp.price,
-                       sp.quantity,
-                       sp.ram,
-                       sp.rom,
-                       sp.additional_features,
-                       sp.code_color,
-                       sp.screen_resolution,
-                       d.sale,
-                       COALESCE(
-                       (SELECT spi.images
-                        FROM sub_product_images spi
-                        WHERE spi.sub_product_id = sp.id
-                        LIMIT 1),' ') AS image
+                                b.name,
+                                p.name                  AS prod_name,
+                                sp.article_number,
+                                sp.price,
+                                sp.quantity,
+                                sp.ram,
+                                sp.rom,
+                                sp.additional_features,
+                                sp.code_color,
+                                sp.screen_resolution,
+                                d.sale,
+                                COALESCE(
+                                        (SELECT spi.images
+                                         FROM sub_product_images spi
+                                         WHERE spi.sub_product_id = sp.id
+                                         LIMIT 1), ' ') AS image
                 FROM sub_products sp
-                JOIN products p ON p.id = sp.product_id
-                JOIN brands b ON b.id = p.brand_id
-                JOIN sub_product_images spi ON sp.id = spi.sub_product_id
-                JOIN discounts d ON spi.sub_product_id = d.sub_product_id
-                JOIN user_favorite uf ON uf.favorite = sp.id
-                JOIN users u ON uf.user_id = u.id
+                         JOIN products p ON p.id = sp.product_id
+                         JOIN brands b ON b.id = p.brand_id
+                         JOIN sub_product_images spi ON sp.id = spi.sub_product_id
+                         JOIN discounts d ON spi.sub_product_id = d.sub_product_id
+                         JOIN user_favorite uf ON uf.favorite = sp.id
+                         JOIN users u ON uf.user_id = u.id
                 WHERE u.id = ?
-                     """;
+                                     """;
 
         return jdbcTemplate.query(
                 query,
