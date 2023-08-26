@@ -1,4 +1,4 @@
-package peaksoft.house.gadgetariumb9.repositories;
+package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,8 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.models.SubProduct;
 import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.services.serviceImpl.FavoriteServiceImpl;
 import peaksoft.house.gadgetariumb9.template.FavoriteTemplate;
 import java.util.ArrayList;
