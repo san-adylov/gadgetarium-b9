@@ -639,7 +639,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                          JOIN products p ON p.id = sp.product_id
                          JOIN categories c ON c.id = p.category_id
                 WHERE uc.user_id = ?
-                  AND c.title IN ('Phone', 'Smart watch', 'Tablet', 'Laptop')
+                  AND c.title IN ('Phone', 'Smart Watch', 'Tablet', 'Laptop')
                 GROUP BY c.title;
                             """;
         return jdbcTemplate.query(
