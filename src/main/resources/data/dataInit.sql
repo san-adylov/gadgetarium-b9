@@ -17,7 +17,7 @@ VALUES (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldo
 INSERT INTO categories (id, title)
 VALUES (1, 'Phone'),
        (2, 'Laptop'),
-       (3, 'Smart watch'),
+       (3, 'Smart Watch'),
        (4, 'Tablet');
 
 INSERT INTO sub_categories (category_id, id, title)

@@ -508,34 +508,38 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     }
 
     public List<CompareProductResponse> getCompareParameters(String productName) {
+        User user = jwtService.getAuthenticationUser();
         String sql = """
-                SELECT DISTINCT
-                    sp.id AS id,
-                    p.id AS product_id,
-                    b.name AS brand_name,
-                    p.name AS product_name,
-                    sp.price AS price,
-                    sp.code_color AS color,
-                    sp.screen_resolution AS screen,
-                    sp.rom AS rom,
-                    sp.additional_features AS operational_systems,
-                    cat.title AS category_title,
-                    sc.title AS sub_category_title,
-                    ph.sim AS simCardAlias,
-                    ph.diagonal_screen,
-                    ph.battery_capacity AS battery_capacity,
-                    l.processor,
-                    l.purpose,
-                    l.screen_size AS screen_size,
-                    l.video_memory,
-                    sm.an_interface AS interface,
-                    sm.hull_shape AS hull_shape,
-                    sm.material_bracelet AS bracelet_material,
-                    sm.housing_material AS housing_material,
-                    sm.gender AS gender,
-                    sm.waterproof AS waterproof,
-                    sm.display_discount AS display_discount,
-                    spi.images AS image
+                         
+                SELECT DISTINCT sp.id                  AS id,
+                                p.id                   AS product_id,
+                                b.name                 AS brand_name,
+                                p.name                 AS product_name,
+                                sp.price               AS price,
+                                sp.code_color          AS color,
+                                sp.screen_resolution   AS screen,
+                                sp.rom                 AS rom,
+                                sp.additional_features AS operational_systems,
+                                cat.title              AS category_title,
+                                sc.title               AS sub_category_title,
+                                ph.sim                 AS simCardAlias,
+                                ph.diagonal_screen,
+                                ph.battery_capacity    AS battery_capacity,
+                                l.processor,
+                                l.purpose,
+                                l.screen_size          AS screen_size,
+                                l.video_memory,
+                                sm.an_interface        AS interface,
+                                sm.hull_shape          AS hull_shape,
+                                sm.material_bracelet   AS bracelet_material,
+                                sm.housing_material    AS housing_material,
+                                sm.gender              AS gender,
+                                sm.waterproof          AS waterproof,
+                                sm.display_discount    AS display_discount,
+                                (SELECT spi
+                                 FROM sub_product_images spi
+                                 WHERE spi.sub_product_id = sp.id
+                                 LIMIT 1)              AS image
                 FROM sub_products sp
                          JOIN products p ON p.id = sp.product_id
                          JOIN brands b ON b.id = p.brand_id
@@ -544,9 +548,10 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                          LEFT JOIN phones ph ON ph.sub_product_id = sp.id
                          LEFT JOIN laptops l ON l.sub_product_id = sp.id
                          LEFT JOIN smart_watches sm ON sm.sub_product_id = sp.id
-                         LEFT JOIN sub_product_images spi ON sp.id = spi.sub_product_id
-                WHERE cat.title LIKE ?
-                         """;
+                         JOIN user_comparison uc ON uc.comparison = sp.id
+                         JOIN users u ON uc.user_id = u.id
+                WHERE cat.title ILIKE ? AND u.id = ?
+                   """;
         if (productName.equalsIgnoreCase("Phone") || productName.equalsIgnoreCase("Tablet")) {
             return jdbcTemplate.query(
                     sql,
@@ -569,7 +574,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .batteryCapacity(rs.getString("battery_capacity"))
                             .screenSize(rs.getDouble("screen_size"))
                             .build()),
-                    "%Phone%");
+                    "%Phone%",user.getId());
         } else if (productName.equalsIgnoreCase("Laptop")) {
             return jdbcTemplate.query(
                     sql,
@@ -592,7 +597,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .screen_size(rs.getDouble("screen_size"))
                             .video_memory(rs.getInt("video_memory"))
                             .build()),
-                    "%Laptop%");
+                    "%Laptop%",user.getId());
         } else if (productName.equalsIgnoreCase("Smart Watch")) {
             return jdbcTemplate.query(
                     sql,
@@ -610,15 +615,15 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .catTitle(rs.getString("category_title"))
                             .subCatTitle(rs.getString("sub_category_title"))
                             .image(rs.getString("image"))
-                            .anInterface(Interface.valueOf(rs.getString("anInterface")))
-                            .hullShape(HullShape.valueOf(rs.getString("hullShape")))
-                            .materialBracelet(MaterialBracelet.valueOf(rs.getString("material_bracelet")))
-                            .housingMaterial(HousingMaterial.valueOf(rs.getString("housing_material")))
-                            .gender(Gender.valueOf(rs.getString("gender")))
+                            .anInterface(rs.getString("interface"))
+                            .hullShape(rs.getString("hull_shape"))
+                            .materialBracelet(rs.getString("bracelet_material"))
+                            .housingMaterial(rs.getString("housing_material"))
+                            .gender(rs.getString("gender"))
                             .waterproof(rs.getBoolean("waterproof"))
-                            .displayDiscount(rs.getDouble("displayDiscount"))
+                            .displayDiscount(rs.getDouble("display_discount"))
                             .build())
-                    , "%Smart Watch%");
+                    ,"%Smart Watch%",user.getId());
         }
         return null;
     }
