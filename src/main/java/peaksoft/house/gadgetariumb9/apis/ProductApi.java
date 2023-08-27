@@ -136,11 +136,11 @@ public class ProductApi {
         return productService.getByProductId(productId, colour);
     }
 
-    @GetMapping("/count/{userId}/comparison")
+    @GetMapping("/count/comparison")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Get comparison data for a specific user", description = "Retrieves the comparison data for a user with the provided user ID.")
-    public List<ComparisonCountResponse> countCompareUser(@PathVariable Long userId) {
-        return subProductService.countCompareUser(userId);
+    public List<ComparisonCountResponse> countCompareUser() {
+        return subProductService.countCompareUser();
     }
 
     @PostMapping("/save-comparison")

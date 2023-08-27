@@ -485,8 +485,8 @@ public class SubProductServiceImpl implements SubProductService {
     }
 
     @Override
-    public List<ComparisonCountResponse> countCompareUser(Long userId) {
-        return subProductTemplate.countCompareUser(userId);
+    public List<ComparisonCountResponse> countCompareUser() {
+        return subProductTemplate.countCompareUser();
     }
     @Override
     public List<CompareProductResponse> getCompareParameters(String productName) {

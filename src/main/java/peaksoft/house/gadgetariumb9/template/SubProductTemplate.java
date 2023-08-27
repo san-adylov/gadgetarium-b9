@@ -5,7 +5,7 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import java.time.LocalDate;
 import peaksoft.house.gadgetariumb9.dto.response.compare.CompareProductResponse;
 import peaksoft.house.gadgetariumb9.dto.response.compare.ComparisonCountResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
+
 import java.util.List;
 
 public interface SubProductTemplate {
@@ -19,7 +19,7 @@ public interface SubProductTemplate {
 
     List<CompareProductResponse> getCompareParameters(String productName);
 
-    List<ComparisonCountResponse> countCompareUser(Long userId);
+    List<ComparisonCountResponse> countCompareUser();
 
     SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 

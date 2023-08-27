@@ -624,7 +624,8 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     }
 
     @Override
-    public List<ComparisonCountResponse> countCompareUser(Long userId) {
+    public List<ComparisonCountResponse> countCompareUser() {
+        User user = jwtService.getAuthenticationUser();
         String compare = """         
                 SELECT c.title              AS categoryTitle,
                        COUNT(uc.comparison) AS comparisonCount
@@ -634,9 +635,9 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                          JOIN products p ON p.id = sp.product_id
                          JOIN categories c ON c.id = p.category_id
                 WHERE uc.user_id = ?
-                  AND c.title IN ('Smartphone', 'Smart watch', 'Tablet', 'Laptop')
+                  AND c.title IN ('Phone', 'Smart watch', 'Tablet', 'Laptop')
                 GROUP BY c.title;
-                 """;
+                            """;
         return jdbcTemplate.query(
                 compare,
                 (rs) -> {
@@ -653,6 +654,6 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                     }
                     return responses;
                 },
-                userId);
+                user.getId());
     }
 }
