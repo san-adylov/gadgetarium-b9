@@ -28,19 +28,24 @@ public class OrderTemplateImpl implements OrderTemplate {
 
         Integer subProductQuantityCount = jdbcTemplate.queryForObject(query, Integer.class);
         Integer orderQuantityCount = jdbcTemplate.queryForObject(query2, Integer.class);
-
         int difference = (subProductQuantityCount != null ? subProductQuantityCount : 0) - (orderQuantityCount != null ? orderQuantityCount : 0);
 
-        String numberIN_PROCESSING = "SELECT SUM(CASE WHEN o.status = 'IN_PROCESSING' THEN 1 ELSE 0 END) AS sum_in_processing\n" +
-                "FROM orders o;";
+        String numberIN_PROCESSING = """
+                SELECT SUM(CASE WHEN o.status = 'IN_PROCESSING' THEN 1 ELSE 0 END) AS sum_in_processing
+                FROM orders o;
+                """;
         Integer number1 = jdbcTemplate.queryForObject(numberIN_PROCESSING, Integer.class);
 
-        String numberREADY_FOR_DELIVERY = "SELECT SUM(CASE WHEN o.status = 'READY_FOR_DELIVERY' THEN 1 ELSE 0 END) AS sum_in_processing\n" +
-                "FROM orders o";
+        String numberREADY_FOR_DELIVERY = """
+                SELECT SUM(CASE WHEN o.status = 'READY_FOR_DELIVERY' THEN 1 ELSE 0 END) AS sum_in_processing
+                FROM orders o
+                """;
         Integer number2 = jdbcTemplate.queryForObject(numberREADY_FOR_DELIVERY, Integer.class);
 
-        String numberDELIVERED = "SELECT SUM(CASE WHEN o.status = 'DELIVERED' THEN 1 ELSE 0 END) AS sum_in_processing\n" +
-                "FROM orders o";
+        String numberDELIVERED = """
+                SELECT SUM(CASE WHEN o.status = 'DELIVERED' THEN 1 ELSE 0 END) AS sum_in_processing
+                FROM orders o
+                               """;
         Integer number3 = jdbcTemplate.queryForObject(numberDELIVERED, Integer.class);
         String sql = "";
 
@@ -171,7 +176,7 @@ public class OrderTemplateImpl implements OrderTemplate {
                         rs.getInt("order_number"),
                         rs.getString("status"),
                         rs.getBigDecimal("total_price"))
-                ,userId
+                , userId
 
         );
     }

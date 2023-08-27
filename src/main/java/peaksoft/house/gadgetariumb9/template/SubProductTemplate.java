@@ -16,11 +16,6 @@ public interface SubProductTemplate {
 
     List<SubProductHistoryResponse> getRecentlyViewedProducts();
 
-    MainPagePaginationResponse getNewProducts(int page, int pageSize);
-
-    MainPagePaginationResponse getRecommendedProducts(int page, int pageSize);
-
-    MainPagePaginationResponse getAllDiscountProducts(int page, int pageSize);
 
     List<CompareProductResponse> getCompareParameters(String productName);
 
