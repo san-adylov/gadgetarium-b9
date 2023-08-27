@@ -509,8 +509,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
 
     public List<CompareProductResponse> getCompareParameters(String productName) {
         User user = jwtService.getAuthenticationUser();
-        String sql = """
-                         
+        String sql = """                        
                 SELECT DISTINCT sp.id                  AS id,
                                 p.id                   AS product_id,
                                 b.name                 AS brand_name,
