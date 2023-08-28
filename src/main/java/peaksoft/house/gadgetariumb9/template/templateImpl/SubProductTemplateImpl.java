@@ -535,7 +535,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 sm.gender              AS gender,
                                 sm.waterproof          AS waterproof,
                                 sm.display_discount    AS display_discount,
-                                (SELECT spi
+                                (SELECT spi.images
                                  FROM sub_product_images spi
                                  WHERE spi.sub_product_id = sp.id
                                  LIMIT 1)              AS image
