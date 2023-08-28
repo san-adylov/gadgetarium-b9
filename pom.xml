@@ -117,20 +117,9 @@
       <version>2.0.1.Final</version>
     </dependency>
     <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>2.2.220</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
+      <groupId>io.logz.logback</groupId>
+      <artifactId>logzio-logback-appender</artifactId>
+      <version>v1.0.25</version>
     </dependency>
   </dependencies>
     <build>
@@ -150,4 +139,3 @@
         </plugins>
     </build>
 </project>
-
