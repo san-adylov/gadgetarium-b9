@@ -17,7 +17,6 @@ import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,12 +40,16 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         int offset = (pageNumber - 1) * pageSize;
         return Arrays.asList(pageSize, offset);
     }
+
+    private String email() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     private List<Long> getFavorites() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Long> favorites = Collections.emptyList();
-        if (!email.equalsIgnoreCase("anonymousUser")) {
-            User user = userRepository.getUserByEmail(email)
-                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
+        if (!email().equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email())
+                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
 
             favorites = jdbcTemplate.queryForList(
                     "SELECT uf.favorite FROM user_favorite uf WHERE uf.user_id = ?",
@@ -56,12 +59,12 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         return favorites;
     }
 
-    private List<Long> getComparison (){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    private List<Long> getComparison() {
+
         List<Long> comparisons = Collections.emptyList();
-        if (!email.equalsIgnoreCase("anonymousUser")) {
-            User user = userRepository.getUserByEmail(email)
-                    .orElseThrow(()-> new NotFoundException("User with email: %s not found".formatted(email)));
+        if (!email().equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email())
+                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
 
             comparisons = jdbcTemplate.queryForList(
                     "SELECT uc.comparison FROM user_comparison uc WHERE uc.user_id = ?",
