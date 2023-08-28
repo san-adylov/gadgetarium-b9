@@ -26,13 +26,13 @@ public class ProductTemplateImpl implements ProductTemplate {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public ProductUserAndAdminResponse getByProductId(Long productId, String color) {
+    public ProductUserAndAdminResponse getByProductId(Long subProductId, String color) {
 
         log.info("Get product by id");
 
-        String colourSql = "SELECT sp.code_color AS colours FROM sub_products sp WHERE sp.product_id = ?";
+        String colourSql = "SELECT sp.code_color AS colours FROM sub_products sp WHERE sp.id = ?";
         List<String> colours = jdbcTemplate.query(colourSql, (rs, i) -> rs.getString("colours"),
-                productId);
+                subProductId);
 
         User user = null;
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -53,7 +53,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                        sp.price                                                        AS price,
                        sp.rating                                                       AS rating,
                        (SELECT COUNT(r.id) FROM reviews r JOIN sub_products sp ON sp.id = r.sub_product_id
-                           WHERE p.id = ?)                                             AS count_of_reviews,
+                           WHERE sp.id = ?)                                             AS count_of_reviews,
                        sp.article_number                                               AS article_number,
                        d.sale                                                          AS discount,
                        sp.screen_resolution                                            AS screen_resolution,
@@ -69,7 +69,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                 LEFT JOIN discounts d ON sp.id = d.sub_product_id
                 LEFT JOIN reviews r ON sp.id = r.sub_product_id
                 LEFT JOIN user_favorite uf ON r.user_id = uf.user_id AND uf.user_id = ?
-                WHERE p.id = ? AND sp.code_color = ?
+                WHERE sp.id = ? AND sp.code_color = ?
                 """;
 
         ProductUserAndAdminResponse response = new ProductUserAndAdminResponse();
@@ -94,9 +94,9 @@ public class ProductTemplateImpl implements ProductTemplate {
                     response.setVideoLink(rs.getString("video_link"));
                     return response;
                 },
-                productId,
+                subProductId,
                 user != null ? user.getId() : null,
-                productId,
+                subProductId,
                 !color.isBlank() ? color : colours.get(0)
         );
 
@@ -105,11 +105,11 @@ public class ProductTemplateImpl implements ProductTemplate {
         String imageSql = """
                 SELECT spi.images AS images FROM sub_product_images spi
                 join sub_products sp on spi.sub_product_id = sp.id
-                where sp.product_id = ? and  sp.code_color = ?
+                where sp.id = ? and  sp.code_color = ?
                 """;
         List<String> images = jdbcTemplate.query(imageSql, (rs, i) ->
                         rs.getString("images"),
-                productId,
+                subProductId,
                 !color.isBlank() ? color : colours.get(0)
         );
 
@@ -127,7 +127,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                          JOIN products p ON p.id = r.sub_product_id
                          JOIN sub_products sp ON r.sub_product_id = sp.product_id
                          JOIN users u ON u.id = r.user_id
-                         WHERE p.id = ?
+                         WHERE sp.id = ?
                 """;
 
         List<ReviewResponse> reviewResponses = jdbcTemplate.query(
@@ -139,7 +139,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                         rs.getString("answer"),
                         rs.getString("date"),
                         rs.getString("image")),
-                productId);
+                subProductId);
 
         response.setReviews(reviewResponses);
 

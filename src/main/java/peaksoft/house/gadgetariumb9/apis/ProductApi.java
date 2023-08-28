@@ -130,10 +130,10 @@ public class ProductApi {
 
     @GetMapping("/get-by-id")
     @PermitAll
-    @Operation(summary = "To get by product id the product.", description = "This method to get by product id the product.")
-    public ProductUserAndAdminResponse getByProductId(@RequestParam Long productId,
+    @Operation(summary = "To get by subProduct id the product.", description = "This method to get by subProduct id the product.")
+    public ProductUserAndAdminResponse getByProductId(@RequestParam Long subProductId,
                                                       @RequestParam(defaultValue = "", required = false) String colour) {
-        return productService.getByProductId(productId, colour);
+        return productService.getByProductId(subProductId, colour);
     }
 
     @GetMapping("/count/comparison")
