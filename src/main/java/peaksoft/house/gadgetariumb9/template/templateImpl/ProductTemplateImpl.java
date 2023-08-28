@@ -48,6 +48,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                 SELECT p.id                                                            AS product_id,
                        sp.id                                                           AS sub_product_id,
                        b.name                                                          AS brand_name,
+                       c.title                                                         AS category,
                        p.name                                                          AS name,
                        sp.quantity                                                     AS quantity,
                        sp.price                                                        AS price,
@@ -68,6 +69,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                 JOIN brands b ON b.id = p.brand_id
                 LEFT JOIN discounts d ON sp.id = d.sub_product_id
                 LEFT JOIN reviews r ON sp.id = r.sub_product_id
+                LEFT JOIN categories c ON p.category_id = c.id
                 LEFT JOIN user_favorite uf ON r.user_id = uf.user_id AND uf.user_id = ?
                 WHERE sp.id = ? AND sp.code_color = ?
                 """;
@@ -77,6 +79,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                     response.setProductId(rs.getLong("product_id"));
                     response.setSubProductId(rs.getLong("sub_product_id"));
                     response.setBrandName(rs.getString("brand_name"));
+                    response.setCategory(rs.getString("category"));
                     response.setName(rs.getString("name"));
                     response.setQuantity(rs.getInt("quantity"));
                     response.setPrice(rs.getBigDecimal("price"));
