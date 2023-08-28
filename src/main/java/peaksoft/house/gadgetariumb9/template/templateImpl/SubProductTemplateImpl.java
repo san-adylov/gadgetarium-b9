@@ -4,21 +4,25 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.compare.*;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
-import peaksoft.house.gadgetariumb9.enums.*;
+import peaksoft.house.gadgetariumb9.enums.Processor;
+import peaksoft.house.gadgetariumb9.enums.Purpose;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +30,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class SubProductTemplateImpl implements SubProductTemplate {
+    private final UserRepository userRepository;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -35,6 +40,35 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     private List<Integer> pageSizeAndOffset(int pageNumber, int pageSize) {
         int offset = (pageNumber - 1) * pageSize;
         return Arrays.asList(pageSize, offset);
+    }
+    private List<Long> getFavorites() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Long> favorites = Collections.emptyList();
+        if (!email.equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email)
+                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
+
+            favorites = jdbcTemplate.queryForList(
+                    "SELECT uf.favorite FROM user_favorite uf WHERE uf.user_id = ?",
+                    Long.class,
+                    user.getId());
+        }
+        return favorites;
+    }
+
+    private List<Long> getComparison (){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Long> comparisons = Collections.emptyList();
+        if (!email.equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email)
+                    .orElseThrow(()-> new NotFoundException("User with email: %s not found".formatted(email)));
+
+            comparisons = jdbcTemplate.queryForList(
+                    "SELECT uc.comparison FROM user_comparison uc WHERE uc.user_id = ?",
+                    Long.class,
+                    user.getId());
+        }
+        return comparisons;
     }
 
     @Override
@@ -150,12 +184,22 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         } else if (subProductCatalogRequest.getSorting().equalsIgnoreCase("Рекомендуемые")) {
             sql += "ORDER BY s.rating DESC";
         }
-
         sql += " LIMIT ? OFFSET ?";
         params.add(pageSizeAndOffset(pageNumber, pageSize).get(0));
         params.add(pageSizeAndOffset(pageNumber, pageSize).get(1));
         List<SubProductCatalogResponse> subProductCatalogResponses = jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductCatalogResponse(rs.getLong("id"), rs.getInt("sale"), rs.getString("image"), rs.getInt("quantity"), rs.getString("name"), rs.getBigDecimal("price")), params.toArray());
         log.info("Filtering completed successfully");
+        List<Long> favorites = getFavorites();
+
+        for (SubProductCatalogResponse s : subProductCatalogResponses) {
+            s.setFavorite(favorites.contains(s.getId()));
+        }
+
+        List<Long> comparisons = getComparison();
+
+        for (SubProductCatalogResponse s : subProductCatalogResponses) {
+            s.setComparison(comparisons.contains(s.getId()));
+        }
         return new SubProductPagination(subProductCatalogResponses, pageSize, pageNumber);
     }
 
@@ -573,7 +617,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .batteryCapacity(rs.getString("battery_capacity"))
                             .screenSize(rs.getDouble("screen_size"))
                             .build()),
-                    "%Phone%",user.getId());
+                    "%Phone%", user.getId());
         } else if (productName.equalsIgnoreCase("Laptop")) {
             return jdbcTemplate.query(
                     sql,
@@ -596,7 +640,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .screen_size(rs.getDouble("screen_size"))
                             .video_memory(rs.getInt("video_memory"))
                             .build()),
-                    "%Laptop%",user.getId());
+                    "%Laptop%", user.getId());
         } else if (productName.equalsIgnoreCase("Smart Watch")) {
             return jdbcTemplate.query(
                     sql,
@@ -622,7 +666,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .waterproof(rs.getBoolean("waterproof"))
                             .displayDiscount(rs.getDouble("display_discount"))
                             .build())
-                    ,"%Smart Watch%",user.getId());
+                    , "%Smart Watch%", user.getId());
         }
         return null;
     }

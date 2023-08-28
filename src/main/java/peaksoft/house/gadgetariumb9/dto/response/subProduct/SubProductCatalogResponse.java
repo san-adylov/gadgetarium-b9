@@ -25,6 +25,10 @@ public class SubProductCatalogResponse {
 
     private BigDecimal price;
 
+    private boolean isFavorite;
+
+    private boolean isComparison;
+
     @Builder
     public SubProductCatalogResponse(Long id, int discount, String image, int quantity, String name,
                                      BigDecimal price) {
