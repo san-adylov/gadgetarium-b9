@@ -40,6 +40,8 @@ public class SubProductMainPageResponse {
 
     private boolean isFavorite;
 
+    private boolean isComparison;
+
 }
 
 

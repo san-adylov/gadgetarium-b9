@@ -46,6 +46,22 @@ public class MainPageProductsImpl implements MainPageProducts {
         return favorites;
     }
 
+    private List<Long> getComparison (){
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Long> comparisons = Collections.emptyList();
+        if (!email.equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email)
+                .orElseThrow(()-> new NotFoundException("User with email: %s not found".formatted(email)));
+
+            comparisons = jdbcTemplate.queryForList(
+                "SELECT uc.comparison FROM user_comparison uc WHERE uc.user_id = ?",
+                    Long.class,
+                    user.getId());
+        }
+        return comparisons;
+    }
+
+
     @Override
     public MainPagePaginationResponse getNewProducts(int page, int pageSize) {
         log.info("Getting all the new products!");
@@ -190,6 +206,12 @@ public class MainPageProductsImpl implements MainPageProducts {
 
         for (SubProductMainPageResponse s : products) {
             s.setFavorite(favorites.contains(s.getSubProductId()));
+        }
+
+        List<Long> comparisons = getComparison();
+
+        for (SubProductMainPageResponse s : products) {
+            s.setComparison(comparisons.contains(s.getSubProductId()));
         }
 
         return MainPagePaginationResponse.builder()
