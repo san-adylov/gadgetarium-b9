@@ -14,9 +14,9 @@ import peaksoft.house.gadgetariumb9.repositories.BrandRepository;
 import peaksoft.house.gadgetariumb9.services.BrandService;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;

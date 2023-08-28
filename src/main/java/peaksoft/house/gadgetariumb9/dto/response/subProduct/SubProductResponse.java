@@ -37,6 +37,7 @@ public class SubProductResponse {
 
     private int discount;
 
+
     public SubProductResponse(String brandName, String name, Long subProductId, int ram, String screenResolution, int rom, String additionalFeatures, BigDecimal price, int quantity, String codeColor, Long articleNumber, String image, int discount) {
         this.brandName = brandName;
         this.name = name;

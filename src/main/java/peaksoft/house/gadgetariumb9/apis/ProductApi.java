@@ -16,7 +16,6 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.ProductService;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -137,11 +136,11 @@ public class ProductApi {
         return productService.getByProductId(productId, colour);
     }
 
-    @GetMapping("/count/{userId}/comparison")
+    @GetMapping("/count/comparison")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Get comparison data for a specific user", description = "Retrieves the comparison data for a user with the provided user ID.")
-    public List<ComparisonCountResponse> countCompareUser(@PathVariable Long userId) {
-        return subProductService.countCompareUser(userId);
+    public List<ComparisonCountResponse> countCompareUser() {
+        return subProductService.countCompareUser();
     }
 
     @PostMapping("/save-comparison")

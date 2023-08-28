@@ -17,14 +17,26 @@ VALUES (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldo
 INSERT INTO categories (id, title)
 VALUES (1, 'Phone'),
        (2, 'Laptop'),
-       (3, 'Smart watch'),
+       (3, 'Smart Watch'),
        (4, 'Tablet');
 
 INSERT INTO sub_categories (category_id, id, title)
-VALUES (1, 1, 'Apple'),
-       (2, 2, 'Asus'),
-       (3, 3, 'Sony'),
-       (4, 4, 'Lenovo');
+VALUES (1, 1, 'Android'),
+       (1, 2, 'iOS'),
+       (1, 3, 'Camera Phones'),
+       (1, 4, 'Gaming Phones'),
+       (2, 5, 'Ultrabooks'),
+       (2, 6, 'Business'),
+       (2, 7, 'Touchscreen Laptops'),
+       (2, 8, 'Chromebooks'),
+       (2, 9, 'Gaming Laptops'),
+       (3, 10, 'Fitness Trackers'),
+       (3, 11, 'Sports  Watches'),
+       (3, 12, 'Children''s Smartwatches'),
+       (4, 13, 'Entertainment Tablets'),
+       (4, 14, 'Professional Tablets'),
+       (4, 15, 'Educational Tablets');
+
 
 INSERT INTO brands (id, image, name)
 VALUES (1, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692870335571_APPLE_Image.png', 'Apple'),
@@ -57,10 +69,14 @@ VALUES (1),
 
 INSERT INTO banner_images (banner_id, images)
 VALUES (1, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692870908817_wallpaperflare.com_wallpaper.jpg'),
-       (2, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871052182_wallpaperflare.com_wallpaper%20%281%29.jpg'),
-       (3, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871204414_wallpaperflare.com_wallpaper%20%282%29.jpg'),
-       (4, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871301118_wallpaperflare.com_wallpaper%20%283%29.jpg'),
-       (5, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871435371_wallpaperflare.com_wallpaper%20%284%29.jpg');
+       (2,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871052182_wallpaperflare.com_wallpaper%20%281%29.jpg'),
+       (3,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871204414_wallpaperflare.com_wallpaper%20%282%29.jpg'),
+       (4,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871301118_wallpaperflare.com_wallpaper%20%283%29.jpg'),
+       (5,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871435371_wallpaperflare.com_wallpaper%20%284%29.jpg');
 
 INSERT INTO baskets (id, user_id)
 VALUES (1, 1),
@@ -143,10 +159,10 @@ VALUES (14, 2, 1, 11, '2400 mAh', '0-2'),
 INSERT INTO smart_watches (display_discount, waterproof, id, sub_product_id, an_interface, gender, hull_shape,
                            housing_material, material_bracelet)
 VALUES (2.0, FALSE, 1, 6, 'BLUETOOTH', 'FEMALE', 'SQUARE', 'ACRYLIC', 'RUBBER'),
-       (1.22,TRUE,2,7,'WIFI','MALE','ROUND','ALUMINIUM','RUBBER'),
-       (1.4,TRUE,3,8,'WIFI','MALE','OVAL','CERAMIC','NYLON'),
-       (1.54,FALSE,4,9,'GPS','UNI','ROUND','GLASS','IMITATION_LEATHER'),
-       (1.37,TRUE,5,10,'NFC','UNI','RECTANGULAR','STAINLESS_STEEL','CERAMIC_IMITATION');
+       (1.22, TRUE, 2, 7, 'WIFI', 'MALE', 'ROUND', 'ALUMINIUM', 'RUBBER'),
+       (1.4, TRUE, 3, 8, 'WIFI', 'MALE', 'OVAL', 'CERAMIC', 'NYLON'),
+       (1.54, FALSE, 4, 9, 'GPS', 'UNI', 'ROUND', 'GLASS', 'IMITATION_LEATHER'),
+       (1.37, TRUE, 5, 10, 'NFC', 'UNI', 'RECTANGULAR', 'STAINLESS_STEEL', 'CERAMIC_IMITATION');
 
 
 INSERT INTO reviews (grade, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment)
@@ -157,16 +173,21 @@ VALUES (4, '2023-07-14T12:59:00+00:00', 1, 1, 1, 'comm', NULL),
 
 
 INSERT INTO sub_product_images (sub_product_id, images)
-VALUES (1, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868741930_laptop_with_black_screen_empty_table_by_window_copy_space_empty.jpg'),
-       (1, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868787266_Acer%20Nitro%205%20AN515-58-93JE%20ctens%20%284%29-450x600.jpg'),
+VALUES (1,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868741930_laptop_with_black_screen_empty_table_by_window_copy_space_empty.jpg'),
+       (1,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868787266_Acer%20Nitro%205%20AN515-58-93JE%20ctens%20%284%29-450x600.jpg'),
        (2, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868803452_147015.jpg'),
        (2, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868817148_128092.jpg'),
        (3, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868803452_147015.jpg'),
-       (3, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868787266_Acer%20Nitro%205%20AN515-58-93JE%20ctens%20%284%29-450x600.jpg'),
-       (4, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868741930_laptop_with_black_screen_empty_table_by_window_copy_space_empty.jpg'),
+       (3,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868787266_Acer%20Nitro%205%20AN515-58-93JE%20ctens%20%284%29-450x600.jpg'),
+       (4,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868741930_laptop_with_black_screen_empty_table_by_window_copy_space_empty.jpg'),
        (4, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868817148_128092.jpg'),
        (5, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868817148_128092.jpg'),
-       (5, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868741930_laptop_with_black_screen_empty_table_by_window_copy_space_empty.jpg'),
+       (5,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868741930_laptop_with_black_screen_empty_table_by_window_copy_space_empty.jpg'),
        (6, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692869439186_333111799_w600_h600_333111799.webp'),
        (6, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692869619409_R3251545001-450x600.jpg'),
        (7, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692869439186_333111799_w600_h600_333111799.webp'),
@@ -176,7 +197,8 @@ VALUES (1, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868741930_la
        (9, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692869619409_R3251545001-450x600.jpg'),
        (9, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692869439186_333111799_w600_h600_333111799.webp'),
        (10, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692869439186_333111799_w600_h600_333111799.webp'),
-       (11, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868771301_Apple_rasskajet_udalos_li_ei_povysit_spros_na_iPhone_uje_30_aprelya.jpg'),
+       (11,
+        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868771301_Apple_rasskajet_udalos_li_ei_povysit_spros_na_iPhone_uje_30_aprelya.jpg'),
        (11, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868932885_3-1-6.jpg'),
        (12, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868932885_3-1-6.jpg'),
        (12, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692868932885_3-1-6.jpg'),

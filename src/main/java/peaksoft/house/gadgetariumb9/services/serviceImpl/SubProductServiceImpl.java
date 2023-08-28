@@ -20,6 +20,7 @@ import peaksoft.house.gadgetariumb9.models.SubProduct;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
+import peaksoft.house.gadgetariumb9.template.MainPageProducts;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 import java.util.List;
 import java.util.Objects;
@@ -48,6 +49,8 @@ public class SubProductServiceImpl implements SubProductService {
 
     private final CategoryRepository categoryRepository;
 
+    private final MainPageProducts mainPageProducts;
+
     @Override
     public SubProductPagination getSubProductCatalogs(
             SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber) {
@@ -62,17 +65,17 @@ public class SubProductServiceImpl implements SubProductService {
 
     @Override
     public MainPagePaginationResponse getNewProducts(int page, int pageSize) {
-        return subProductTemplate.getNewProducts(page, pageSize);
+        return mainPageProducts.getNewProducts(page, pageSize);
     }
 
     @Override
     public MainPagePaginationResponse getRecommendedProducts(int page, int pageSize) {
-        return subProductTemplate.getRecommendedProducts(page, pageSize);
+        return mainPageProducts.getRecommendedProducts(page, pageSize);
     }
 
     @Override
     public MainPagePaginationResponse getAllDiscountProducts(int page, int pageSize) {
-        return subProductTemplate.getAllDiscountProducts(page, pageSize);
+        return mainPageProducts.getAllDiscountProducts(page, pageSize);
     }
 
     public void addRecentlyViewedProduct(Long productId) {
@@ -482,8 +485,8 @@ public class SubProductServiceImpl implements SubProductService {
     }
 
     @Override
-    public List<ComparisonCountResponse> countCompareUser(Long userId) {
-        return subProductTemplate.countCompareUser(userId);
+    public List<ComparisonCountResponse> countCompareUser() {
+        return subProductTemplate.countCompareUser();
     }
     @Override
     public List<CompareProductResponse> getCompareParameters(String productName) {

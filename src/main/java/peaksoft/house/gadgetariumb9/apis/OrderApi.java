@@ -60,9 +60,9 @@ public class OrderApi {
     }
 
     @PostMapping
-    @Operation(summary = "sending and save order",description = "User submits an order to purchase a product")
+    @Operation(summary = "sending and save order", description = "User submits an order to purchase a product")
     @PreAuthorize("hasAuthority('USER')")
-    public OrderUserResponse saveOrder(@RequestBody OrderUserRequest request){
+    public OrderUserResponse saveOrder(@RequestBody OrderUserRequest request) {
         return orderService.saveOrder(request);
     }
 }

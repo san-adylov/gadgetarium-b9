@@ -33,7 +33,7 @@ public interface SubProductService {
 
     SimpleResponse updateSubProduct(Long subProductId, ProductRequest productRequest);
 
-    List<ComparisonCountResponse>countCompareUser(Long userId);
+    List<ComparisonCountResponse>countCompareUser();
 
     SimpleResponse comparisonAddOrDelete(Long id, boolean addOrDelete);
 
