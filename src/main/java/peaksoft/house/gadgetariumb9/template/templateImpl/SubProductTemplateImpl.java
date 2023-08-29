@@ -98,7 +98,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         List<Object> params = new ArrayList<>();
 
         params.add(subProductCatalogRequest.getGadgetType());
-        if (subProductCatalogRequest.getBrandIds().get(0) != 0) {
+        if (subProductCatalogRequest.getBrandIds().get(0) > 0) {
             sql += "AND b.id = ANY (?)";
             params.add(subProductCatalogRequest.getBrandIds().toArray(new Long[0]));
         }
@@ -138,11 +138,11 @@ public class SubProductTemplateImpl implements SubProductTemplate {
             sql += " AND (s.screen_resolution = ANY (?))";
             params.add(subProductCatalogRequest.getScreenResolution().toArray(new String[0]));
         }
-        if (subProductCatalogRequest.getProcessors().get(0).equalsIgnoreCase("string")) {
+        if (!subProductCatalogRequest.getProcessors().get(0).equalsIgnoreCase("string")) {
             sql += " AND (l.processor = ANY (?))";
             params.add(subProductCatalogRequest.getProcessors().toArray(new String[0]));
         }
-        if (subProductCatalogRequest.getPurposes().get(0).equalsIgnoreCase("string")) {
+        if (!subProductCatalogRequest.getPurposes().get(0).equalsIgnoreCase("string")) {
             sql += " AND (l.purpose = ANY (?))";
             params.add(subProductCatalogRequest.getPurposes().toArray(new String[0]));
         }
@@ -150,23 +150,23 @@ public class SubProductTemplateImpl implements SubProductTemplate {
             sql += " AND (l.video_memory = ANY (?))";
             params.add(subProductCatalogRequest.getVideoMemory().toArray(new Integer[0]));
         }
-        if (subProductCatalogRequest.getHousingMaterials().get(0).equalsIgnoreCase("string")) {
+        if (!subProductCatalogRequest.getHousingMaterials().get(0).equalsIgnoreCase("string")) {
             sql += " AND (sw.housing_material = ANY (?))";
             params.add(subProductCatalogRequest.getHousingMaterials().toArray(new String[0]));
         }
-        if (subProductCatalogRequest.getMaterialBracelets().get(0).equalsIgnoreCase("string")) {
+        if (!subProductCatalogRequest.getMaterialBracelets().get(0).equalsIgnoreCase("string")) {
             sql += " AND (sw.material_bracelet = ANY (?))";
             params.add(subProductCatalogRequest.getMaterialBracelets().toArray(new String[0]));
         }
-        if (subProductCatalogRequest.getGenders().get(0).equalsIgnoreCase("string")) {
+        if (!subProductCatalogRequest.getGenders().get(0).equalsIgnoreCase("string")) {
             sql += " AND (sw.gender = ANY (?))";
             params.add(subProductCatalogRequest.getGenders().toArray(new String[0]));
         }
-        if (subProductCatalogRequest.getInterfaces().get(0).equalsIgnoreCase("string")) {
+        if (!subProductCatalogRequest.getInterfaces().get(0).equalsIgnoreCase("string")) {
             sql += " AND (sw.an_interface = ANY (?))";
             params.add(subProductCatalogRequest.getInterfaces().toArray(new String[0]));
         }
-        if (subProductCatalogRequest.getHullShapes().get(0).equalsIgnoreCase("string")) {
+        if (!subProductCatalogRequest.getHullShapes().get(0).equalsIgnoreCase("string")) {
             sql += " AND (sw.hull_shape = ANY (?))";
             params.add(subProductCatalogRequest.getHullShapes().toArray(new String[0]));
         }
