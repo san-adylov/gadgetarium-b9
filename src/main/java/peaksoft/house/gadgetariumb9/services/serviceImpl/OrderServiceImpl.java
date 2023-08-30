@@ -225,7 +225,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private int generate() {
+    public int generate() {
         SecureRandom random = new SecureRandom();
         return random.nextInt(9999999) + 1000000;
     }
