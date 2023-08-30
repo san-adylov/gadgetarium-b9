@@ -82,7 +82,7 @@ public class MainPageProductsImpl implements MainPageProducts {
                        p.created_at            as createdAt,
                        r.grade                 as grade,
                        sp.rating               as rating,
-                       count(r)                as countOfReviews,
+                       (SELECT COUNT(r) FROM reviews r WHERE r.sub_product_id = sp.id)   as countOfReviews,
                        COALESCE(
                                (SELECT spi.images
                                 FROM sub_product_images spi
@@ -120,7 +120,7 @@ public class MainPageProductsImpl implements MainPageProducts {
                        p.created_at            as createdAt,
                        r.grade                 as grade,
                        sp.rating               as rating,
-                       count(r)                as countOfReviews,
+                       (SELECT COUNT(r) FROM reviews r WHERE r.sub_product_id = sp.id)   as countOfReviews,
                        COALESCE(
                                (SELECT spi.images
                                 FROM sub_product_images spi
@@ -135,8 +135,9 @@ public class MainPageProductsImpl implements MainPageProducts {
                          JOIN categories cat ON cat.id = p.category_id
                          JOIN sub_categories sc ON sc.id = p.sub_category_id
                 WHERE sp.rating > 4
-                group by sp.code_color, d.sale, cat.title, sc.title, p.created_at, r.grade, sp.rating, sp.id,
+                GROUP BY sp.code_color, d.sale, cat.title, sc.title, p.created_at, r.grade, sp.rating, sp.id,
                          b.name, p.name
+                ORDER BY sp.id
                 LIMIT ? OFFSET ?
                 """;
         return getProductsByQuery(sql, page, pageSize);
@@ -158,9 +159,7 @@ public class MainPageProductsImpl implements MainPageProducts {
                                 p.created_at                      as createdAt,
                                 r.grade                           as grade,
                                 sp.rating                         as rating,
-                                (SELECT count(r1)
-                                 FROM reviews r1
-                                 WHERE r1.sub_product_id = sp.id) as countOfReviews,
+                                (SELECT COUNT(r) FROM reviews r WHERE r.sub_product_id = sp.id)  as countOfReviews,
                                 COALESCE(
                                         (SELECT spi.images
                                          FROM sub_product_images spi
@@ -175,6 +174,9 @@ public class MainPageProductsImpl implements MainPageProducts {
                          JOIN categories cat ON cat.id = p.category_id
                          JOIN sub_categories sc ON sc.id = p.sub_category_id
                 WHERE d.sale > 0
+                GROUP BY sp.code_color, d.sale, cat.title, sc.title, p.created_at, r.grade, sp.rating, sp.id,
+                         b.name, p.name
+                ORDER BY sp.id
                 LIMIT ? OFFSET ?
                 """;
         return getProductsByQuery(sql, page, pageSize);
