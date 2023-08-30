@@ -41,13 +41,15 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         return Arrays.asList(pageSize, offset);
     }
 
-    private List<Long> getFavorites() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        List<Long> favorites = Collections.emptyList();
-        if (!email.equalsIgnoreCase("anonymousUser")) {
-            User user = userRepository.getUserByEmail(email)
-                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
+    private String email() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
+    private List<Long> getFavorites() {
+        List<Long> favorites = Collections.emptyList();
+        if (!email().equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email())
+                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
             favorites = jdbcTemplate.queryForList(
                     "SELECT uf.favorite FROM user_favorite uf WHERE uf.user_id = ?",
                     Long.class,
@@ -57,12 +59,10 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     }
 
     private List<Long> getComparison() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         List<Long> comparisons = Collections.emptyList();
-        if (!email.equalsIgnoreCase("anonymousUser")) {
-            User user = userRepository.getUserByEmail(email)
-                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email)));
-
+        if (!email().equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email())
+                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
             comparisons = jdbcTemplate.queryForList(
                     "SELECT uc.comparison FROM user_comparison uc WHERE uc.user_id = ?",
                     Long.class,
@@ -97,79 +97,78 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         List<Object> params = new ArrayList<>();
 
         params.add(subProductCatalogRequest.getGadgetType());
-        if (subProductCatalogRequest.getBrandIds().get(0) > 0) {
-            sql += "AND b.id = ANY (?)";
+        if (subProductCatalogRequest.getBrandIds() != null) {
+            sql += "OR b.id = ANY (?)";
             params.add(subProductCatalogRequest.getBrandIds().toArray(new Long[0]));
         }
         if (subProductCatalogRequest.getPriceStart().compareTo(BigDecimal.ZERO) != 0) {
-            sql += " AND (s.price >= ?)";
+            sql += " OR (s.price >= ?)";
             params.add(subProductCatalogRequest.getPriceStart());
         }
         if (subProductCatalogRequest.getPriceEnd().compareTo(BigDecimal.ZERO) != 0) {
-            sql += " AND (s.price <= ?)";
+            sql += " OR (s.price <= ?)";
             params.add(subProductCatalogRequest.getPriceEnd());
         }
         if (!subProductCatalogRequest.getCodeColor().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (s.code_color = ANY (?))";
+            sql += " OR (s.code_color = ANY (?))";
             params.add(subProductCatalogRequest.getCodeColor().toArray(new String[0]));
         }
         if (subProductCatalogRequest.getRam().get(0) > 0) {
-            sql += " AND (s.ram = ANY (?))";
+            sql += " OR (s.ram = ANY (?))";
             params.add(subProductCatalogRequest.getRam().toArray(new Integer[0]));
         }
         if (subProductCatalogRequest.getRom().get(0) > 0) {
-            sql += " AND (s.rom = ANY (?))";
+            sql += " OR (s.rom = ANY (?))";
             params.add(subProductCatalogRequest.getRom().toArray(new Integer[0]));
         }
         if (subProductCatalogRequest.getSim().get(0) > 0) {
-            sql += " AND (p.sim = ?)";
+            sql += "OR (p.sim = ?)";
             params.add(subProductCatalogRequest.getSim());
         }
         if (!subProductCatalogRequest.getBatteryCapacity().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (p.battery_capacity = ANY (?))";
+            sql += "OR (p.battery_capacity = ANY (?))";
             params.add(subProductCatalogRequest.getBatteryCapacity().toArray(new String[0]));
         }
         if (subProductCatalogRequest.getScreenSize().get(0) > 0) {
-            sql += " AND (p.screen_size = ANY (?))";
+            sql += "OR (p.screen_size = ANY (?))";
             params.add(subProductCatalogRequest.getScreenSize().toArray(new Double[0]));
         }
         if (!subProductCatalogRequest.getScreenResolution().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (s.screen_resolution = ANY (?))";
+            sql += "OR (s.screen_resolution = ANY (?))";
             params.add(subProductCatalogRequest.getScreenResolution().toArray(new String[0]));
         }
-        if (!subProductCatalogRequest.getProcessors().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (l.processor = ANY (?))";
+        if (subProductCatalogRequest.getProcessors().get(0).equalsIgnoreCase("string")) {
+            sql += " OR (l.processor = ANY (?))";
             params.add(subProductCatalogRequest.getProcessors().toArray(new String[0]));
         }
-        if (!subProductCatalogRequest.getPurposes().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (l.purpose = ANY (?))";
+        if (subProductCatalogRequest.getPurposes().get(0).equalsIgnoreCase("string")) {
+            sql += " OR (l.purpose = ANY (?))";
             params.add(subProductCatalogRequest.getPurposes().toArray(new String[0]));
         }
         if (subProductCatalogRequest.getVideoMemory() != null && subProductCatalogRequest.getVideoMemory().get(0) > 0) {
-            sql += " AND (l.video_memory = ANY (?))";
+            sql += "OR (l.video_memory = ANY(?))";
             params.add(subProductCatalogRequest.getVideoMemory().toArray(new Integer[0]));
         }
-        if (!subProductCatalogRequest.getHousingMaterials().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (sw.housing_material = ANY (?))";
+        if (subProductCatalogRequest.getHousingMaterials().get(0).equalsIgnoreCase("string")) {
+            sql += "OR (sw.housing_material = ANY (?))";
             params.add(subProductCatalogRequest.getHousingMaterials().toArray(new String[0]));
         }
-        if (!subProductCatalogRequest.getMaterialBracelets().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (sw.material_bracelet = ANY (?))";
+        if (subProductCatalogRequest.getMaterialBracelets().get(0).equalsIgnoreCase("string")) {
+            sql += "OR (sw.material_bracelet = ANY(?))";
             params.add(subProductCatalogRequest.getMaterialBracelets().toArray(new String[0]));
         }
-        if (!subProductCatalogRequest.getGenders().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (sw.gender = ANY (?))";
+        if (subProductCatalogRequest.getGenders().get(0).equalsIgnoreCase("string")) {
+            sql += "OR (sw.gender = ANY(?))";
             params.add(subProductCatalogRequest.getGenders().toArray(new String[0]));
         }
-        if (!subProductCatalogRequest.getInterfaces().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (sw.an_interface = ANY (?))";
+        if (subProductCatalogRequest.getInterfaces().get(0).equalsIgnoreCase("string")) {
+            sql += "OR (sw.an_interface = ANY(?))";
             params.add(subProductCatalogRequest.getInterfaces().toArray(new String[0]));
         }
-        if (!subProductCatalogRequest.getHullShapes().get(0).equalsIgnoreCase("string")) {
-            sql += " AND (sw.hull_shape = ANY (?))";
+        if (subProductCatalogRequest.getHullShapes().get(0).equalsIgnoreCase("string")) {
+            sql += "OR (sw.hull_shape = ANY(?))";
             params.add(subProductCatalogRequest.getHullShapes().toArray(new String[0]));
         }
-
         if (subProductCatalogRequest.getSorting().equalsIgnoreCase("Новинки")) {
             sql += " ORDER BY s.id DESC";
         } else if (subProductCatalogRequest.getSorting().equalsIgnoreCase("Все скидки")) {
@@ -236,7 +235,6 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         });
     }
 
-
     @Override
     public List<SubProductHistoryResponse> getRecentlyViewedProducts() {
         User user = jwtService.getAuthenticationUser();
@@ -277,10 +275,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         int subProductQuantityCount = getQuantityCount(subProductQuery);
         int orderQuantityCount = getQuantityCount(orderQuery);
         int difference = orderQuantityCount - subProductQuantityCount;
-
-
         String sql = "";
-
         if (productType != null) {
             if (productType.equalsIgnoreCase("Все товары")) {
                 sql = """
@@ -703,33 +698,6 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                     }
                     return responses;
                 },
-                user.getId());
-    }
-
-    @Override
-    public List<LatestComparison> getLatestComparison() {
-        User user = jwtService.getAuthenticationUser();
-        return jdbcTemplate.query("""
-                        SELECT (SELECT spi.images
-                                FROM sub_product_images spi
-                                WHERE spi.sub_product_id = sp.id
-                                LIMIT 1)                   AS image,
-                               concat(b.name, ' ', p.name) AS name,
-                               sp.price
-                        FROM sub_products sp
-                                 JOIN products p ON sp.product_id = p.id
-                                 JOIN brands b ON p.brand_id = b.id
-                                 JOIN user_comparison uc ON uc.comparison = sp.id
-                                 JOIN users u ON uc.user_id = u.id
-                        WHERE u.id = ?
-                        LIMIT 2
-                        """, (rs, rowNum) ->
-                        LatestComparison
-                                .builder()
-                                .image(rs.getString("image"))
-                                .name(rs.getString("name"))
-                                .price(rs.getBigDecimal("price"))
-                                .build(),
                 user.getId());
     }
 }
