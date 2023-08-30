@@ -50,7 +50,6 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         if (!email().equalsIgnoreCase("anonymousUser")) {
             User user = userRepository.getUserByEmail(email())
                     .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
-
             favorites = jdbcTemplate.queryForList(
                     "SELECT uf.favorite FROM user_favorite uf WHERE uf.user_id = ?",
                     Long.class,
@@ -60,12 +59,10 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     }
 
     private List<Long> getComparison() {
-
         List<Long> comparisons = Collections.emptyList();
         if (!email().equalsIgnoreCase("anonymousUser")) {
             User user = userRepository.getUserByEmail(email())
                     .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
-
             comparisons = jdbcTemplate.queryForList(
                     "SELECT uc.comparison FROM user_comparison uc WHERE uc.user_id = ?",
                     Long.class,
@@ -238,7 +235,6 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         });
     }
 
-
     @Override
     public List<SubProductHistoryResponse> getRecentlyViewedProducts() {
         User user = jwtService.getAuthenticationUser();
@@ -279,10 +275,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         int subProductQuantityCount = getQuantityCount(subProductQuery);
         int orderQuantityCount = getQuantityCount(orderQuery);
         int difference = orderQuantityCount - subProductQuantityCount;
-
-
         String sql = "";
-
         if (productType != null) {
             if (productType.equalsIgnoreCase("Все товары")) {
                 sql = """
