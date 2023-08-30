@@ -1,6 +1,8 @@
 package peaksoft.house.gadgetariumb9.template.templateImpl;
 
 import jakarta.transaction.Transactional;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,7 +36,7 @@ public class ProductTemplateImpl implements ProductTemplate {
         List<String> colours = jdbcTemplate.query(colourSql, (rs, i) -> rs.getString("colours"),
                 subProductId);
 
-        User user = null;
+        User user;
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!email.equalsIgnoreCase("anonymousUser")) {
             user = userRepository.getUserByEmail(email).orElseThrow(
@@ -42,9 +44,11 @@ public class ProductTemplateImpl implements ProductTemplate {
                         log.error("User with id: " + email + " is not found");
                         return new NotFoundException("Product with id: " + email + " is not found");
                     });
+        } else {
+          user = null;
         }
 
-        String sql = """
+      String sql = """
                 SELECT p.id                                                            AS product_id,
                        sp.id                                                           AS sub_product_id,
                        b.name                                                          AS brand_name,
@@ -119,29 +123,35 @@ public class ProductTemplateImpl implements ProductTemplate {
         response.setImages(images);
 
         String reviewSql = """
-                SELECT DISTINCT CONCAT(u.first_name, ' ', u.last_name)                        AS user_name,
-                                u.image                                                       AS user_image,
-                                r.grade                                                       AS grade,
-                                r.comment                                                     AS comment,
-                                r.reply_to_comment                                            AS answer,
-                                r.date_creat_ad                                               AS date,
-                                r.image_link                                                  AS image
-                FROM reviews r
-                         JOIN products p ON p.id = r.sub_product_id
-                         JOIN sub_products sp ON r.sub_product_id = sp.product_id
-                         JOIN users u ON u.id = r.user_id
-                         WHERE sp.id = ?
+                SELECT DISTINCT CONCAT(u.first_name, ' ', u.last_name) AS user_name,
+                                               u.image AS user_image,
+                                               r.user_id AS user_id,
+                                               r.grade AS grade,
+                                               r.comment AS comment,
+                                               r.reply_to_comment AS answer,
+                                               r.date_creat_ad AS date,
+                                               r.image_link AS image
+                                        FROM reviews r
+                                        JOIN products p ON p.id = r.sub_product_id
+                                        JOIN sub_products sp ON r.sub_product_id = sp.product_id
+                                        JOIN users u ON u.id = r.user_id
+                                        WHERE sp.id = ?
+                                        
                 """;
 
         List<ReviewResponse> reviewResponses = jdbcTemplate.query(
-                reviewSql, (rs, rowNum) -> new ReviewResponse(
-                        rs.getString("user_name"),
-                        rs.getString("user_image"),
-                        rs.getInt("grade"),
-                        rs.getString("comment"),
-                        rs.getString("answer"),
-                        rs.getString("date"),
-                        rs.getString("image")),
+                reviewSql, (rs, rowNum) -> {
+                  ReviewResponse rewiew = new  ReviewResponse(
+                  rs.getString("user_name"),
+                  rs.getString("user_image"),
+                  rs.getInt("grade"),
+                  rs.getString("comment"),
+                  rs.getString("answer"),
+                  rs.getString("date"),
+                  rs.getString("image"));
+                  rewiew.setMy(user != null && user.getId().equals(getUserIdFromRS(rs)));
+                  return rewiew;
+            },
                 subProductId);
 
         response.setReviews(reviewResponses);
@@ -149,4 +159,8 @@ public class ProductTemplateImpl implements ProductTemplate {
         log.info("Product successfully get!");
         return response;
     }
+
+  private Long getUserIdFromRS(ResultSet rs) throws SQLException {
+    return rs.getLong("user_id");
+  }
 }
