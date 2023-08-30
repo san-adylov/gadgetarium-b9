@@ -1,7 +1,6 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.transaction.Transactional;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +10,7 @@ import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.compare.CompareProductResponse;
 import peaksoft.house.gadgetariumb9.dto.response.compare.ComparisonCountResponse;
+import peaksoft.house.gadgetariumb9.dto.response.compare.LatestComparison;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
@@ -22,6 +22,8 @@ import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.template.MainPageProducts;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -89,7 +91,7 @@ public class SubProductServiceImpl implements SubProductService {
         log.info("Get recently viewed products");
         return subProductTemplate.getRecentlyViewedProducts();
     }
-  
+
     @Override
     public SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
         return subProductTemplate.getGetAllSubProductAdmin(productType, startDate, endDate, pageSize, pageNumber);
@@ -488,10 +490,12 @@ public class SubProductServiceImpl implements SubProductService {
     public List<ComparisonCountResponse> countCompareUser() {
         return subProductTemplate.countCompareUser();
     }
+
     @Override
     public List<CompareProductResponse> getCompareParameters(String productName) {
         return subProductTemplate.getCompareParameters(productName);
     }
+
     @Override
     @Transactional
     public SimpleResponse comparisonAddOrDelete(Long id, boolean addOrDelete) {
@@ -513,6 +517,7 @@ public class SubProductServiceImpl implements SubProductService {
             return SimpleResponse.builder().status(HttpStatus.OK).message("The product has been successfully removed from the comparison!").build();
         }
     }
+
     @Override
     public SimpleResponse clearUserCompare() {
         User user = jwtService.getAuthenticationUser();
@@ -520,6 +525,11 @@ public class SubProductServiceImpl implements SubProductService {
         userRepository.save(user);
         log.error("Comparison cleared!");
         return SimpleResponse.builder().message("Comparison cleared!").status(HttpStatus.OK).build();
+    }
+
+    @Override
+    public List<LatestComparison> getLatestComparison() {
+        return subProductTemplate.getLatestComparison();
     }
 
 }

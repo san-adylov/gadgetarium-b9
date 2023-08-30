@@ -17,7 +17,6 @@ import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -704,6 +703,33 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                     }
                     return responses;
                 },
+                user.getId());
+    }
+
+    @Override
+    public List<LatestComparison> getLatestComparison() {
+        User user = jwtService.getAuthenticationUser();
+        return jdbcTemplate.query("""
+                        SELECT (SELECT spi.images
+                                FROM sub_product_images spi
+                                WHERE spi.sub_product_id = sp.id
+                                LIMIT 1)                   AS image,
+                               concat(b.name, ' ', p.name) AS name,
+                               sp.price
+                        FROM sub_products sp
+                                 JOIN products p ON sp.product_id = p.id
+                                 JOIN brands b ON p.brand_id = b.id
+                                 JOIN user_comparison uc ON uc.comparison = sp.id
+                                 JOIN users u ON uc.user_id = u.id
+                        WHERE u.id = ?
+                        LIMIT 2
+                        """, (rs, rowNum) ->
+                        LatestComparison
+                                .builder()
+                                .image(rs.getString("image"))
+                                .name(rs.getString("name"))
+                                .price(rs.getBigDecimal("price"))
+                                .build(),
                 user.getId());
     }
 }

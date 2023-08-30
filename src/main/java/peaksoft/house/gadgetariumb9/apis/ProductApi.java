@@ -11,6 +11,7 @@ import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.compare.CompareProductResponse;
 import peaksoft.house.gadgetariumb9.dto.response.compare.ComparisonCountResponse;
+import peaksoft.house.gadgetariumb9.dto.response.compare.LatestComparison;
 import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -165,4 +166,12 @@ public class ProductApi {
     public SimpleResponse cleanCompare() {
         return subProductService.clearUserCompare();
     }
+
+    @GetMapping("/get-latest-comparison")
+    @PreAuthorize("hasAuthority('USER')")
+    @Operation(summary = "Get Latest Comparison", description = "Retrieve the latest product comparisons for the authorized user.")
+    public List<LatestComparison> getLatestComparison() {
+        return subProductService.getLatestComparison();
+    }
+
 }
