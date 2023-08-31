@@ -11,6 +11,7 @@ import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
 import peaksoft.house.gadgetariumb9.dto.response.compare.CompareProductResponse;
 import peaksoft.house.gadgetariumb9.dto.response.compare.ComparisonCountResponse;
+import peaksoft.house.gadgetariumb9.dto.response.compare.LatestComparison;
 import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -129,18 +130,18 @@ public class ProductApi {
     }
 
     @GetMapping("/get-by-id")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    @Operation(summary = "To get by product id the product.", description = "This method to get by product id the product.")
-    public ProductUserAndAdminResponse getByProductId(@RequestParam Long productId,
+    @PermitAll
+    @Operation(summary = "To get by subProduct id the product.", description = "This method to get by subProduct id the product.")
+    public ProductUserAndAdminResponse getByProductId(@RequestParam Long subProductId,
                                                       @RequestParam(defaultValue = "", required = false) String colour) {
-        return productService.getByProductId(productId, colour);
+        return productService.getByProductId(subProductId, colour);
     }
 
-    @GetMapping("/count/{userId}/comparison")
+    @GetMapping("/count/comparison")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Get comparison data for a specific user", description = "Retrieves the comparison data for a user with the provided user ID.")
-    public List<ComparisonCountResponse> countCompareUser(@PathVariable Long userId) {
-        return subProductService.countCompareUser(userId);
+    public List<ComparisonCountResponse> countCompareUser() {
+        return subProductService.countCompareUser();
     }
 
     @PostMapping("/save-comparison")
@@ -165,4 +166,12 @@ public class ProductApi {
     public SimpleResponse cleanCompare() {
         return subProductService.clearUserCompare();
     }
+
+    @GetMapping("/get-latest-comparison")
+    @PreAuthorize("hasAuthority('USER')")
+    @Operation(summary = "Get Latest Comparison", description = "Retrieve the latest product comparisons for the authorized user.")
+    public List<LatestComparison> getLatestComparison() {
+        return subProductService.getLatestComparison();
+    }
+
 }

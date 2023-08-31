@@ -13,6 +13,7 @@ import peaksoft.house.gadgetariumb9.dto.response.user.UserResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.UserService;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -48,6 +49,12 @@ public class UserApi {
     @Operation(summary = "Get user order history", description = "Retrieves the order history for the user.")
     public List<OrderHistoryResponse> getOrdersByUserId() {
         return userService.getOrdersByUser();
+    }
+
+    @GetMapping("/getPhoneNumber")
+    @Operation(summary = "Get User Phone Number", description = "Retrieve the user's phone number.")
+    public Map<String, String> getPhoneNumber() {
+        return userService.getPhoneNumber();
     }
 }
 

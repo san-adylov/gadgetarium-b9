@@ -1,6 +1,6 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FavoriteServiceImpl implements FavoriteService {
 
     private final UserRepository userRepository;

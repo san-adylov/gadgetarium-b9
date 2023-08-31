@@ -16,7 +16,7 @@ public class SmartWatch {
 
     @Id
     @GeneratedValue(generator = "smart_watch_gen", strategy = GenerationType.SEQUENCE)
-    @SequenceGenerator(name = "smart_watch_gen", sequenceName = "smart_watch_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "smart_watch_gen", sequenceName = "smart_watch_seq", allocationSize = 1, initialValue = 6)
     private Long id;
 
     @Enumerated(EnumType.STRING)

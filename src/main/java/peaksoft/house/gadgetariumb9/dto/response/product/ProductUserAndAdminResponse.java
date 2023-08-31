@@ -17,6 +17,8 @@ public class ProductUserAndAdminResponse {
 
   private String brandName;
 
+  private String category;
+
   private String name;
 
   private int quantity;
@@ -50,4 +52,6 @@ public class ProductUserAndAdminResponse {
   private boolean isFavorite;
 
   private String description;
+
+  private String videoLink;
 }
