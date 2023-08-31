@@ -7,6 +7,8 @@ import lombok.*;
 @Setter
 public class ReviewResponse {
 
+  private Long reviewId;
+
   private String userFullName;
 
   private String userAvatar;
@@ -23,8 +25,9 @@ public class ReviewResponse {
 
   private boolean isMy;
 
-  public ReviewResponse(String userFullName, String userAvatar,
+  public ReviewResponse(Long reviewId, String userFullName, String userAvatar,
       int grade, String comment, String answer, String dateOfCreatAd, String imageLink) {
+    this.reviewId = reviewId;
     this.userFullName = userFullName;
     this.userAvatar = userAvatar;
     this.grade = grade;

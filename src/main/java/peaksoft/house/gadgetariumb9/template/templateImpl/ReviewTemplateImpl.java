@@ -30,21 +30,23 @@ public class ReviewTemplateImpl implements ReviewTemplate {
     public ReviewPagination getAll(Long subProductId, int pageSize, int numberPage) {
         log.info("Get all comments");
         String sql = """
-                SELECT DISTINCT CONCAT(u.first_name, ' ', u.last_name)                                       AS user_name,
-                                u.image                                                                      AS user_image,
-                                r.grade                                                                      AS grade,
-                                r.comment                                                                    AS comment,
-                                r.reply_to_comment                                                           AS answer,
-                                r.date_creat_ad                                                              AS date,
-                                r.image_link                                                                 AS image,
-                                u.id                                                                         AS user_id
-                FROM reviews r
-                         JOIN products p ON p.id = r.sub_product_id
-                         JOIN sub_products sp ON r.sub_product_id = sp.product_id
-                         JOIN users u ON u.id = r.user_id
-                WHERE sp.id = ?
-                ORDER BY r.date_creat_ad DESC
-                LIMIT ? OFFSET ?
+                        SELECT DISTINCT 
+                          r.id,
+                          CONCAT(u.first_name, ' ', u.last_name) AS user_name,
+                          u.image                                AS user_image,
+                          r.grade                                AS grade,
+                          r.comment                              AS comment,
+                          r.reply_to_comment                     AS answer,
+                          r.date_creat_ad                        AS date,
+                          r.image_link                           AS image,
+                          u.id                                   AS user_id
+          FROM reviews r
+                   JOIN products p ON p.id = r.sub_product_id
+                   JOIN sub_products sp ON r.sub_product_id = sp.product_id
+                   JOIN users u ON u.id = r.user_id
+          WHERE sp.id = ?
+          ORDER BY r.date_creat_ad DESC
+          LIMIT ? OFFSET ?
                 """;
 
         int offset = (numberPage - 1) * pageSize;
@@ -54,6 +56,7 @@ public class ReviewTemplateImpl implements ReviewTemplate {
         List<ReviewResponse> reviewResponses = jdbcTemplate.query(
                 sql, (rs, rowNum) -> {
                     ReviewResponse response = new ReviewResponse(
+                            rs.getLong("id"),
                             rs.getString("user_name"),
                             rs.getString("user_image"),
                             rs.getInt("grade"),
