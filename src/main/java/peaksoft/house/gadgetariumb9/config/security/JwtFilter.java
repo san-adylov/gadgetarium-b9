@@ -1,12 +1,14 @@
 package peaksoft.house.gadgetariumb9.config.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -26,9 +28,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            @NotNull HttpServletRequest request,
-            @NotNull HttpServletResponse response,
-            @NotNull FilterChain filterChain) throws ServletException, IOException {
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
 
         final String tokenHeader = request.getHeader("Authorization");
         if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
@@ -36,10 +38,21 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = tokenHeader.substring(7);
             if (StringUtils.hasText(token)) {
                 try {
-                    String username = jwtService.validateToken(token);
+                    String username;
+                    try {
+                        username = jwtService.validateToken(token);
+                    } catch (MalformedJwtException e) {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+                        return;
+                    } catch (ExpiredJwtException e) {
+                        response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+                        return;
+                    }
+
+                    String finalUsername = username;
                     User user = userRepository.getUserByEmail(username)
                             .orElseThrow(() ->
-                                    new NotFoundException("User with email: %s not found".formatted(username)));
+                                    new NotFoundException("User with email: %s not found".formatted(finalUsername)));
                     SecurityContextHolder.getContext()
                             .setAuthentication(
                                     new UsernamePasswordAuthenticationToken(

@@ -5,8 +5,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import peaksoft.house.gadgetariumb9.dto.request.order.OrderUserRequest;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderPaginationAdmin;
+import peaksoft.house.gadgetariumb9.dto.response.order.OrderUserResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.OrderService;
 import java.time.LocalDate;
@@ -55,5 +57,12 @@ public class OrderApi {
     @PreAuthorize("hasAuthority('ADMIN')")
     public SimpleResponse multiDeleteOrder(@RequestBody List<Long> orderids) {
         return orderService.multiDeleteOrder(orderids);
+    }
+
+    @PostMapping
+    @Operation(summary = "sending and save order", description = "User submits an order to purchase a product")
+    @PreAuthorize("hasAuthority('USER')")
+    public OrderUserResponse saveOrder(@RequestBody OrderUserRequest request) {
+        return orderService.saveOrder(request);
     }
 }

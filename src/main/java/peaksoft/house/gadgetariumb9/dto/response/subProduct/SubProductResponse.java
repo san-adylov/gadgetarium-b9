@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class SubProductResponse {
 
+
     private String name;
 
     private String brandName;
@@ -36,6 +37,7 @@ public class SubProductResponse {
 
     private int discount;
 
+
     public SubProductResponse(String brandName, String name, Long subProductId, int ram, String screenResolution, int rom, String additionalFeatures, BigDecimal price, int quantity, String codeColor, Long articleNumber, String image, int discount) {
         this.brandName = brandName;
         this.name = name;
@@ -45,11 +47,7 @@ public class SubProductResponse {
         this.rom = rom;
         this.additionalFeatures = additionalFeatures;
         this.price = price;
-        if (quantity >= 1) {
-            this.quantity = "В наличии";
-        } else {
-            this.quantity = "Не в наличии";
-        }
+        this.quantity = Integer.toString(quantity);
         this.codeColor = codeColor;
         this.articleNumber = articleNumber;
         this.image = image;

@@ -20,7 +20,10 @@ import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.services.FavoriteService;
 import peaksoft.house.gadgetariumb9.services.OrderService;
 import peaksoft.house.gadgetariumb9.services.UserService;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -87,5 +90,13 @@ public class UserServiceImpl implements UserService {
     public List<OrderHistoryResponse> getOrdersByUser() {
         User user = jwtService.getAuthenticationUser();
         return orderService.getOrdersByUserId(user.getId());
+    }
+
+    @Override
+    public Map<String,String> getPhoneNumber(){
+        User user = jwtService.getAuthenticationUser();
+        Map<String,String> getUser = new HashMap<>();
+        getUser.put(user.getPhoneNumber(),user.getImage());
+        return getUser;
     }
 }
