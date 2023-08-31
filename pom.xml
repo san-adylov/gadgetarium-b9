@@ -126,10 +126,6 @@
         <artifactId>flyway-core</artifactId>
         <version>8.0.4</version>
       </dependency>
-    </dependencies>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
-    </dependency>
     <dependency>
       <groupId>com.stripe</groupId>
       <artifactId>stripe-java</artifactId>
