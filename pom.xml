@@ -120,24 +120,11 @@
       <groupId>io.logz.logback</groupId>
       <artifactId>logzio-logback-appender</artifactId>
       <version>v1.0.25</version>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
     </dependency>
-  </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+      <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version>8.0.4</version>
+      </dependency>
+    </dependencies>
 </project>
