@@ -563,7 +563,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  JOIN user_comparison uc ON uc.comparison = sp.id
                                  JOIN users u ON uc.user_id = u.id
                         WHERE u.id = ?
-                        LIMIT 2
+                       
                         """, (rs, rowNum) ->
                         LatestComparison
                                 .builder()
