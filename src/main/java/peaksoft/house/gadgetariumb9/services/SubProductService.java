@@ -40,7 +40,7 @@ public interface SubProductService {
 
     List<CompareProductResponse> getCompareParameters(String productName);
 
-    SimpleResponse clearUserCompare();
+    SimpleResponse clearUserCompare(List<Long> subProductIds);
 
     List<LatestComparison> getLatestComparison();
  

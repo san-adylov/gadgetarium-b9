@@ -1,4 +1,5 @@
 package peaksoft.house.gadgetariumb9.dto.response.compare;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import java.math.BigDecimal;
@@ -6,6 +7,7 @@ import java.math.BigDecimal;
 
 @NoArgsConstructor
 @SuperBuilder
+@Getter
 public class CompareSmartPhoneResponse extends CompareProductResponse{
 
     private int simCard;

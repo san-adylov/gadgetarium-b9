@@ -163,8 +163,8 @@ public class ProductApi {
     @Operation(
             summary = "Clear user's product comparisons",
             description = "Clears all product comparisons for the authenticated user.")
-    public SimpleResponse cleanCompare() {
-        return subProductService.clearUserCompare();
+    public SimpleResponse cleanCompare(@RequestBody List<Long> subProductIds) {
+        return subProductService.clearUserCompare(subProductIds);
     }
 
     @GetMapping("/get-latest-comparison")
