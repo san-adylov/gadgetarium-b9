@@ -133,11 +133,11 @@ public class ProductTemplateImpl implements ProductTemplate {
                                r.date_creat_ad                        AS date,
                                r.image_link                           AS image
                FROM reviews r
-                        JOIN products p ON p.id = r.sub_product_id
-                        JOIN sub_products sp ON r.sub_product_id = sp.product_id
+                        JOIN sub_products sp ON r.sub_product_id = sp.id
                         JOIN users u ON u.id = r.user_id
-               WHERE sp.id = ?                    
-                """;
+                        JOIN products p ON sp.product_id = p.id
+               WHERE sp.id = ?
+               """;
 
         List<ReviewResponse> reviewResponses = jdbcTemplate.query(
                 reviewSql, (rs, rowNum) -> {
