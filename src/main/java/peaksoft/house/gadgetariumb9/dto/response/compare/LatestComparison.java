@@ -1,5 +1,7 @@
 package peaksoft.house.gadgetariumb9.dto.response.compare;
 
+import jakarta.annotation.security.DenyAll;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,7 +9,10 @@ import java.math.BigDecimal;
 
 @Getter
 @Builder
+@AllArgsConstructor
 public class LatestComparison {
+
+    private Long subProductId;
 
     private String image;
 
@@ -15,9 +20,5 @@ public class LatestComparison {
 
     private BigDecimal price;
 
-    public LatestComparison(String image, String name, BigDecimal price) {
-        this.image = image;
-        this.name = name;
-        this.price = price;
-    }
+
 }

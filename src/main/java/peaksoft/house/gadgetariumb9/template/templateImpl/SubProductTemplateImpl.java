@@ -551,7 +551,8 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     public List<LatestComparison> getLatestComparison() {
         User user = jwtService.getAuthenticationUser();
         return jdbcTemplate.query("""
-                        SELECT (SELECT spi.images
+                        SELECT sp.id,
+                               (SELECT spi.images
                                 FROM sub_product_images spi
                                 WHERE spi.sub_product_id = sp.id
                                 LIMIT 1)                   AS image,
@@ -562,11 +563,11 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  JOIN brands b ON p.brand_id = b.id
                                  JOIN user_comparison uc ON uc.comparison = sp.id
                                  JOIN users u ON uc.user_id = u.id
-                        WHERE u.id = ?
-                       
-                        """, (rs, rowNum) ->
+                        WHERE u.id = ?         
+                                                """, (rs, rowNum) ->
                         LatestComparison
                                 .builder()
+                                .subProductId(rs.getLong("id"))
                                 .image(rs.getString("image"))
                                 .name(rs.getString("name"))
                                 .price(rs.getBigDecimal("price"))
