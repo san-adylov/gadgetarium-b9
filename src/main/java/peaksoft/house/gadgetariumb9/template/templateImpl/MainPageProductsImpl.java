@@ -70,7 +70,8 @@ public class MainPageProductsImpl implements MainPageProducts {
 
     private static String getSql() {
         String sql = """
-                SELECT sp.id                   as id,
+                SELECT DISTINCT
+                       sp.id                   as id,
                        b.name                  as name,
                        p.name                  as prodName,
                        sp.price                as price,
@@ -108,7 +109,8 @@ public class MainPageProductsImpl implements MainPageProducts {
     @Override
     public MainPagePaginationResponse getRecommendedProducts(int page, int pageSize) {
         String sql = """
-                SELECT sp.id                   as id,
+                SELECT DISTINCT 
+                       sp.id                   as id,
                        b.name                  as name,
                        p.name                  as prodName,
                        sp.price                as price,
