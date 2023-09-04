@@ -519,9 +519,11 @@ public class SubProductServiceImpl implements SubProductService {
     }
 
     @Override
-    public SimpleResponse clearUserCompare() {
+    public SimpleResponse clearUserCompare(List<Long> subProductIds) {
         User user = jwtService.getAuthenticationUser();
-        user.getComparison().clear();
+        for (Long l : subProductIds) {
+            user.getComparison().remove(l);
+        }
         userRepository.save(user);
         log.error("Comparison cleared!");
         return SimpleResponse.builder().message("Comparison cleared!").status(HttpStatus.OK).build();

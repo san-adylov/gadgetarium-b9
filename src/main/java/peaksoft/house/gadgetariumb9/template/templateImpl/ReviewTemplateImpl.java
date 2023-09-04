@@ -30,7 +30,7 @@ public class ReviewTemplateImpl implements ReviewTemplate {
     public ReviewPagination getAll(Long subProductId, int pageSize, int numberPage) {
         log.info("Get all comments");
         String sql = """
-                        SELECT DISTINCT 
+                        SELECT DISTINCT
                           r.id,
                           CONCAT(u.first_name, ' ', u.last_name) AS user_name,
                           u.image                                AS user_image,
@@ -41,13 +41,13 @@ public class ReviewTemplateImpl implements ReviewTemplate {
                           r.image_link                           AS image,
                           u.id                                   AS user_id
           FROM reviews r
-                   JOIN products p ON p.id = r.sub_product_id
-                   JOIN sub_products sp ON r.sub_product_id = sp.product_id
+                   JOIN sub_products sp ON r.sub_product_id = sp.id
                    JOIN users u ON u.id = r.user_id
+                   JOIN products p ON sp.product_id = p.id
           WHERE sp.id = ?
           ORDER BY r.date_creat_ad DESC
           LIMIT ? OFFSET ?
-                """;
+          """;
 
         int offset = (numberPage - 1) * pageSize;
 

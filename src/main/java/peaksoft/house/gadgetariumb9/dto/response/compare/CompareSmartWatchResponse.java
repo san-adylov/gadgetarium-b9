@@ -1,8 +1,10 @@
 package peaksoft.house.gadgetariumb9.dto.response.compare;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+@Getter
 @SuperBuilder
 @NoArgsConstructor
 public class CompareSmartWatchResponse extends CompareProductResponse {

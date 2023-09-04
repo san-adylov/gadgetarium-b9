@@ -589,7 +589,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 sp.additional_features AS operational_systems,
                                 cat.title              AS category_title,
                                 sc.title               AS sub_category_title,
-                                ph.sim                 AS simCardAlias,
+                                ph.sim                 AS sim,
                                 ph.diagonal_screen,
                                 ph.battery_capacity    AS battery_capacity,
                                 l.processor,
@@ -636,7 +636,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .catTitle(rs.getString("category_title"))
                             .subCatTitle(rs.getString("sub_category_title"))
                             .image(rs.getString("image"))
-                            .simCard(rs.getInt("simCardAlias"))
+                            .simCard(rs.getInt("sim"))
                             .diagonalScreen(rs.getString("diagonal_screen"))
                             .batteryCapacity(rs.getString("battery_capacity"))
                             .screenSize(rs.getDouble("screen_size"))
