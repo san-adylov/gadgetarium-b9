@@ -34,8 +34,6 @@ public class SubProductMainPageResponse {
 
     private String catTitle;
 
-    private String grade;
-
     private int countOfReviews;
 
     private boolean isFavorite;
