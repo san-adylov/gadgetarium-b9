@@ -1,4 +1,5 @@
 package peaksoft.house.gadgetariumb9.dto.response.compare;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import peaksoft.house.gadgetariumb9.enums.Processor;
@@ -7,6 +8,7 @@ import java.math.BigDecimal;
 
 @SuperBuilder
 @NoArgsConstructor
+@Getter
 public class CompareLaptopResponse extends CompareProductResponse{
 
     private Processor processor;
