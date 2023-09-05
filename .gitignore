@@ -20,7 +20,7 @@ target/
 *.ipr
 /src/main/resources/application-davran.properties
 /src/main/resources/application-sanzhar.properties
-
+/src/main/resources/application-salymbek.properties
 
 ### NetBeans ###
 /nbproject/private/
@@ -34,4 +34,3 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/application-salymbek.properties
