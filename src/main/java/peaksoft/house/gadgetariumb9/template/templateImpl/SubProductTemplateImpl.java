@@ -45,7 +45,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
-    private List<Long> getFavorites() {
+    public List<Long> getFavorites() {
         List<Long> favorites = Collections.emptyList();
         if (!email().equalsIgnoreCase("anonymousUser")) {
             User user = userRepository.getUserByEmail(email())
@@ -58,7 +58,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         return favorites;
     }
 
-    private List<Long> getComparison() {
+    public List<Long> getComparison() {
         List<Long> comparisons = Collections.emptyList();
         if (!email().equalsIgnoreCase("anonymousUser")) {
             User user = userRepository.getUserByEmail(email())

@@ -4,12 +4,18 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductResponse;
 import peaksoft.house.gadgetariumb9.dto.response.user.UserFavoritesResponse;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.FavoriteTemplate;
+
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -21,6 +27,25 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
     private final JdbcTemplate jdbcTemplate;
 
     private final JwtService jwtService;
+
+    private final UserRepository userRepository;
+
+    private String email() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    public List<Long> getComparison() {
+        List<Long> comparisons = Collections.emptyList();
+        if (!email().equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email())
+                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
+            comparisons = jdbcTemplate.queryForList(
+                    "SELECT uc.comparison FROM user_comparison uc WHERE uc.user_id = ?",
+                    Long.class,
+                    user.getId());
+        }
+        return comparisons;
+    }
 
     @Override
     public List<SubProductResponse> getAllFavorite() {
@@ -53,7 +78,7 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
                 WHERE u.id = ?
                                      """;
 
-        return jdbcTemplate.query(
+        List<SubProductResponse> subProductResponses = jdbcTemplate.query(
                 query,
                 (rs, rowNum) -> new SubProductResponse(
                         rs.getString("name"),
@@ -70,6 +95,14 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
                         rs.getString("image"),
                         rs.getInt("sale")),
                 user.getId());
+
+        List<Long> comparisons = getComparison();
+
+        for (SubProductResponse s : subProductResponses) {
+            s.setComparison(comparisons.contains(s.getSubProductId()));
+        }
+
+        return subProductResponses;
     }
 
     @Override
