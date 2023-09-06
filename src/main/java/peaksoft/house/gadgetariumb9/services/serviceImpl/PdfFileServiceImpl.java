@@ -27,7 +27,7 @@ public class PdfFileServiceImpl implements PdfFileService {
 
     @Override
     public ResponseEntity<InputStreamResource> pdfFile(Long id) throws IOException, DocumentException {
-        String template = "templates/your-template.html";
+        String template = "templates/pdf-file-template.html";
         Context context = new Context();
 
         SubProduct subProduct = subProductRepository.findById(id)
@@ -77,7 +77,5 @@ public class PdfFileServiceImpl implements PdfFileService {
             e.printStackTrace();
             throw e;
         }
-
     }
-
 }

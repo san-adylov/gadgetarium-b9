@@ -154,11 +154,6 @@
       <version>3.0.0-beta1</version>
     </dependency>
     <dependency>
-      <groupId>com.itextpdf</groupId>
-      <artifactId>itextpdf</artifactId>
-      <version>5.5.13.3</version>
-    </dependency>
-    <dependency>
       <groupId>org.xhtmlrenderer</groupId>
       <artifactId>flying-saucer-pdf</artifactId>
       <version>9.1.22</version>
