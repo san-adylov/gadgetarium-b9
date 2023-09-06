@@ -1,10 +1,13 @@
 package peaksoft.house.gadgetariumb9.apis;
 
+import com.lowagie.text.DocumentException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
@@ -15,8 +18,10 @@ import peaksoft.house.gadgetariumb9.dto.response.compare.LatestComparison;
 import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
+import peaksoft.house.gadgetariumb9.services.PdfFileService;
 import peaksoft.house.gadgetariumb9.services.ProductService;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,6 +33,7 @@ public class ProductApi {
 
     private final ProductService productService;
     private final SubProductService subProductService;
+    private final PdfFileService pdfFileService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "save Product", description = "Creating a new product")
@@ -167,11 +173,17 @@ public class ProductApi {
         return subProductService.clearUserCompare(subProductIds);
     }
 
+    @GetMapping("downloadPdf/{id}")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @Operation(summary = "Get PDF file", description = "This method is to download a pdf file to a sub-product")
+    public ResponseEntity<InputStreamResource> pdfFile(@PathVariable Long id) throws IOException , DocumentException {
+        return pdfFileService.pdfFile(id);
+    }
+
     @GetMapping("/get-latest-comparison")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Get Latest Comparison", description = "Retrieve the latest product comparisons for the authorized user.")
     public List<LatestComparison> getLatestComparison() {
         return subProductService.getLatestComparison();
     }
-
 }
