@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.user.UserUpdateRequest;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderHistoryResponse;
+import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoByUserResponse;
 import peaksoft.house.gadgetariumb9.dto.response.user.UserFavoritesResponse;
 import peaksoft.house.gadgetariumb9.dto.response.user.UserResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -20,7 +21,6 @@ import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.services.FavoriteService;
 import peaksoft.house.gadgetariumb9.services.OrderService;
 import peaksoft.house.gadgetariumb9.services.UserService;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,5 +98,11 @@ public class UserServiceImpl implements UserService {
         Map<String,String> getUser = new HashMap<>();
         getUser.put(user.getPhoneNumber(),user.getImage());
         return getUser;
+    }
+
+    @Override
+    public OrderInfoByUserResponse getOrderInfoByUser(Long orderId) {
+        User user = jwtService.getAuthenticationUser();
+        return orderService.getOrderByUser(orderId, user.getId());
     }
 }

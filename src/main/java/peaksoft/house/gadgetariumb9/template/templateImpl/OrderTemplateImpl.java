@@ -9,7 +9,6 @@ import peaksoft.house.gadgetariumb9.dto.response.order.*;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.template.OrderTemplate;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -179,5 +178,92 @@ public class OrderTemplateImpl implements OrderTemplate {
                 , userId
 
         );
+    }
+
+    @Override
+    public OrderInfoByUserResponse getOrderByUser(Long orderId,Long userId) {
+
+        String sql= """
+            SELECT
+                o.id                                    as order_id,
+                o.order_number                          as order_number,
+                o.status                                as status,
+                concat(u.first_name,' ',u.last_name)    as client,
+                u.first_name                            as first_name,
+                u.last_name                             as last_name,
+                u.address                               as address,
+                u.phone_number                          as phone_number,
+                u.email                                 as email,
+                o.date_of_order                         as date,
+                o.type_payment                          as type_payment,
+                o.total_discount                        as total_discount,
+                o.total_price                           as total_price
+            FROM orders o
+            JOIN users u on o.user_id = u.id
+            JOIN orders_sub_products osp on o.id = osp.orders_id
+            JOIN sub_products sp on osp.sub_products_id = sp.id
+            JOIN products p on sp.product_id = p.id
+            JOIN brands b on p.brand_id = b.id
+            LEFT JOIN discounts d on sp.id = d.sub_product_id
+            WHERE o.id = ? AND u.id = ?
+            """;
+
+        OrderInfoByUserResponse info = new OrderInfoByUserResponse();
+        jdbcTemplate.query(sql,(rs, rowNum) -> {
+        info.setOrderId(rs.getLong("order_id"));
+        info.setOrderNumber(rs.getInt("order_number"));
+        info.setStatus(rs.getString("status"));
+        info.setClient(rs.getString("client"));
+        info.setFirstName(rs.getString("first_name"));
+        info.setLastName(rs.getString("last_name"));
+        info.setAddress(rs.getString("address"));
+        info.setPhoneNumber(rs.getString("phone_number"));
+        info.setEmail(rs.getString("email"));
+        info.setDate(rs.getDate("date").toLocalDate());
+        info.setTypePayment(rs.getString("type_payment"));
+        info.setTotalDiscount(rs.getInt("total_discount"));
+        info.setTotalPrice(rs.getInt("total_price"));
+        return info;
+        },
+            orderId,
+            userId
+        );
+
+        String sql2 = """
+            SELECT
+                sp.id,
+                concat(p.name, ' ', b.name, ' ', sp.rom, ' ', sp.code_color)    as product_name,
+                sp.rating                                                       as rating,
+                (SELECT COUNT(r) FROM sub_products sp
+                JOIN reviews r ON sp.id = r.sub_product_id
+                JOIN orders_sub_products osp on sp.id = osp.sub_products_id)    as count_of_reviews,
+                sp.price                                                        as price,
+                (SELECT spi.images
+                    FROM sub_product_images spi
+                    WHERE spi.sub_product_id = sp.id LIMIT 1)                   as image
+            FROM sub_products sp
+            JOIN products p on sp.product_id = p.id
+            JOIN reviews r on sp.id = r.sub_product_id
+            JOIN brands b on p.brand_id = b.id
+            JOIN orders_sub_products osp on sp.id = osp.sub_products_id
+            JOIN orders o on osp.orders_id = o.id
+            JOIN users u on o.user_id = u.id
+            WHERE o.id = ? AND u.id = ?
+            """;
+
+        List<OrderProductsInfoResponse> products = jdbcTemplate.query(
+            sql2, (rs, i) -> new OrderProductsInfoResponse(
+                rs.getString("product_name"),
+                rs.getDouble("rating"),
+                rs.getInt("count_of_reviews"),
+                rs.getBigDecimal("price"),
+                rs.getString("image")
+            ),
+            orderId,
+            userId
+        );
+
+        info.setProductsInfoResponses(products);
+        return info;
     }
 }
