@@ -17,6 +17,7 @@ import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
 import peaksoft.house.gadgetariumb9.services.BasketService;
 import peaksoft.house.gadgetariumb9.template.BasketTemplate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -53,6 +54,9 @@ public class BasketServiceImpl implements BasketService {
                 .status(HttpStatus.OK)
                 .build();
     }
+
+
+
 
     @Override
     public BasketInfographicResponse getAllByProductsFromTheBasket() {

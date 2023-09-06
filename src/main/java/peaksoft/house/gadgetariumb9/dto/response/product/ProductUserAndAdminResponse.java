@@ -17,6 +17,8 @@ public class ProductUserAndAdminResponse {
 
   private String brandName;
 
+  private String category;
+
   private String name;
 
   private int quantity;

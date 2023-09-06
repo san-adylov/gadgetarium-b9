@@ -4,12 +4,18 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.response.basket.BasketInfographicResponse;
 import peaksoft.house.gadgetariumb9.dto.response.basket.BasketResponse;
+import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogResponse;
+import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.BasketTemplate;
+
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -21,6 +27,40 @@ public class BasketTemplateImpl implements BasketTemplate {
     private final JdbcTemplate jdbcTemplate;
 
     private final JwtService jwtService;
+
+    private final UserRepository userRepository;
+
+
+    private String email() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
+    private List<Long> getFavorites() {
+        List<Long> favorites = Collections.emptyList();
+        if (!email().equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email())
+                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
+            favorites = jdbcTemplate.queryForList(
+                    "SELECT uf.favorite FROM user_favorite uf WHERE uf.user_id = ?",
+                    Long.class,
+                    user.getId());
+        }
+        return favorites;
+    }
+
+    private List<Long> getComparison() {
+        List<Long> comparisons = Collections.emptyList();
+        if (!email().equalsIgnoreCase("anonymousUser")) {
+            User user = userRepository.getUserByEmail(email())
+                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
+            comparisons = jdbcTemplate.queryForList(
+                    "SELECT uc.comparison FROM user_comparison uc WHERE uc.user_id = ?",
+                    Long.class,
+                    user.getId());
+        }
+        return comparisons;
+    }
+
 
     @Override
     public List<BasketResponse> getAllByProductsFromTheBasket() {
@@ -49,7 +89,10 @@ public class BasketTemplateImpl implements BasketTemplate {
                          sp.rating, sp.quantity, sp.
                    article_number, sp.price;
                    """;
-        return jdbcTemplate.query(
+
+
+
+        List<BasketResponse> basketResponses = jdbcTemplate.query(
                 sql,
                 (rs, rowNum) ->
                         BasketResponse
@@ -66,6 +109,19 @@ public class BasketTemplateImpl implements BasketTemplate {
                                 .build(),
                 user.getId()
         );
+
+        List<Long> favorites = getFavorites();
+
+        for (BasketResponse s : basketResponses) {
+            s.setFavorite(favorites.contains(s.getSubProductId()));
+        }
+
+        List<Long> comparisons = getComparison();
+
+        for (BasketResponse s : basketResponses) {
+            s.setComparison(comparisons.contains(s.getSubProductId()));
+        }
+        return basketResponses;
     }
 
     @Override

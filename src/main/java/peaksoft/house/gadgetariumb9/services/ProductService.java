@@ -11,5 +11,5 @@ public interface ProductService {
 
     List<String> getColor(String name);
 
-    ProductUserAndAdminResponse getByProductId(Long productId, String color);
+    ProductUserAndAdminResponse getByProductId(Long subProductId, String color);
 }

@@ -123,9 +123,15 @@
       <version>2.0.1.Final</version>
     </dependency>
     <dependency>
-      <groupId>org.flywaydb</groupId>
-      <artifactId>flyway-core</artifactId>
+      <groupId>io.logz.logback</groupId>
+      <artifactId>logzio-logback-appender</artifactId>
+      <version>v1.0.25</version>
     </dependency>
+      <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version>8.0.4</version>
+      </dependency>
     <dependency>
       <groupId>com.stripe</groupId>
       <artifactId>stripe-java</artifactId>
@@ -157,9 +163,12 @@
       <groupId>org.xhtmlrenderer</groupId>
       <artifactId>flying-saucer-pdf</artifactId>
       <version>9.1.22</version>
-    </dependency>
-
-
+    </dependency>    
+      <dependency>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+          <scope>test</scope>
+      </dependency>
   </dependencies>
     <build>
         <plugins>
@@ -178,4 +187,3 @@
         </plugins>
     </build>
 </project>
-

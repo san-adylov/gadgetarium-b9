@@ -78,14 +78,14 @@ public class ReviewApi {
     @PutMapping("/update-comment")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Update user review", description = "Edit your review if not answered yet")
-    public ReviewUserResponse updateComment(@RequestBody ReviewUserRequest request){
+    public ReviewUserResponse updateComment(@RequestBody ReviewUserRequest request) {
         return service.updateComment(request);
     }
 
     @DeleteMapping("/delete-comment/{reviewId}")
     @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "Delete user review",description = "Delete your review if no answer")
-    public ReviewUserResponse deleteComment(@PathVariable Long reviewId){
+    @Operation(summary = "Delete user review", description = "Delete your review if no answer")
+    public ReviewUserResponse deleteComment(@PathVariable Long reviewId) {
         return service.deleteComment(reviewId);
     }
 }

@@ -25,6 +25,12 @@ public class FavoriteApi {
         return favoriteService.addAndDeleteFavorite(subProductId);
     }
 
+    @Operation(summary = "Add or delete", description = "The method adds and, if present, removes")
+    @PostMapping("/saveAll")
+    SimpleResponse addOrDeleteFavorites(@RequestBody List<Long> subProductIds) {
+        return favoriteService.addSubProductsToFavorite(subProductIds);
+    }
+
     @Operation(summary = "Clear favorite", description = "Method to clear selected available USER")
     @DeleteMapping
     SimpleResponse clearFavorite() {

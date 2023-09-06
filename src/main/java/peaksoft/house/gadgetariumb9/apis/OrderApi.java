@@ -18,13 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/order")
 @Tag(name = "Order API", description = "API for order CRUD management")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class OrderApi {
 
     private final OrderService orderService;
 
     @GetMapping
     @Operation(summary = "get all order", description = "Displaying the total number of orders of users who bought the product")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public OrderPaginationAdmin getAllOrder(@RequestParam(defaultValue = "В обработке", required = false) String status,
                                             @RequestParam(defaultValue = "6", required = false) int pageSize,
                                             @RequestParam(defaultValue = "1", required = false) int pageNumber,
@@ -35,7 +35,8 @@ public class OrderApi {
 
     @PostMapping("/{orderId}")
     @Operation(summary = "Change status", description = "Change status of orders")
-    public SimpleResponse Changestatus(@PathVariable Long orderId, @RequestParam String status) {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public SimpleResponse ChangeStatus(@PathVariable Long orderId, @RequestParam String status) {
         return orderService.updateStatus(orderId, status);
     }
 
@@ -60,9 +61,9 @@ public class OrderApi {
     }
 
     @PostMapping
-    @Operation(summary = "sending and save order",description = "User submits an order to purchase a product")
+    @Operation(summary = "sending and save order", description = "User submits an order to purchase a product")
     @PreAuthorize("hasAuthority('USER')")
-    public OrderUserResponse saveOrder(@RequestBody OrderUserRequest request){
+    public OrderUserResponse saveOrder(@RequestBody OrderUserRequest request) {
         return orderService.saveOrder(request);
     }
 }

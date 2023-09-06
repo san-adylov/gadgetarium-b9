@@ -2,6 +2,7 @@ package peaksoft.house.gadgetariumb9.services;
 
 import peaksoft.house.gadgetariumb9.dto.request.order.OrderUserRequest;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderHistoryResponse;
+import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoByUserResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderPaginationAdmin;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderUserResponse;
@@ -24,5 +25,7 @@ public interface OrderService {
     OrderUserResponse saveOrder (OrderUserRequest request);
 
     List<OrderHistoryResponse> getOrdersByUserId(Long userId);
+
+    OrderInfoByUserResponse getOrderByUser (Long orderId,Long userId);
 
 }

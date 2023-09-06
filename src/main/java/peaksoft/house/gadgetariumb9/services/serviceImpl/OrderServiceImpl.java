@@ -17,6 +17,7 @@ import org.thymeleaf.context.Context;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.order.OrderUserRequest;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderHistoryResponse;
+import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoByUserResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderPaginationAdmin;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderUserResponse;
@@ -225,7 +226,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private int generate() {
+    public int generate() {
         SecureRandom random = new SecureRandom();
         return random.nextInt(9999999) + 1000000;
     }
@@ -236,5 +237,14 @@ public class OrderServiceImpl implements OrderService {
 
     public List<OrderHistoryResponse> getOrdersByUserId(Long userId) {
         return orderTemplate.getOrdersByUserId(userId);
+    }
+
+    @Override
+    public OrderInfoByUserResponse getOrderByUser(Long orderId, Long userId) {
+        orderRepository.findById(orderId).orElseThrow(() -> {
+            log.error("Order with %s is not found" + orderId);
+            return new NotFoundException("Order with %s is not found" + orderId);
+        });
+        return orderTemplate.getOrderByUser(orderId,userId);
     }
 }

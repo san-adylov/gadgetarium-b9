@@ -58,6 +58,33 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
+    public SimpleResponse addSubProductsToFavorite(List<Long> subProductIds) {
+        User user = jwtService.getAuthenticationUser();
+        List<Long> favorites = user.getFavorite();
+        subProductIds.forEach(subProductId -> {
+            subProductRepository.findById(subProductId).orElseThrow(() -> {
+                log.error("SubProduct with id: " + subProductId + " is not found");
+                return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
+            });
+
+            if (favorites.contains(subProductId)) {
+                favorites.remove(subProductId);
+                log.info("Successfully removed the product with id " + subProductId + " from favorites");
+            } else {
+                favorites.add(subProductId);
+                log.info("Successfully added the product with id " + subProductId + " to favorites");
+            }
+        });
+        user.setFavorite(favorites);
+        userRepository.save(user);
+        return SimpleResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Successfully added or removed from favorites.")
+                .build();
+    }
+
+
+    @Override
     public SimpleResponse clearFavorite() {
         User user = jwtService.getAuthenticationUser();
         List<Long> favorites = user.getFavorite();

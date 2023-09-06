@@ -11,7 +11,6 @@ import peaksoft.house.gadgetariumb9.dto.request.banner.BannerRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.models.Banner;
 import peaksoft.house.gadgetariumb9.services.serviceImpl.BannerServiceImpl;
-
 import java.util.List;
 
 @RestController
@@ -32,7 +31,7 @@ public class BannerApi {
     @PermitAll
     @Operation(summary = "Get all banners", description = "Retrieve a list of all banners.")
     @GetMapping
-    List<Banner> getAllBanners(){
+    List<Banner> getAllBanners() {
         return bannerService.getAllBanner();
     }
 
