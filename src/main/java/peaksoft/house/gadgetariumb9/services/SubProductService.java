@@ -43,6 +43,6 @@ public interface SubProductService {
     SimpleResponse clearUserCompare(List<Long> subProductIds);
 
     List<LatestComparison> getLatestComparison();
- 
 
+    CountColorResponse getCountColor (String color,Long categoryId);
 }

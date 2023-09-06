@@ -6,7 +6,6 @@ import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import java.time.LocalDate;
 import peaksoft.house.gadgetariumb9.dto.response.compare.CompareProductResponse;
 import peaksoft.house.gadgetariumb9.dto.response.compare.ComparisonCountResponse;
-
 import java.util.List;
 
 public interface SubProductTemplate {
@@ -25,5 +24,7 @@ public interface SubProductTemplate {
     SubProductPaginationCatalogAdminResponse getGetAllSubProductAdmin(String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 
      List<LatestComparison> getLatestComparison();
+
+     CountColorResponse getCountColor (String color, Long categoryId);
 
 }

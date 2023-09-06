@@ -22,7 +22,6 @@ import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.template.MainPageProducts;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -534,4 +533,8 @@ public class SubProductServiceImpl implements SubProductService {
         return subProductTemplate.getLatestComparison();
     }
 
+    @Override
+    public CountColorResponse getCountColor(String color,Long categoryId) {
+        return subProductTemplate.getCountColor(color, categoryId);
+    }
 }

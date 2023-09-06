@@ -93,7 +93,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             JOIN sub_categories sc ON p2.sub_category_id = sc.id
                             JOIN categories c ON p2.category_id = c.id
                    WHERE c.title ILIKE ?
-                """;
+                   """;
         List<Object> params = new ArrayList<>();
         params.add(subProductCatalogRequest.getGadgetType());
         if (subProductCatalogRequest.getBrandIds().get(0) > 0) {
@@ -408,7 +408,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                         GROUP BY s.id, s.article_number, p2.created_at, s.quantity, s.price, d.sale, b.name, p2.name, s.rating
                         ORDER BY s.id
                         LIMIT ? ;
-                          """;
+                        """;
             } else if (productType.equalsIgnoreCase("До 50%")) {
                 sql = """
                         SELECT s.id                                AS subProductId,
@@ -483,7 +483,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 LIMIT 1)                           AS images,
                                s.article_number                    AS articleNumber,
                                CONCAT(b.name, ' ', p2.name)        AS name,
-                               p2.created_at                    AS dateOfCreation,
+                               p2.created_at                       AS dateOfCreation,
                                s.quantity                          AS quantity,
                                CONCAT(s.price, ', ', d.sale)       AS price_and_sale,
                                SUM(s.price * (1 - d.sale / 100.0)) AS total_with_discount,
@@ -562,8 +562,8 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                  JOIN brands b ON p.brand_id = b.id
                                  JOIN user_comparison uc ON uc.comparison = sp.id
                                  JOIN users u ON uc.user_id = u.id
-                        WHERE u.id = ?         
-                                                """, (rs, rowNum) ->
+                        WHERE u.id = ?
+                        """, (rs, rowNum) ->
                         LatestComparison
                                 .builder()
                                 .subProductId(rs.getLong("id"))
@@ -572,6 +572,29 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                                 .price(rs.getBigDecimal("price"))
                                 .build(),
                 user.getId());
+    }
+
+    @Override
+    public CountColorResponse getCountColor(String color,Long categoryId) {
+
+        String sql = """
+            SELECT
+                sp.code_color                       as color,
+                (select count(code_color)
+                from sub_products sp
+                where sp.code_color = ?)            as count
+            FROM sub_products sp
+            JOIN products p on sp.product_id = p.id
+            JOIN categories c on p.category_id = c.id
+            WHERE sp.code_color = ? and c.id = ?
+            """;
+
+        return jdbcTemplate.query(sql,(rs, rowNum) -> {
+                CountColorResponse colorResponse = new CountColorResponse();
+                colorResponse.setCodeColor(rs.getString("color"));
+                colorResponse.setCountColor(rs.getInt("count"));
+                return colorResponse;
+            },color, color, categoryId).stream().findAny().orElseThrow(()-> new NotFoundException("The index not fount"));
     }
 
     public List<CompareProductResponse> getCompareParameters(String productName) {
@@ -617,7 +640,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                          JOIN user_comparison uc ON uc.comparison = sp.id
                          JOIN users u ON uc.user_id = u.id
                 WHERE cat.title ILIKE ? AND u.id = ?
-                   """;
+                """;
         if (productName.equalsIgnoreCase("Phone") || productName.equalsIgnoreCase("Tablet")) {
             return jdbcTemplate.query(
                     sql,
@@ -708,7 +731,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                 WHERE uc.user_id = ?
                   AND c.title IN ('Phone', 'Smart Watch', 'Tablet', 'Laptop')
                 GROUP BY c.title;
-                            """;
+                """;
         return jdbcTemplate.query(
                 compare,
                 (rs) -> {
