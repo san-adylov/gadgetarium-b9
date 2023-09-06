@@ -16,8 +16,9 @@ import peaksoft.house.gadgetariumb9.repositories.BasketRepository;
 import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
 import peaksoft.house.gadgetariumb9.services.BasketService;
 import peaksoft.house.gadgetariumb9.template.BasketTemplate;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -56,8 +57,6 @@ public class BasketServiceImpl implements BasketService {
     }
 
 
-
-
     @Override
     public BasketInfographicResponse getAllByProductsFromTheBasket() {
         return basketTemplate.getInfographic();
@@ -66,16 +65,26 @@ public class BasketServiceImpl implements BasketService {
     @Override
     public SimpleResponse deleteProductByIds(List<Long> subProductIds) {
         User user = jwtService.getAuthenticationUser();
-        if (basketRepository.getBasketByUserId(user.getId()) == null || basketRepository.getBasketByUserId(user.getId()).isEmpty()) {
+        List<Basket> baskets = basketRepository.getBasketByUserId(user.getId());
+        if (baskets == null || baskets.isEmpty()) {
             throw new NotFoundException("Baskets not found");
         }
-        basketRepository.deleteAll(basketRepository.getBasketByUserId(user.getId()));
-        return SimpleResponse
-                .builder()
+        List<Basket> basketsToDelete = new ArrayList<>();
+        for (Basket basket : baskets) {
+            for (SubProduct subProduct : basket.getSubProducts()) {
+                if (subProductIds.contains(subProduct.getId())) {
+                    basketsToDelete.add(basket);
+                    break;
+                }
+            }
+        }
+        basketRepository.deleteAll(basketsToDelete);
+        return SimpleResponse.builder()
                 .message("Sub product deleted")
                 .status(HttpStatus.OK)
                 .build();
     }
+
 
     @Override
     public SimpleResponse deleteProductById(Long supProductId) {

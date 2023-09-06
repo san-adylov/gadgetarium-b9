@@ -125,9 +125,9 @@
     <dependency>
       <groupId>io.logz.logback</groupId>
       <artifactId>logzio-logback-appender</artifactId>
-      <version>v1.0.25</version>
+      <version>1.0.2</version>
     </dependency>
-      <dependency>
+    <dependency>
         <groupId>org.flywaydb</groupId>
         <artifactId>flyway-core</artifactId>
         <version>8.0.4</version>
@@ -162,9 +162,9 @@
     <dependency>
       <groupId>org.xhtmlrenderer</groupId>
       <artifactId>flying-saucer-pdf</artifactId>
-      <version>9.1.22</version>
+      <version>9.1.20</version>
     </dependency>
-      <dependency>
+    <dependency>
           <groupId>org.junit.vintage</groupId>
           <artifactId>junit-vintage-engine</artifactId>
           <scope>test</scope>
