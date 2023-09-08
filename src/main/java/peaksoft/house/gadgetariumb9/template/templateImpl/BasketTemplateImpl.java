@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.response.basket.BasketInfographicResponse;
 import peaksoft.house.gadgetariumb9.dto.response.basket.BasketResponse;
-import peaksoft.house.gadgetariumb9.dto.response.subProduct.SubProductCatalogResponse;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
@@ -29,7 +28,6 @@ public class BasketTemplateImpl implements BasketTemplate {
     private final JwtService jwtService;
 
     private final UserRepository userRepository;
-
 
     private String email() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
@@ -61,16 +59,15 @@ public class BasketTemplateImpl implements BasketTemplate {
         return comparisons;
     }
 
-
     @Override
     public List<BasketResponse> getAllByProductsFromTheBasket() {
         User user = jwtService.getAuthenticationUser();
         String sql = """
                  SELECT sp.id,
                         (SELECT spi.images
-                         FROM sub_product_images spi
-                         WHERE spi.sub_product_id = sp.id
-                         LIMIT 1) AS image,
+                        FROM sub_product_images spi
+                        WHERE spi.sub_product_id = sp.id
+                        LIMIT 1) AS image,
                         p.name,
                         sp.rating,
                         COALESCE((SELECT COUNT(DISTINCT r.id) FROM reviews r WHERE r.sub_product_id = sp.id), 0) AS number_of_reviews,
@@ -78,19 +75,13 @@ public class BasketTemplateImpl implements BasketTemplate {
                         sp.article_number,
                         SUM(sp.price) AS total_price,
                         COUNT(sp.id) AS the_number_of_orders
-                FROM sub_products sp
-                         JOIN baskets_sub_products bsp ON sp.id = bsp.sub_products_id
-                         JOIN baskets b ON bsp.baskets_id = b.id
-                         JOIN products p ON sp.product_id = p.id
-                         JOIN reviews r ON sp.id = r.sub_product_id
-                         JOIN users u ON b.user_id = u.id
-                WHERE u.id = ?
-                GROUP BY sp.id, p.name, (SELECT spi.images FROM sub_product_images spi WHERE spi.sub_product_id = sp.id LIMIT 1),
-                         sp.rating, sp.quantity, sp.
-                   article_number, sp.price;
-                   """;
-
-
+                 FROM sub_products sp
+                     JOIN products p ON sp.product_id = p.id
+                     LEFT JOIN reviews r ON sp.id = r.sub_product_id
+                 WHERE sp.id IN (SELECT sub_products_id FROM baskets_sub_products WHERE baskets_id IN (SELECT id FROM baskets WHERE user_id = ?))
+                 GROUP BY sp.id, p.name, (SELECT spi.images FROM sub_product_images spi WHERE spi.sub_product_id = sp.id LIMIT 1),
+                     sp.rating, sp.quantity, sp.article_number, sp.price, sp.quantity;
+                 """;
 
         List<BasketResponse> basketResponses = jdbcTemplate.query(
                 sql,
@@ -138,7 +129,7 @@ public class BasketTemplateImpl implements BasketTemplate {
                          JOIN sub_products sp ON bsp.sub_products_id = sp.id
                          LEFT JOIN discounts d ON sp.id = d.sub_product_id
                 WHERE u.id = ?
-                   """;
+                """;
         BasketInfographicResponse basketInfographicResponse = jdbcTemplate.queryForObject(
                 sql,
                 (rs, rowNum) -> BasketInfographicResponse
