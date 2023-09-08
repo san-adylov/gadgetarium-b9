@@ -14,10 +14,7 @@ import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.ProductService;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import peaksoft.house.gadgetariumb9.template.ProductTemplate;
 
@@ -166,7 +163,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public List<String> getColor(String name) {
-        return new ArrayList<>(Collections.singleton(codeColor.ColorName(name)));
+        return codeColor.ColorName(name);
     }
 
   @Override

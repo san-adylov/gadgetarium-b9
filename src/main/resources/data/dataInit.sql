@@ -14,28 +14,29 @@ VALUES (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldo
        (false, 'USER', 5, 'Аламидин-1', 'erjan@gmail.com', 'Erjan', 'img', '  Taalaibekov',
         '$2a$12$XhWrZB5uMZcfsw8n5kZ58emB5Z6nkF3Ix94D5QaYB4ikkfyimUO66', '0700020206'); --erjan2004
 
+
 INSERT INTO categories (id, title)
-VALUES (1, 'Phone'),
-       (2, 'Laptop'),
-       (3, 'Smart Watch'),
-       (4, 'Tablet');
+VALUES (1, 'Смартфоны'),
+       (2, 'Ноутбук'),
+       (3, 'Смарт часы'),
+       (4, 'Планшет');
 
 INSERT INTO sub_categories (category_id, id, title)
 VALUES (1, 1, 'Android'),
        (1, 2, 'iOS'),
-       (1, 3, 'Camera Phones'),
-       (1, 4, 'Gaming Phones'),
-       (2, 5, 'Ultrabooks'),
-       (2, 6, 'Business'),
-       (2, 7, 'Touchscreen Laptops'),
-       (2, 8, 'Chromebooks'),
-       (2, 9, 'Gaming Laptops'),
-       (3, 10, 'Fitness Trackers'),
-       (3, 11, 'Sports  Watches'),
-       (3, 12, 'Children''s Smartwatches'),
-       (4, 13, 'Entertainment Tablets'),
-       (4, 14, 'Professional Tablets'),
-       (4, 15, 'Educational Tablets');
+       (1, 3, 'Камерофоны'),
+       (1, 4, 'Игровые телефоны'),
+       (2, 5, 'Ультрабуки'),
+       (2, 6, 'Деловые ноутбуки'),
+       (2, 7, 'Сенсорные ноутбуки'),
+       (2, 8, 'Chromebook'),
+       (2, 9, 'Игровые ноутбуки'),
+       (3, 10, 'Фитнес-трекеры'),
+       (3, 11, 'Спортивные часы'),
+       (3, 12, 'Детские смарт-часы'),
+       (4, 13, 'Планшеты для развлечений'),
+       (4, 14, 'Профессиональные планшеты'),
+       (4, 15, 'Образовательные планшеты');
 
 
 INSERT INTO brands (id, image, name)
