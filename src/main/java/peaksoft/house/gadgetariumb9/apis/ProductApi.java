@@ -186,4 +186,11 @@ public class ProductApi {
     public List<LatestComparison> getLatestComparison() {
         return subProductService.getLatestComparison();
     }
+
+    @GetMapping("/count_color")
+    @PermitAll
+    @Operation(summary = "Product counter by color", description = "Get count of products with color")
+    public CountColorResponse getCountColor (@RequestParam String color, @RequestParam Long categoryId){
+        return subProductService.getCountColor(color, categoryId);
+    }
 }
