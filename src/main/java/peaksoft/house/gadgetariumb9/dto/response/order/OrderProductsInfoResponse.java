@@ -10,6 +10,8 @@ import lombok.*;
 @Builder
 public class OrderProductsInfoResponse {
 
+  private Long subProductId;
+
   private String productName;
 
   private double rating;

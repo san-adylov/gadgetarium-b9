@@ -55,13 +55,13 @@ public class OrderApi {
 
     @DeleteMapping("/multi-delete")
     @Operation(summary = " multi delete", description = "Deleting orders selected by the administrator")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse multiDeleteOrder(@RequestBody List<Long> orderids) {
-        return orderService.multiDeleteOrder(orderids);
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public SimpleResponse multiDeleteOrder(@RequestBody List<Long> orders) {
+        return orderService.multiDeleteOrder(orders);
     }
 
     @PostMapping
-    @Operation(summary = "sending and save order", description = "User submits an order to purchase a product")
+    @Operation(summary = "Sending and save order", description = "User submits an order to purchase a product")
     @PreAuthorize("hasAuthority('USER')")
     public OrderUserResponse saveOrder(@RequestBody OrderUserRequest request) {
         return orderService.saveOrder(request);
