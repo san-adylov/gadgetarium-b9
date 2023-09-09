@@ -48,7 +48,7 @@ public class OrderApi {
 
     @DeleteMapping("/single-delete/{orderId}")
     @Operation(summary = "single delete ", description = "Order deletion by administrator via id")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public SimpleResponse singleDelete(@PathVariable Long orderId) {
         return orderService.singleDelete(orderId);
     }
