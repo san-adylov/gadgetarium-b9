@@ -43,9 +43,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    public static final String EMAIL_TEMPLATE = "order-email-template";
-
-    public static final String UTF_8_ENCODING = "UTF-8";
+    public static final String UTF_8 = "UTF-8";
 
     private final OrderTemplate orderTemplate;
 
@@ -198,9 +196,9 @@ public class OrderServiceImpl implements OrderService {
             context.setVariable("user", user.getFirstName() + " " + user.getLastName());
             context.setVariable("phoneNumber", user.getPhoneNumber());
             context.setVariable("deliveryType", typeDelivery.getValue());
-            String text = templateEngine.process(EMAIL_TEMPLATE, context);
+            String text = templateEngine.process("templates/order-email-template.html", context);
             MimeMessage message = getMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8);
             helper.setPriority(1);
             helper.setSubject("Gadgetarium");
             helper.setFrom("shop.gadgetarium.kg@gmail.com");
