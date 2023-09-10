@@ -12,7 +12,6 @@ import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.ProductTemplate;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -28,13 +27,13 @@ public class ProductTemplateImpl implements ProductTemplate {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public ProductUserAndAdminResponse getByProductId(Long subProductId, String color) {
+    public ProductUserAndAdminResponse getByProductId(Long productId, String color) {
 
         log.info("Get product by id");
 
-        String colourSql = "SELECT sp.code_color AS colours FROM sub_products sp WHERE sp.id = ?";
+        String colourSql = "SELECT sp.code_color AS colours FROM sub_products sp JOIN products p on sp.product_id = p.id JOIN categories c on c.id = p.category_id JOIN brands b on b.id = p.brand_id WHERE p.id = ?";
         List<String> colours = jdbcTemplate.query(colourSql, (rs, i) -> rs.getString("colours"),
-                subProductId);
+                productId);
 
         User user;
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -57,8 +56,10 @@ public class ProductTemplateImpl implements ProductTemplate {
                        sp.quantity                                                     AS quantity,
                        sp.price                                                        AS price,
                        sp.rating                                                       AS rating,
-                       (SELECT COUNT(r.id) FROM reviews r JOIN sub_products sp ON sp.id = r.sub_product_id
-                           WHERE sp.id = ?)                                             AS count_of_reviews,
+                       (SELECT COUNT(r.id) FROM reviews r
+                       JOIN sub_products sp ON sp.id = r.sub_product_id
+                       JOIN products p on sp.product_id = p.id
+                       WHERE p.id = ? and sp.code_color = ?)                           AS count_of_reviews,
                        sp.article_number                                               AS article_number,
                        d.sale                                                          AS discount,
                        sp.screen_resolution                                            AS screen_resolution,
@@ -71,11 +72,11 @@ public class ProductTemplateImpl implements ProductTemplate {
                        p.video_link                                                    AS video_link
                 FROM sub_products sp JOIN products p ON sp.product_id = p.id
                 JOIN brands b ON b.id = p.brand_id
+                JOIN categories c on c.id = p.category_id
                 LEFT JOIN discounts d ON sp.id = d.sub_product_id
                 LEFT JOIN reviews r ON sp.id = r.sub_product_id
-                LEFT JOIN categories c ON p.category_id = c.id
                 LEFT JOIN user_favorite uf ON r.user_id = uf.user_id AND uf.user_id = ?
-                WHERE sp.id = ? AND sp.code_color = ?
+                WHERE p.id = ? AND sp.code_color = ?
                 """;
 
         ProductUserAndAdminResponse response = new ProductUserAndAdminResponse();
@@ -101,9 +102,10 @@ public class ProductTemplateImpl implements ProductTemplate {
                     response.setVideoLink(rs.getString("video_link"));
                     return response;
                 },
-                subProductId,
+                productId,
+                !color.isBlank() ? color : colours.get(0),
                 user != null ? user.getId() : null,
-                subProductId,
+                productId,
                 !color.isBlank() ? color : colours.get(0)
         );
 
@@ -112,11 +114,12 @@ public class ProductTemplateImpl implements ProductTemplate {
         String imageSql = """
                 SELECT spi.images AS images FROM sub_product_images spi
                 join sub_products sp on spi.sub_product_id = sp.id
-                where sp.id = ? and  sp.code_color = ?
+                join products p on p.id = sp.product_id
+                where p.id = ? and  sp.code_color = ?
                 """;
         List<String> images = jdbcTemplate.query(imageSql, (rs, i) ->
                         rs.getString("images"),
-                subProductId,
+                productId,
                 !color.isBlank() ? color : colours.get(0)
         );
 
@@ -136,12 +139,12 @@ public class ProductTemplateImpl implements ProductTemplate {
                         JOIN sub_products sp ON r.sub_product_id = sp.id
                         JOIN users u ON u.id = r.user_id
                         JOIN products p ON sp.product_id = p.id
-               WHERE sp.id = ?
+               WHERE p.id = ? and sp.code_color = ?
                """;
 
         List<ReviewResponse> reviewResponses = jdbcTemplate.query(
                 reviewSql, (rs, rowNum) -> {
-                    ReviewResponse rewiew = new ReviewResponse(
+                    ReviewResponse review = new ReviewResponse(
                             rs.getLong("id"),
                             rs.getString("user_name"),
                             rs.getString("user_image"),
@@ -150,10 +153,11 @@ public class ProductTemplateImpl implements ProductTemplate {
                             rs.getString("answer"),
                             rs.getString("date"),
                             rs.getString("image"));
-                    rewiew.setMy(user != null && user.getId().equals(getUserIdFromRS(rs)));
-                    return rewiew;
+                    review.setMy(user != null && user.getId().equals(getUserIdFromRS(rs)));
+                    return review;
                 },
-                subProductId);
+                productId,
+                !color.isBlank() ? color : colours.get(0));
 
         response.setReviews(reviewResponses);
 

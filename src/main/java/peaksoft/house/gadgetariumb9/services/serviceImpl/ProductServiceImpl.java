@@ -167,12 +167,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
   @Override
-  public ProductUserAndAdminResponse getByProductId(Long subProductId, String color) {
-    subProductRepository.findById(subProductId).orElseThrow(
+  public ProductUserAndAdminResponse getByProductId(Long productId, String color) {
+//    subProductRepository.findById(subProductId).orElseThrow(
+//        () -> {
+//          log.error("SubProduct with id: " + subProductId + " is not found");
+//          return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
+//        });
+    productRepository.findById(productId).orElseThrow(
         () -> {
-          log.error("SubProduct with id: " + subProductId + " is not found");
-          return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
+          log.error("Product with id: " + productId + " is not found");
+          return new NotFoundException("Product with id: " + productId + " is not found");
         });
-    return productTemplate.getByProductId(subProductId,color);
+    return productTemplate.getByProductId(productId,color);
   }
 }
