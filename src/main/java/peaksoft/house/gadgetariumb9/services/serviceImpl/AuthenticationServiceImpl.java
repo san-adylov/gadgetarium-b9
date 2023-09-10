@@ -26,7 +26,7 @@ import peaksoft.house.gadgetariumb9.services.AuthenticationService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class    AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
 

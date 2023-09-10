@@ -663,7 +663,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .batteryCapacity(rs.getString("battery_capacity"))
                             .screenSize(rs.getDouble("screen_size"))
                             .build()),
-                    "%Phone%", user.getId());
+                    "%Смартфоны%", user.getId());
         } else if (productName.equalsIgnoreCase("Laptop")) {
             return jdbcTemplate.query(
                     sql,
@@ -686,7 +686,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .screen_size(rs.getDouble("screen_size"))
                             .video_memory(rs.getInt("video_memory"))
                             .build()),
-                    "%Laptop%", user.getId());
+                    "%Ноутбук%", user.getId());
         } else if (productName.equalsIgnoreCase("Smart Watch")) {
             return jdbcTemplate.query(
                     sql,
@@ -712,7 +712,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                             .waterproof(rs.getBoolean("waterproof"))
                             .displayDiscount(rs.getDouble("display_discount"))
                             .build())
-                    , "%Smart Watch%", user.getId());
+                    , "%Смарт часы%", user.getId());
         }
         return null;
     }
