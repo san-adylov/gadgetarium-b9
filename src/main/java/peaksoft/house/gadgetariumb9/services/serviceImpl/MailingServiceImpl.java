@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MailingServiceImpl implements MailingService {
 
-    public static final String EMAIL_TEMPLATE = "emailtemplate";
-
     private final JavaMailSender emailSender;
 
     private final UserRepository userRepository;
@@ -80,7 +78,7 @@ public class MailingServiceImpl implements MailingService {
             context.setVariable("image", mailingRequest.getImage());
             context.setVariable("startDate", mailingRequest.getStartDate());
             context.setVariable("finishDate", mailingRequest.getFinishDate());
-            String text = templateEngine.process(EMAIL_TEMPLATE, context);
+            String text = templateEngine.process("templates/email-template.html", context);
             MimeMessage message = getMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, UTF_8_ENCODING);
             helper.setPriority(1);
