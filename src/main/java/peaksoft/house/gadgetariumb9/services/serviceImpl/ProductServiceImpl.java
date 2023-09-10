@@ -146,7 +146,7 @@ public class ProductServiceImpl implements ProductService {
         product.setSubProducts(subProducts);
         product.setVideoLink(productRequest.getVideoLink());
         product.setPdf(productRequest.getPdf());
-        product.setDescription(product.getDescription());
+        product.setDescription(productRequest.getDescription());
 
         log.info("Product saved successfully");
         productRepository.save(product);
