@@ -94,17 +94,17 @@ public class MainPageProductsImpl implements MainPageProducts {
                                          LIMIT 1), ' ')         AS image,
                                 COALESCE(rev.countOfReviews, 0) AS countOfReviews
                 FROM sub_products sp
-                         JOIN products p ON p.id = sp.product_id
-                         JOIN brands b ON b.id = p.brand_id
-                         JOIN sub_product_images spi ON sp.id = spi.sub_product_id
-                         JOIN discounts d ON sp.id = d.sub_product_id
-                         JOIN categories cat ON cat.id = p.category_id
-                         JOIN sub_categories sc ON sc.id = p.sub_category_id
-                         JOIN reviews r ON sp.id = r.sub_product_id
+                         LEFT JOIN products p ON p.id = sp.product_id
+                         LEFT JOIN brands b ON b.id = p.brand_id
+                         LEFT JOIN sub_product_images spi ON sp.id = spi.sub_product_id
+                         LEFT JOIN discounts d ON sp.id = d.sub_product_id
+                         LEFT JOIN categories cat ON cat.id = p.category_id
+                         LEFT JOIN sub_categories sc ON sc.id = p.sub_category_id
+                         LEFT JOIN reviews r ON sp.id = r.sub_product_id
                          LEFT JOIN (SELECT sub_product_id, COUNT(id) AS countOfReviews
                                     FROM reviews
                                     GROUP BY sub_product_id) rev ON sp.id = rev.sub_product_id
-                WHERE p.created_at BETWEEN (CURRENT_DATE - INTERVAL '1 Month') AND CURRENT_DATE
+                WHERE created_at BETWEEN (CURRENT_DATE - INTERVAL '1 Month') AND CURRENT_DATE
                 ORDER BY sp.id
                 LIMIT ? OFFSET ?
                 """;
