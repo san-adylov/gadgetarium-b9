@@ -25,6 +25,6 @@ public interface SubProductTemplate {
 
      List<LatestComparison> getLatestComparison();
 
-     CountColorResponse getCountColor (String color, Long categoryId);
+     CountColorResponse getCountColor ( Long categoryId);
 
 }

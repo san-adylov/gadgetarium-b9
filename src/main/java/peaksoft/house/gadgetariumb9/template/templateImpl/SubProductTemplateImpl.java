@@ -575,18 +575,18 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     }
 
     @Override
-    public CountColorResponse getCountColor(String color,Long categoryId) {
+    public CountColorResponse getCountColor(Long categoryId) {
 
         String sql = """
             SELECT
-                sp.code_color                       as color,
-                (select count(code_color)
-                from sub_products sp
-                where sp.code_color = ?)            as count
+                sp.code_color                       AS color,
+                (SELECT count(code_color)
+                FROM sub_products sp
+                WHERE sp.code_color = ?)            AS count
             FROM sub_products sp
-            JOIN products p on sp.product_id = p.id
-            JOIN categories c on p.category_id = c.id
-            WHERE sp.code_color = ? and c.id = ?
+            JOIN products p ON sp.product_id = p.id
+            JOIN categories c ON p.category_id = c.id
+            WHERE  c.id = ?
             """;
 
         return jdbcTemplate.query(sql,(rs, rowNum) -> {
@@ -594,7 +594,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                 colorResponse.setCodeColor(rs.getString("color"));
                 colorResponse.setCountColor(rs.getInt("count"));
                 return colorResponse;
-            },color, color, categoryId).stream().findAny().orElseThrow(()-> new NotFoundException("The index not fount"));
+            }, categoryId).stream().findAny().orElseThrow(()-> new NotFoundException("The index not fount"));
     }
 
     public List<CompareProductResponse> getCompareParameters(String productName) {

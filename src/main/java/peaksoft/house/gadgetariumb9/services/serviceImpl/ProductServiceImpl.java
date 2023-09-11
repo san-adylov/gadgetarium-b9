@@ -65,7 +65,8 @@ public class ProductServiceImpl implements ProductService {
 
         ZoneId zoneId = ZoneId.systemDefault();
         ZonedDateTime startDateZ = ZonedDateTime.of(productRequest.getDateOfIssue().atStartOfDay(), zoneId);
-
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime modifiedDateTime = now.withNano(0);
         Product product = new Product();
         product.setCategory(category);
         product.setSubCategory(subCategory);
@@ -73,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productRequest.getName());
         product.setGuarantee(productRequest.getGuarantee());
         product.setDataOfIssue(startDateZ);
-        product.setCreatedAt(ZonedDateTime.now());
+        product.setCreatedAt(modifiedDateTime);
 
         List<SubProduct> subProducts = productRequest.getSubProductRequests().stream()
                 .map(subProductRequest -> {

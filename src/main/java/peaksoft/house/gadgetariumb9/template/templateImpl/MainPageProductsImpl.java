@@ -104,7 +104,7 @@ public class MainPageProductsImpl implements MainPageProducts {
                          LEFT JOIN (SELECT sub_product_id, COUNT(id) AS countOfReviews
                                     FROM reviews
                                     GROUP BY sub_product_id) rev ON sp.id = rev.sub_product_id
-                WHERE p.created_at BETWEEN (CURRENT_DATE - INTERVAL '1 month') AND CURRENT_DATE
+                WHERE p.created_at BETWEEN (CURRENT_DATE - INTERVAL '1 Month') AND CURRENT_DATE
                 ORDER BY sp.id
                 LIMIT ? OFFSET ?
                 """;

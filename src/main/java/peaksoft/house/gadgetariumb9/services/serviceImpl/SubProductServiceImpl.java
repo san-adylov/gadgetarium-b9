@@ -534,7 +534,7 @@ public class SubProductServiceImpl implements SubProductService {
     }
 
     @Override
-    public CountColorResponse getCountColor(String color,Long categoryId) {
-        return subProductTemplate.getCountColor(color, categoryId);
+    public CountColorResponse getCountColor(Long categoryId) {
+        return subProductTemplate.getCountColor( categoryId);
     }
 }
