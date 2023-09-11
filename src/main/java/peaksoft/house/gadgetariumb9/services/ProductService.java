@@ -4,7 +4,6 @@ import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
 import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import java.util.List;
-import java.util.Set;
 
 public interface ProductService {
 
@@ -12,5 +11,5 @@ public interface ProductService {
 
     List<String> getColor(String name);
 
-    ProductUserAndAdminResponse getByProductId(Long subProductId, String color);
+    ProductUserAndAdminResponse getByProductId(Long productId, String color);
 }
