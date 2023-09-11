@@ -47,6 +47,11 @@ public class ProductTemplateImpl implements ProductTemplate {
             user = null;
         }
 
+        if (!color.isBlank() && !colours.contains(color)) {
+        log.error(String.format("Product with colour - %s is not found!", color));
+        throw new NotFoundException(String.format("Product with colour - %s is not found!", color));
+        }
+
         String sql = """
                 SELECT p.id                                                            AS product_id,
                        sp.id                                                           AS sub_product_id,

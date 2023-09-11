@@ -137,7 +137,7 @@ public class ProductApi {
 
     @GetMapping("/get-by-id")
     @PermitAll
-    @Operation(summary = "To get by subProduct id the product.", description = "This method to get by subProduct id the product.")
+    @Operation(summary = "To get by product id and color the product.", description = "This method to get by color and id the product.")
     public ProductUserAndAdminResponse getByProductId(@RequestParam Long productId,
                                                       @RequestParam(defaultValue = "", required = false) String colour) {
         return productService.getByProductId(productId, colour);

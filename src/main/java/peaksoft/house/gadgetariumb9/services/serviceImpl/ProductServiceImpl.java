@@ -168,11 +168,6 @@ public class ProductServiceImpl implements ProductService {
 
   @Override
   public ProductUserAndAdminResponse getByProductId(Long productId, String color) {
-//    subProductRepository.findById(subProductId).orElseThrow(
-//        () -> {
-//          log.error("SubProduct with id: " + subProductId + " is not found");
-//          return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
-//        });
     productRepository.findById(productId).orElseThrow(
         () -> {
           log.error("Product with id: " + productId + " is not found");
