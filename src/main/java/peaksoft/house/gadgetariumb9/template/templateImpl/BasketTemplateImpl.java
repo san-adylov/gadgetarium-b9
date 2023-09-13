@@ -13,7 +13,6 @@ import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.BasketTemplate;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class BasketTemplateImpl implements BasketTemplate {
                         sp.quantity,
                         sp.article_number,
                         SUM(sp.price) AS total_price,
-                        COUNT(sp.id) AS the_number_of_orders
+                        (SELECT COUNT(*) FROM baskets_sub_products bsp JOIN baskets b on b.id = bsp.baskets_id WHERE bsp.sub_products_id = sp.id AND b.user_id = ?) AS the_number_of_orders
                  FROM sub_products sp
                      JOIN products p ON sp.product_id = p.id
                      LEFT JOIN reviews r ON sp.id = r.sub_product_id
@@ -98,6 +97,7 @@ public class BasketTemplateImpl implements BasketTemplate {
                                 .price(rs.getBigDecimal("total_price"))
                                 .theNumberOfOrders(rs.getInt("the_number_of_orders"))
                                 .build(),
+                user.getId(),
                 user.getId()
         );
 

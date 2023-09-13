@@ -38,50 +38,23 @@ public class BasketServiceImpl implements BasketService {
     public SimpleResponse saveBasket(Long subProductId) {
         User user = jwtService.getAuthenticationUser();
 
-        Optional<Basket> userBasket = basketRepository.findByUser(user);
-
-        if (userBasket.isPresent()) {
-            Basket basket = userBasket.get();
-            Optional<SubProduct> existingSubProduct = basket.getSubProducts()
-                .stream()
-                .filter(sp -> sp.getId().equals(subProductId))
-                .findFirst();
-
-            if (existingSubProduct.isPresent()) {
-                SubProduct subProduct = existingSubProduct.get();
-                subProduct.setQuantity(subProduct.getQuantity() + 1);
-                basket.getSubProducts().add(subProduct);
-                basketRepository.save(basket);
-            } else {
-                SubProduct subProduct = subProductRepository.findById(subProductId)
-                    .orElseThrow(() -> {
-                        log.error("Sub product with id: %s not found".formatted(subProductId));
-                        return new NotFoundException("Sub product with id: %s not found".formatted(subProductId));
-                    });
-                basket.getSubProducts().add(subProduct);
-            }
-        } else {
-            SubProduct subProduct = subProductRepository.findById(subProductId)
-                .orElseThrow(() -> {
-                    log.error("Sub product with id: %s not found".formatted(subProductId));
-                    return new NotFoundException("Sub product with id: %s not found".formatted(subProductId));
-                });
-
-            Basket newBasket = Basket.builder()
+        SubProduct subProduct = subProductRepository.findById(subProductId).orElseThrow(() -> {
+            log.error("Sub product with id: %s not found".formatted(subProductId));
+            return new NotFoundException("Sub product with id: %s not found".formatted(subProductId));
+        });
+        basketRepository.save(
+            Basket
+                .builder()
                 .user(user)
                 .subProducts(List.of(subProduct))
-                .build();
-
-            basketRepository.save(newBasket);
-        }
-
+                .build());
         log.info("Basket with id: %s successfully saved".formatted(subProductId));
-        return SimpleResponse.builder()
-            .message("Basket successfully saved")
+        return SimpleResponse
+            .builder()
+            .message("Basket with successfully saved")
             .status(HttpStatus.OK)
             .build();
     }
-
 
     @Override
     public BasketInfographicResponse getAllByProductsFromTheBasket() {
