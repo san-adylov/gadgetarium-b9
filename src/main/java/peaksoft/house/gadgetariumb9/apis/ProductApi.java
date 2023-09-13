@@ -43,7 +43,7 @@ public class ProductApi {
     }
 
     @GetMapping("/colors/{name}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PermitAll
     @Operation(summary = "Get color", description = "Get the right colors")
     public List<String> getColors(@PathVariable String name) {
         return productService.getColor(name);
