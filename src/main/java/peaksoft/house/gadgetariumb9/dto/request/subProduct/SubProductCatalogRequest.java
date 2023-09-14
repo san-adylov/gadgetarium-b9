@@ -15,6 +15,8 @@ public class SubProductCatalogRequest {
 
     private String sorting;
 
+    private List<Long> subCategoryIds;
+
     private List<Long> brandIds;
 
     private BigDecimal priceStart;

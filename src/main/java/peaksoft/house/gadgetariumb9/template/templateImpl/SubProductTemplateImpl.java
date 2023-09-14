@@ -94,10 +94,15 @@ public class SubProductTemplateImpl implements SubProductTemplate {
                          LEFT JOIN brands b ON p2.brand_id = b.id
                          JOIN sub_categories sc ON p2.sub_category_id = sc.id
                          JOIN categories c ON p2.category_id = c.id
+                         JOIN sub_categories scs ON p2.sub_category_id = scs.id
                 WHERE c.title ILIKE ?
                 """;
         List<Object> params = new ArrayList<>();
         params.add(subProductCatalogRequest.getGadgetType());
+        if (subProductCatalogRequest.getSubCategoryIds().get(0) > 0) {
+            sql += "AND scs.id = ANY (?)";
+            params.add(subProductCatalogRequest.getSubCategoryIds().toArray(new Long[0]));
+        }
         if (subProductCatalogRequest.getBrandIds().get(0) > 0) {
             sql += "AND b.id = ANY (?)";
             params.add(subProductCatalogRequest.getBrandIds().toArray(new Long[0]));
@@ -188,7 +193,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         sql += " LIMIT ? OFFSET ?";
         params.add(pageSizeAndOffset(pageNumber, pageSize).get(0));
         params.add(pageSizeAndOffset(pageNumber, pageSize).get(1));
-        List<SubProductCatalogResponse> subProductCatalogResponses = jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductCatalogResponse(rs.getLong("sub_product_id"),rs.getLong("product_id"), rs.getInt("sale"), rs.getString("image"), rs.getInt("quantity"), rs.getString("name"), rs.getBigDecimal("price")), params.toArray());
+        List<SubProductCatalogResponse> subProductCatalogResponses = jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductCatalogResponse(rs.getLong("sub_product_id"), rs.getLong("product_id"), rs.getInt("sale"), rs.getString("image"), rs.getInt("quantity"), rs.getString("name"), rs.getBigDecimal("price")), params.toArray());
         log.info("Filtering completed successfully");
         List<Long> favorites = getFavorites();
 
