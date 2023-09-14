@@ -190,7 +190,7 @@ public class ProductApi {
     @GetMapping("/count-color")
     @PermitAll
     @Operation(summary = "Product counter by color", description = "Get count of products with color")
-    public CountColorResponse getCountColor (@RequestParam Long categoryId){
+    public List<CountColorResponse> getCountColor (@RequestParam Long categoryId){
         return subProductService.getCountColor( categoryId);
     }
 }

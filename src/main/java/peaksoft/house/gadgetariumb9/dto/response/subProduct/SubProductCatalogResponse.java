@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.math.BigDecimal;
 
 @Getter
@@ -11,7 +12,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class SubProductCatalogResponse {
 
-    private Long id;
+    private Long subProductId;
+
+    private Long productId;
 
     private int discount;
 
@@ -30,9 +33,10 @@ public class SubProductCatalogResponse {
     private boolean isComparison;
 
     @Builder
-    public SubProductCatalogResponse(Long id, int discount, String image, int quantity, String name,
+    public SubProductCatalogResponse(Long id, Long productId, int discount, String image, int quantity, String name,
                                      BigDecimal price) {
-        this.id = id;
+        this.subProductId = id;
+        this.productId = productId;
         this.discount = discount;
         this.image = image;
         this.quantity = quantity;

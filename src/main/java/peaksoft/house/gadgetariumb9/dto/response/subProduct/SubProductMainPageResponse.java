@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class SubProductMainPageResponse {
 
+    private Long productId;
+
     private Long subProductId;
 
     private String name;

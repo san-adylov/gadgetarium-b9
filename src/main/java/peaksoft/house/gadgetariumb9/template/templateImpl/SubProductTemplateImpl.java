@@ -75,7 +75,8 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     @Override
     public SubProductPagination getProductFilter(SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber) {
         String sql = """
-                SELECT s.id,
+                SELECT p.id      AS product_id,
+                       s.id      AS sub_product_id,
                        d.sale,
                        (SELECT spi.images
                         FROM sub_product_images spi
@@ -187,18 +188,18 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         sql += " LIMIT ? OFFSET ?";
         params.add(pageSizeAndOffset(pageNumber, pageSize).get(0));
         params.add(pageSizeAndOffset(pageNumber, pageSize).get(1));
-        List<SubProductCatalogResponse> subProductCatalogResponses = jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductCatalogResponse(rs.getLong("id"), rs.getInt("sale"), rs.getString("image"), rs.getInt("quantity"), rs.getString("name"), rs.getBigDecimal("price")), params.toArray());
+        List<SubProductCatalogResponse> subProductCatalogResponses = jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductCatalogResponse(rs.getLong("sub_product_id"),rs.getLong("product_id"), rs.getInt("sale"), rs.getString("image"), rs.getInt("quantity"), rs.getString("name"), rs.getBigDecimal("price")), params.toArray());
         log.info("Filtering completed successfully");
         List<Long> favorites = getFavorites();
 
         for (SubProductCatalogResponse s : subProductCatalogResponses) {
-            s.setFavorite(favorites.contains(s.getId()));
+            s.setFavorite(favorites.contains(s.getSubProductId()));
         }
 
         List<Long> comparisons = getComparison();
 
         for (SubProductCatalogResponse s : subProductCatalogResponses) {
-            s.setComparison(comparisons.contains(s.getId()));
+            s.setComparison(comparisons.contains(s.getSubProductId()));
         }
         return new SubProductPagination(subProductCatalogResponses, pageSize, pageNumber);
     }
@@ -576,7 +577,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
     }
 
     @Override
-    public CountColorResponse getCountColor(Long categoryId) {
+    public List<CountColorResponse> getCountColor(Long categoryId) {
 
         String sql = """
                 SELECT sp.code_color        AS color,
@@ -593,7 +594,7 @@ public class SubProductTemplateImpl implements SubProductTemplate {
             colorResponse.setCodeColor(rs.getString("color"));
             colorResponse.setCountColor(rs.getInt("count"));
             return colorResponse;
-        }, categoryId).stream().findAny().orElseThrow(() -> new NotFoundException("The index not fount"));
+        }, categoryId);
     }
 
     public List<CompareProductResponse> getCompareParameters(String productName) {
