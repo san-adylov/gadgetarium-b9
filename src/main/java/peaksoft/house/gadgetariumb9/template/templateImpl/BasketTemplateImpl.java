@@ -62,25 +62,25 @@ public class BasketTemplateImpl implements BasketTemplate {
     public List<BasketResponse> getAllByProductsFromTheBasket() {
         User user = jwtService.getAuthenticationUser();
         String sql = """
-                 SELECT sp.id,
-                        (SELECT spi.images
-                        FROM sub_product_images spi
-                        WHERE spi.sub_product_id = sp.id
-                        LIMIT 1) AS image,
-                        p.name,
-                        sp.rating,
-                        COALESCE((SELECT COUNT(DISTINCT r.id) FROM reviews r WHERE r.sub_product_id = sp.id), 0) AS number_of_reviews,
-                        sp.quantity,
-                        sp.article_number,
-                        SUM(sp.price) AS total_price,
-                        (SELECT COUNT(*) FROM baskets_sub_products bsp JOIN baskets b on b.id = bsp.baskets_id WHERE bsp.sub_products_id = sp.id AND b.user_id = ?) AS the_number_of_orders
-                 FROM sub_products sp
-                     JOIN products p ON sp.product_id = p.id
-                     LEFT JOIN reviews r ON sp.id = r.sub_product_id
-                 WHERE sp.id IN (SELECT sub_products_id FROM baskets_sub_products WHERE baskets_id IN (SELECT id FROM baskets WHERE user_id = ?))
-                 GROUP BY sp.id, p.name, (SELECT spi.images FROM sub_product_images spi WHERE spi.sub_product_id = sp.id LIMIT 1),
-                     sp.rating, sp.quantity, sp.article_number, sp.price, sp.quantity;
-                 """;
+                SELECT sp.id,
+                       (SELECT spi.images
+                       FROM sub_product_images spi
+                       WHERE spi.sub_product_id = sp.id
+                       LIMIT 1) AS image,
+                       p.name,
+                       sp.rating,
+                       COALESCE((SELECT COUNT(DISTINCT r.id) FROM reviews r WHERE r.sub_product_id = sp.id), 0) AS number_of_reviews,
+                       sp.quantity,
+                       sp.article_number,
+                       SUM(sp.price) AS total_price,
+                       (SELECT COUNT(*) FROM baskets_sub_products bsp JOIN baskets b on b.id = bsp.baskets_id WHERE bsp.sub_products_id = sp.id AND b.user_id = ?) AS the_number_of_orders
+                FROM sub_products sp
+                    JOIN products p ON sp.product_id = p.id
+                    LEFT JOIN reviews r ON sp.id = r.sub_product_id
+                WHERE sp.id IN (SELECT sub_products_id FROM baskets_sub_products WHERE baskets_id IN (SELECT id FROM baskets WHERE user_id = ?))
+                GROUP BY sp.id, p.name, (SELECT spi.images FROM sub_product_images spi WHERE spi.sub_product_id = sp.id LIMIT 1),
+                    sp.rating, sp.quantity, sp.article_number, sp.price, sp.quantity;
+                """;
 
         List<BasketResponse> basketResponses = jdbcTemplate.query(
                 sql,
@@ -146,4 +146,6 @@ public class BasketTemplateImpl implements BasketTemplate {
         }
         return basketInfographicResponse;
     }
+
+
 }

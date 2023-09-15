@@ -1,7 +1,6 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
 import jakarta.transaction.Transactional;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -97,5 +96,30 @@ public class BasketServiceImpl implements BasketService {
                 .status(HttpStatus.OK)
                 .build();
     }
+
+    @Override
+    public SimpleResponse addSubProductForBasket(Long subProductId, int quantity) {
+        User user = jwtService.getAuthenticationUser();
+        List<SubProduct> subProducts = new ArrayList<>(quantity);
+        for (int i = 0; i < quantity; i++) {
+            SubProduct subProduct = subProductRepository.findById(subProductId)
+                    .orElseThrow(() -> new NotFoundException("Sub product with id: %s not found".formatted(subProductId)));
+            subProducts.add(subProduct);
+        }
+
+        Basket basket = Basket.builder()
+                .subProducts(subProducts)
+                .user(user)
+                .build();
+
+        basketRepository.save(basket);
+        log.info("Sub products added for basket");
+
+        return SimpleResponse.builder()
+                .message("Sub products added for basket")
+                .status(HttpStatus.OK)
+                .build();
+    }
+
 
 }

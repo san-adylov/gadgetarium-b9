@@ -14,4 +14,6 @@ public interface BasketService {
 
     SimpleResponse deleteProductById(Long supProductId);
 
+    SimpleResponse addSubProductForBasket(Long subProductId, int quantity);
+
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.response.basket.BasketInfographicResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.BasketService;
+
 import java.util.List;
 
 @RestController
@@ -45,4 +46,12 @@ public class BasketApi {
     public SimpleResponse deleteBySubProductId(@PathVariable Long subProductId) {
         return basketService.deleteProductById(subProductId);
     }
+
+    @GetMapping("/add-sub-products-for-basket")
+    @PreAuthorize("hasAuthority('USER')")
+    @Operation(summary = "Add SubProduct to Basket", description = "This method allows users to add a subProduct to their basket with a specified quantity.")
+    public SimpleResponse addSubProductForBasket(@RequestParam Long subProductId, @RequestParam int quantity) {
+        return basketService.addSubProductForBasket(subProductId, quantity);
+    }
+
 }
