@@ -12,7 +12,6 @@ import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.MainPageProducts;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -192,6 +191,19 @@ public class MainPageProductsImpl implements MainPageProducts {
     }
 
     private MainPagePaginationResponse getProductsByQuery(String sql, int page, int pageSize) {
+        User user;
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (!email.equalsIgnoreCase("anonymousUser")) {
+            user = userRepository.getUserByEmail(email)
+                .orElseThrow(() -> {
+                    log.error("User with email: " + email + " is not found");
+                    return new NotFoundException("User with email: " + email + " is not found");
+                });
+        } else {
+            user = null;
+        }
+
         List<SubProductMainPageResponse> products = jdbcTemplate.query(
                 sql,
                 (resultSet, i) -> SubProductMainPageResponse.builder()
@@ -224,11 +236,21 @@ public class MainPageProductsImpl implements MainPageProducts {
             s.setComparison(comparisons.contains(s.getSubProductId()));
         }
 
+        List<Long> subProductIdsInBasket = Collections.emptyList();
+
+        if (user != null) {
+            String subProductIdsInBasketSql = "SELECT sub_products_id FROM baskets_sub_products JOIN baskets b on b.id = baskets_sub_products.baskets_id WHERE b.user_id = ?";
+            subProductIdsInBasket = jdbcTemplate.queryForList(subProductIdsInBasketSql, Long.class, user.getId());
+        }
+
+        for (SubProductMainPageResponse s : products) {
+            s.setInBasket(subProductIdsInBasket.contains(s.getSubProductId()));
+        }
+
         return MainPagePaginationResponse.builder()
                 .subProductMainPageResponses(products)
                 .page(page)
                 .pageSize(pageSize)
                 .build();
     }
-
 }

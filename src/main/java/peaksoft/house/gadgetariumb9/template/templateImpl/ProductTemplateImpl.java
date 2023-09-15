@@ -180,6 +180,25 @@ public class ProductTemplateImpl implements ProductTemplate {
 
     response.setReviews(reviewResponses);
 
+    boolean inBasket;
+
+    if (user != null) {
+      String inBasketSql = """
+        SELECT 1 FROM baskets_sub_products bsp
+        JOIN baskets b ON b.id = bsp.baskets_id
+        WHERE b.user_id = ? AND bsp.sub_products_id IN
+        (SELECT sp.id FROM sub_products sp
+         JOIN products p ON sp.product_id = p.id
+         WHERE p.id = ? AND sp.code_color = ?)
+    """;
+      inBasket = jdbcTemplate.query(inBasketSql, (rs, i) -> true, user.getId(), productId,
+          !color.isBlank() ? color : colours.get(0)).stream().findFirst().orElse(false);
+    } else {
+      inBasket = false;
+    }
+
+    response.setInBasket(inBasket);
+
     log.info("Product successfully get!");
     return response;
   }
