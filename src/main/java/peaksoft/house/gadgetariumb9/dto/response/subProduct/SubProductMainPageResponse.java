@@ -42,6 +42,8 @@ public class SubProductMainPageResponse {
 
     private boolean isComparison;
 
+    private boolean inBasket;
+
 }
 
 

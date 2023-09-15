@@ -54,4 +54,6 @@ public class ProductUserAndAdminResponse {
   private String description;
 
   private String videoLink;
+
+  private boolean inBasket;
 }
