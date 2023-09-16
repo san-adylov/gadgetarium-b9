@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.template.templateImpl;
 
 import jakarta.transaction.Transactional;
+import java.sql.Types;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -104,20 +105,9 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
         .build();
   }
 
-  private int getQuantityCount(String query) {
-    Integer quantityCount = jdbcTemplate.queryForObject(query, Integer.class);
-    return quantityCount != null ? quantityCount : 0;
-  }
-
   @Override
-  public AdminMainPagination adminSearch(String keyword, String productType, LocalDate startDate,
-      LocalDate endDate, int pageSize, int pageNumber) {
+  public AdminMainPagination adminSearch(String keyword, String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
 
-    String subProductQuery = "SELECT sum(s.quantity) from sub_products s";
-    String orderQuery = "SELECT sum(o.quantity) from orders o";
-    int subProductQuantityCount = getQuantityCount(subProductQuery);
-    int orderQuantityCount = getQuantityCount(orderQuery);
-    int difference = orderQuantityCount - subProductQuantityCount;
     String sql = "";
 
     if (productType != null) {
@@ -253,7 +243,87 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
         pageSize, offset
     );
 
+    String countSQL = "";
+    if (productType.equalsIgnoreCase("Все товары")) {
+      countSQL = """
+          SELECT COUNT(*) FROM (
+              SELECT sp.id
+              FROM sub_products sp
+                  LEFT JOIN discounts d ON sp.id = d.sub_product_id
+                  LEFT JOIN products p ON sp.product_id = p.id
+                  LEFT JOIN brands b ON p.brand_id = b.id
+              WHERE p.created_at BETWEEN ? AND ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(b.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(p.created_at AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(sp.price AS TEXT) ILIKE (concat('%' || ? || '%'))
+          ) AS filtered_products
+          """;
+    } else if (productType.equalsIgnoreCase("В продаже")) {
+      countSQL = """
+          SELECT COUNT(*) FROM (
+              SELECT sp.id
+              FROM sub_products sp
+                  LEFT JOIN discounts d ON sp.id = d.sub_product_id
+                  LEFT JOIN products p ON sp.product_id = p.id
+                  LEFT JOIN brands b ON p.brand_id = b.id
+              WHERE sp.quantity > 0 AND p.created_at BETWEEN ? AND ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(b.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(p.created_at AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(sp.price AS TEXT) ILIKE (concat('%' || ? || '%'))
+          ) AS filtered_products
+          """;
+    } else if (productType.equalsIgnoreCase("В избранном")) {
+      countSQL = """
+          SELECT COUNT(*) FROM (
+              SELECT sp.id
+              FROM sub_products sp
+                  LEFT JOIN discounts d ON sp.id = d.sub_product_id
+                  LEFT JOIN products p ON sp.product_id = p.id
+                  LEFT JOIN brands b ON p.brand_id = b.id
+                  JOIN user_favorite f ON f.favorite = sp.id
+              WHERE p.created_at BETWEEN ? AND ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(b.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(p.created_at AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(sp.price AS TEXT) ILIKE (concat('%' || ? || '%'))
+          ) AS filtered_products
+          """;
+    } else if (productType.equalsIgnoreCase("В корзине")) {
+      countSQL = """
+          SELECT COUNT(*) FROM (
+              SELECT sp.id
+              FROM sub_products sp
+                  LEFT JOIN discounts d ON sp.id = d.sub_product_id
+                  LEFT JOIN products p ON sp.product_id = p.id
+                  LEFT JOIN brands b ON p.brand_id = b.id
+                  JOIN baskets_sub_products bsp ON sp.id = bsp.sub_products_id
+                  JOIN baskets bas ON bsp.baskets_id = bas.id
+                  JOIN users u ON bas.user_id = u.id
+              WHERE p.created_at BETWEEN ? AND ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(b.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(p.created_at AS TEXT) ILIKE (concat('%' || ? || '%'))
+                  OR CAST(sp.price AS TEXT) ILIKE (concat('%' || ? || '%'))
+          ) AS filtered_products
+          """;
+    }
+
+    Integer count = jdbcTemplate.queryForObject(
+        countSQL,
+        new Object[]{startDate, endDate, keyword, keyword, keyword, keyword, keyword},
+        new int[]{Types.DATE, Types.DATE, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR,
+            Types.VARCHAR, Types.VARCHAR},
+        Integer.class
+    );
+
+    if (count == null) {
+      log.info("Product quantity not available");
+      throw new NullPointerException("Product quantity not available");
+    }
+
     log.info("Successfully!");
-    return new AdminMainPagination(adminSearchResponses, pageSize, pageNumber, difference);
+    return new AdminMainPagination(adminSearchResponses, pageSize, pageNumber, count);
   }
 }

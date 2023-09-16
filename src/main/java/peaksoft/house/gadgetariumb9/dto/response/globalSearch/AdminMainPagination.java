@@ -15,5 +15,5 @@ public class AdminMainPagination {
 
   private int pageNumber;
 
-  private int quantity;
+  private int countOfProducts;
 }
