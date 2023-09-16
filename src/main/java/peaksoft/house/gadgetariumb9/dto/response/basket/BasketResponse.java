@@ -14,6 +14,8 @@ public class BasketResponse {
 
     private String image;
 
+    private String color;
+
     private String title;
 
     private int rating;
