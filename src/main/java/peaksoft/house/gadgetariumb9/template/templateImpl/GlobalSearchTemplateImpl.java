@@ -105,8 +105,38 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
         .build();
   }
 
+  private String getSortClause(String sortType) {
+    return switch (sortType) {
+      case "Новинки" -> "p.created_at DESC ";
+      case "Все акции" -> "d.sale DESC ";
+      case "Рекомендуемые" -> "sp.rating DESC ";
+      case "По увеличению цены" -> "sp.price ASC ";
+      case "По уменьшению цены" -> "sp.price DESC ";
+      default -> null;
+    };
+  }
+
+  private String getFilterClause(String filterType){
+    return switch (filterType) {
+      case "До 50%" -> "d.sale<50 AND ";
+      case "Свыше 50%" -> "d.sale>=50 AND ";
+      default -> null;
+    };
+  }
+
   @Override
-  public AdminMainPagination adminSearch(String keyword, String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
+  public AdminMainPagination adminSearch(String keyword, String productType, String sortType, String filterType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
+
+    String sort = null;
+    String filter = null;
+
+    if (sortType != null) {
+      sort = getSortClause(sortType);
+    }
+
+    if (filterType != null) {
+      filter = getFilterClause(filterType);
+    }
 
     String sql = "";
 
@@ -122,8 +152,10 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                    CONCAT(b.name, ' ', p.name)                                    AS name,
                    p.created_at                                                   AS date_of_creation,
                    sp.quantity                                                    AS quantity,
-                   CONCAT(sp.price, ', ', d.sale)                                 AS price_and_sale,
-                   SUM(sp.price * (1 - d.sale / 100.0))                           AS total_with_discount
+                   sp.price                                                       AS price,
+                   d.sale                                                         AS sale,
+                   SUM(sp.price * (1 - d.sale / 100.0))                           AS total_with_discount,
+                   sp.rating                                                      AS rating
             FROM sub_products sp
                      LEFT JOIN discounts d ON sp.id = d.sub_product_id
                      LEFT JOIN products p ON sp.product_id = p.id
@@ -147,8 +179,10 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                    CONCAT(b.name, ' ', p.name)                                    AS name,
                    p.created_at                                                   AS date_of_creation,
                    sp.quantity                                                    AS quantity,
-                   CONCAT(sp.price, ', ', d.sale)                                 AS price_and_sale,
-                   SUM(sp.price * (1 - d.sale / 100.0))                           AS total_with_discount
+                   sp.price                                                       AS price,
+                   d.sale                                                         AS sale,
+                   SUM(sp.price * (1 - d.sale / 100.0))                           AS total_with_discount,
+                   sp.rating                                                      AS rating
             FROM sub_products sp
                      LEFT JOIN discounts d ON sp.id = d.sub_product_id
                      LEFT JOIN products p ON sp.product_id = p.id
@@ -173,8 +207,10 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                    CONCAT(b.name, ' ', p.name)                                    AS name,
                    p.created_at                                                   AS date_of_creation,
                    sp.quantity                                                    AS quantity,
-                   CONCAT(sp.price, ', ', d.sale)                                 AS price_and_sale,
-                   SUM(sp.price * (1 - d.sale / 100.0))                           AS total_with_discount
+                   sp.price                                                       AS price,
+                   d.sale                                                         AS sale,
+                   SUM(sp.price * (1 - d.sale / 100.0))                           AS total_with_discount,
+                   sp.rating                                                      AS rating
             FROM sub_products sp
                      LEFT JOIN discounts d ON sp.id = d.sub_product_id
                      LEFT JOIN products p ON sp.product_id = p.id
@@ -199,8 +235,10 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                    CONCAT(b.name, ' ', p.name)                                    AS name,
                    p.created_at                                                   AS date_of_creation,
                    sp.quantity                                                    AS quantity,
-                   CONCAT(sp.price, ', ', d.sale)                                 AS price_and_sale,
-                   SUM(sp.price * (1 - d.sale / 100.0))                           AS total_with_discount
+                   sp.price                                                       AS price,
+                   d.sale                                                         AS sale,
+                   SUM(sp.price * (1 - d.sale / 100.0))                           AS total_with_discount,
+                   sp.rating                                                      AS rating
             FROM sub_products sp
                      LEFT JOIN discounts d ON sp.id = d.sub_product_id
                      LEFT JOIN products p ON sp.product_id = p.id
@@ -222,6 +260,15 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
       throw new BadRequestException("Product type is not correct");
     }
 
+    if (sort != null){
+      sql = sql.replace("ORDER BY sp.id", "ORDER BY " + sort);
+    }
+
+    if (filter != null){
+      sql = sql.replace("WHERE", "WHERE " + filter)
+          .replace("LEFT JOIN discounts", "JOIN discounts");
+    }
+
     int offset = (pageNumber - 1) * pageSize;
     sql += " LIMIT ? OFFSET ?";
 
@@ -235,8 +282,10 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                 .name(rs.getString("name"))
                 .createdAt(rs.getDate("date_of_creation").toLocalDate())
                 .quantity(rs.getInt("quantity"))
-                .priceAndSale(rs.getString("price_and_sale"))
+                .price(rs.getBigDecimal("price"))
+                .sale(rs.getInt("sale"))
                 .currentPrice(rs.getBigDecimal("total_with_discount"))
+                .rating(rs.getDouble("rating"))
                 .build(),
         startDate, endDate,
         keyword, keyword, keyword, keyword, keyword,

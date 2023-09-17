@@ -7,5 +7,5 @@ import peaksoft.house.gadgetariumb9.dto.response.globalSearch.GlobalSearchRespon
 public interface GlobalSearchService {
     GlobalSearchResponse globalSearch(String keyword);
 
-    AdminMainPagination adminSearch (String keyword,String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
+    AdminMainPagination adminSearch (String keyword,String productType, String sortType, String filterType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 }
