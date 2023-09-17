@@ -11,15 +11,15 @@ import lombok.*;
 @Builder
 public class AdminSearchResponse {
 
-  private Long productId;
+  private Long subProductId;
 
-  private String images;
+  private String image;
 
   private int articleNumber;
 
   private String name;
 
-  private LocalDate dataOfIssue;
+  private LocalDate createdAt;
 
   private int quantity;
 

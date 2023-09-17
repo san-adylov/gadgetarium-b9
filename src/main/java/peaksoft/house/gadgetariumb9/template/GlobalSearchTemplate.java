@@ -1,13 +1,13 @@
 package peaksoft.house.gadgetariumb9.template;
 
-import java.util.List;
-import peaksoft.house.gadgetariumb9.dto.response.globalSearch.AdminSearchResponse;
+import java.time.LocalDate;
+import peaksoft.house.gadgetariumb9.dto.response.globalSearch.AdminMainPagination;
 import peaksoft.house.gadgetariumb9.dto.response.globalSearch.GlobalSearchResponse;
 
 public interface GlobalSearchTemplate {
 
    GlobalSearchResponse globalSearch(String keyword);
 
-   List<AdminSearchResponse> adminSearch (String keyword);
+   AdminMainPagination adminSearch(String keyword, String productType, LocalDate startDate, LocalDate endDate,int pageSize, int pageNumber);
 
 }
