@@ -47,7 +47,7 @@ public class BasketApi {
         return basketService.deleteProductById(subProductId);
     }
 
-    @GetMapping("/add-sub-products-for-basket")
+    @PostMapping("/add-sub-products-for-basket")
     @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Add SubProduct to Basket", description = "This method allows users to add a subProduct to their basket with a specified quantity.")
     public SimpleResponse addSubProductForBasket(@RequestParam Long subProductId, @RequestParam int quantity) {

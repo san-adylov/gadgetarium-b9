@@ -23,7 +23,11 @@ public class AdminSearchResponse {
 
   private int quantity;
 
-  private String priceAndSale;
+  private BigDecimal price;
+
+  private int sale;
 
   private BigDecimal currentPrice;
+
+  private double rating;
 }

@@ -22,7 +22,7 @@ public class GlobalSearchServiceImpl implements GlobalSearchService {
     }
 
     @Override
-    public AdminMainPagination adminSearch(String keyword,String productType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
-        return globalSearchTemplate.adminSearch(keyword,productType,startDate,endDate,pageSize,pageNumber);
+    public AdminMainPagination adminSearch(String keyword,String productType, String sortType, String filterType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
+        return globalSearchTemplate.adminSearch(keyword, productType, sortType, filterType, startDate, endDate, pageSize, pageNumber);
     }
 }
