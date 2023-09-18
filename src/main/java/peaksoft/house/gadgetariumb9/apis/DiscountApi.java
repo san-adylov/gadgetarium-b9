@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import peaksoft.house.gadgetariumb9.dto.request.discount.DiscountRequest;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -25,7 +25,7 @@ public class DiscountApi {
     @PostMapping
     @Operation(summary = "Save discount", description = "Adding a discount for sub products")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public SimpleResponse saveDiscount(@RequestParam DiscountRequest discountRequest) {
+    public SimpleResponse saveDiscount(@RequestBody DiscountRequest discountRequest) {
         return discountService.saveDiscount(discountRequest);
     }
 }
