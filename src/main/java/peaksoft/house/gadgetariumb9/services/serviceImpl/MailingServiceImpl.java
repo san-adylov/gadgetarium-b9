@@ -51,14 +51,11 @@ public class MailingServiceImpl implements MailingService {
         try {
             LocalDate currentDate = LocalDate.now();
 
-            if (mailingRequest.getFinishDate().isBefore(mailingRequest.getStartDate())) {
-                log.error("Дата окончания не должна быть раньше даты начала акции!");
-                throw new BadCredentialException("Дата окончания не должна быть раньше даты начала акции!");
-            }
-
-            if (!mailingRequest.getStartDate().isAfter(currentDate) || !mailingRequest.getFinishDate().isAfter(currentDate)) {
-                log.error("Дата ложна быть в будущем!");
-                throw new BadCredentialException("Дата должна быть в будущем!");
+            if (mailingRequest.getStartDate().isBefore(currentDate) ||
+                mailingRequest.getFinishDate().isBefore(mailingRequest.getStartDate()) ||
+                mailingRequest.getStartDate().isEqual(mailingRequest.getFinishDate())) {
+                log.error("The date must be in the present or future, and the end date must be after the start date, and they cannot be on the same day!");
+                throw new BadCredentialException("The date must be in the present or future, and the end date must be after the start date, and they cannot be on the same day!");
             }
 
             ZoneId zoneId = ZoneId.systemDefault();
