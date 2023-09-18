@@ -167,6 +167,10 @@ public class ProductServiceImpl implements ProductService {
         return codeColor.ColorName(name);
     }
 
+    public Map<String, String> getColorNames(List<String> codes) {
+    return codeColor.getColorNames(codes);
+    }
+
   @Override
   public ProductUserAndAdminResponse getByProductId(Long productId, String color) {
     productRepository.findById(productId).orElseThrow(

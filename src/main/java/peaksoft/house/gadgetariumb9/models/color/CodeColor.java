@@ -110,6 +110,14 @@ public class CodeColor {
     }
 
     public List<String> ColorName(String code) {
-        return Collections.singletonList(colors.getOrDefault(code, "Unknown"));
+        return Collections.singletonList(colors.getOrDefault(code.toUpperCase(), "Unknown"));
+    }
+
+    public Map<String, String> getColorNames(List<String> codes) {
+        Map<String, String> colorNames = new HashMap<>();
+        for (String code : codes) {
+            colorNames.put(code.toUpperCase(), ColorName(code.toUpperCase()).get(0));
+        }
+        return colorNames;
     }
 }

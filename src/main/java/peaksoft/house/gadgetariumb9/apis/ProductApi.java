@@ -4,6 +4,7 @@ import com.lowagie.text.DocumentException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -47,6 +48,13 @@ public class ProductApi {
     @Operation(summary = "Get color", description = "Get the right colors")
     public List<String> getColors(@PathVariable String name) {
         return productService.getColor(name);
+    }
+
+    @GetMapping("/colors")
+    @PermitAll
+    @Operation(summary = "Get color", description = "Get the right colors")
+    public Map<String,String> getColoursNames(@RequestParam List<String> names) {
+        return productService.getColorNames(names);
     }
 
     @GetMapping("/new")

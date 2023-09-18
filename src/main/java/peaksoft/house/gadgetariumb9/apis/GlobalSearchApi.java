@@ -37,7 +37,7 @@ public class GlobalSearchApi {
                                            @RequestParam(name = "sort", required = false) String sortType,
                                            @RequestParam(name = "filter", required = false) String filterType,
                                            @RequestParam(name = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-                                           @RequestParam(name = "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                           @RequestParam(name = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
                                            @RequestParam(defaultValue = "6") int pageSize,
                                            @RequestParam(defaultValue = "1") int pageNumber) {
         return globalSearchService.adminSearch(keyword,productType, sortType, filterType, startDate,endDate,pageSize,pageNumber);

@@ -56,7 +56,8 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
         keyword
     );
     String sql3 = """
-        SELECT p.name,
+        SELECT p.id                  AS product_id,
+               p.name,
                b.name                as brandName,
                s.id                  as subProductId,
                s.ram,
@@ -82,6 +83,7 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
     List<SubProductResponse> subProductResponses = jdbcTemplate.query(
         sql3,
         (rs, rowNum) -> SubProductResponse.builder()
+            .productId(rs.getLong("product_id"))
             .name(rs.getString("name"))
             .brandName(rs.getString("brandName"))
             .subProductId(rs.getLong("subProductId"))
@@ -118,8 +120,8 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
 
   private String getFilterClause(String filterType){
     return switch (filterType) {
-      case "До 50%" -> "d.sale<50 AND ";
-      case "Свыше 50%" -> "d.sale>=50 AND ";
+      case "До 50%" -> " d.sale<50 AND ";
+      case "Свыше 50%" -> " d.sale>=50 AND ";
       default -> null;
     };
   }
@@ -160,7 +162,7 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                      LEFT JOIN discounts d ON sp.id = d.sub_product_id
                      LEFT JOIN products p ON sp.product_id = p.id
                      LEFT JOIN brands b ON p.brand_id = b.id
-                     WHERE p.created_at BETWEEN  ? AND  ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+            WHERE p.created_at BETWEEN ? AND ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(b.name AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(p.created_at AS TEXT) ILIKE (concat('%' || ? || '%'))
@@ -187,7 +189,7 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                      LEFT JOIN discounts d ON sp.id = d.sub_product_id
                      LEFT JOIN products p ON sp.product_id = p.id
                      LEFT JOIN brands b ON p.brand_id = b.id
-                     WHERE sp.quantity>0 AND p.created_at BETWEEN  ? AND  ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+            WHERE p.created_at BETWEEN ? AND ? AND sp.quantity>0 AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(b.name AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(p.created_at AS TEXT) ILIKE (concat('%' || ? || '%'))
@@ -216,7 +218,7 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                      LEFT JOIN products p ON sp.product_id = p.id
                      LEFT JOIN brands b ON p.brand_id = b.id
                      JOIN user_favorite f ON f.favorite = sp.id
-            WHERE p.created_at BETWEEN  ? AND  ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+            WHERE p.created_at BETWEEN ? AND ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(b.name AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(p.created_at AS TEXT) ILIKE (concat('%' || ? || '%'))
@@ -246,7 +248,7 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
                      JOIN baskets_sub_products bsp ON sp.id = bsp.sub_products_id
                      JOIN baskets bas ON bsp.baskets_id = bas.id
                      JOIN users u ON bas.user_id = u.id
-            WHERE p.created_at BETWEEN  ? AND  ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+            WHERE p.created_at BETWEEN ? AND ? AND CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(b.name AS TEXT) ILIKE (concat('%' || ? || '%'))
                                                         OR CAST(p.created_at AS TEXT) ILIKE (concat('%' || ? || '%'))
@@ -260,13 +262,19 @@ public class GlobalSearchTemplateImpl implements GlobalSearchTemplate {
       throw new BadRequestException("Product type is not correct");
     }
 
+    if (endDate == null) {
+      endDate = LocalDate.now();
+    }
+
     if (sort != null){
       sql = sql.replace("ORDER BY sp.id", "ORDER BY " + sort);
     }
 
     if (filter != null){
-      sql = sql.replace("WHERE", "WHERE " + filter)
-          .replace("LEFT JOIN discounts", "JOIN discounts");
+      sql = sql.replace("p.created_at BETWEEN ? AND ?", filter + "p.created_at BETWEEN ? AND ?");
+    }
+    if (filter != null){
+      sql = sql.replace("LEFT JOIN discounts", "JOIN discounts");
     }
 
     int offset = (pageNumber - 1) * pageSize;
