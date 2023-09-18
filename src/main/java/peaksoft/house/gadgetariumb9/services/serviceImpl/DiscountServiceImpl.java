@@ -30,12 +30,9 @@ public class DiscountServiceImpl implements DiscountService {
     @Override
     public SimpleResponse saveDiscount(DiscountRequest discountRequest) {
         if (discountRequest.getDiscountStartDate().isAfter(discountRequest.getDiscountEndDate()) ||
-                discountRequest.getDiscountStartDate().isEqual(discountRequest.getDiscountEndDate())) {
-            throw new BadCredentialException("The start and end of the action must not be the same");
-        }
-        if (discountRequest.getDiscountStartDate().isBefore(LocalDate.now())
-                && discountRequest.getDiscountEndDate().isBefore(LocalDate.now())) {
-            throw new BadCredentialException("The date must be in the future");
+            discountRequest.getDiscountStartDate().isEqual(discountRequest.getDiscountEndDate()) ||
+            discountRequest.getDiscountStartDate().isBefore(LocalDate.now())) {
+            throw new BadCredentialException("Invalid date range. Start date must be in the present or future, and end date must be after start date.");
         }
         ZoneId zoneId = ZoneId.systemDefault();
         ZonedDateTime startDate = discountRequest.getDiscountStartDate().atStartOfDay(zoneId);
