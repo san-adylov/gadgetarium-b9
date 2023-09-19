@@ -196,8 +196,7 @@ public class ReviewServiceImpl implements ReviewService {
                     log.error(String.format("Review with id %s not found", reviewId));
                     return new NotFoundException(String.format("Отзыв с id: %s не найден", reviewId));
                 });
-
-        if (!review.getReplyToComment().isEmpty()) {
+        if (review.getReplyToComment() != null) {
             if (!text.isBlank()) {
                 review.setReplyToComment(text);
                 reviewRepository.save(review);
