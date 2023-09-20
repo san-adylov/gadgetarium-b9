@@ -8,6 +8,6 @@ public interface PdfFileService {
 
     ResponseEntity<InputStreamResource> pdfFile(Long id) throws IOException, DocumentException;
 
-    byte[] convertHtmlToPdf(String htmlContent) throws IOException, DocumentException;
+    ResponseEntity<byte[]> convertHtmlToPdf(String htmlContent) throws IOException, DocumentException;
 
 }

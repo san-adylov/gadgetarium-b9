@@ -10,6 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SubProductPagination {
 
+    private int quantity;
+
     private List<SubProductCatalogResponse> responseList;
 
     private int pageSize;
