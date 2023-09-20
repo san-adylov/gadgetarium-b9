@@ -50,7 +50,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     }
 
                     String finalUsername = username;
-                    User user = userRepository.getUserByEmail(username)
+                    User user = userRepository.getUserByEmail(finalUsername)
                             .orElseThrow(() ->
                                     new NotFoundException("User with email: %s not found".formatted(finalUsername)));
                     SecurityContextHolder.getContext()

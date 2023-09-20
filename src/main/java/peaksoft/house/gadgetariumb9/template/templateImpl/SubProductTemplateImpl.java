@@ -206,7 +206,13 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         for (SubProductCatalogResponse s : subProductCatalogResponses) {
             s.setComparison(comparisons.contains(s.getSubProductId()));
         }
-        return new SubProductPagination(subProductCatalogResponses, pageSize, pageNumber);
+       int quan = jdbcTemplate.queryForObject("""
+                SELECT count(sc.id) FROM sub_products sc
+                JOIN products p ON sc.product_id = p.id
+                JOIN categories c ON p.category_id = c.id
+                WHERE c.title ILIKE ?
+                """,Integer.class ,subProductCatalogRequest.getGadgetType());
+        return new SubProductPagination(quan,subProductCatalogResponses, pageSize, pageNumber);
     }
 
     @Override

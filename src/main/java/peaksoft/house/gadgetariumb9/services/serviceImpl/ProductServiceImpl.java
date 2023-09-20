@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
+import peaksoft.house.gadgetariumb9.dto.response.product.AllInformationProduct;
 import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
@@ -171,7 +172,12 @@ public class ProductServiceImpl implements ProductService {
     return codeColor.getColorNames(codes);
     }
 
-  @Override
+    @Override
+    public AllInformationProduct getAllProductInformation(Long subProductId) {
+        return productTemplate.getAllProductInformation(subProductId);
+    }
+
+    @Override
   public ProductUserAndAdminResponse getByProductId(Long productId, String color) {
     productRepository.findById(productId).orElseThrow(
         () -> {

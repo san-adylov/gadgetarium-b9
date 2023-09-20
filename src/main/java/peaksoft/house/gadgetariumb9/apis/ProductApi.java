@@ -16,6 +16,7 @@ import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequ
 import peaksoft.house.gadgetariumb9.dto.response.compare.CompareProductResponse;
 import peaksoft.house.gadgetariumb9.dto.response.compare.ComparisonCountResponse;
 import peaksoft.house.gadgetariumb9.dto.response.compare.LatestComparison;
+import peaksoft.house.gadgetariumb9.dto.response.product.AllInformationProduct;
 import peaksoft.house.gadgetariumb9.dto.response.product.ProductUserAndAdminResponse;
 import peaksoft.house.gadgetariumb9.dto.response.subProduct.*;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
@@ -201,4 +202,13 @@ public class ProductApi {
     public List<CountColorResponse> getCountColor (@RequestParam Long categoryId){
         return subProductService.getCountColor( categoryId);
     }
+
+    @GetMapping("/all-information")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Retrieve All Information for a Product",
+            description = "This endpoint allows an administrator to retrieve all information related to a product by specifying its unique supplier product ID.")
+    public AllInformationProduct allInformationProduct (@RequestParam Long supProductId){
+        return productService.getAllProductInformation(supProductId);
+    }
+
 }

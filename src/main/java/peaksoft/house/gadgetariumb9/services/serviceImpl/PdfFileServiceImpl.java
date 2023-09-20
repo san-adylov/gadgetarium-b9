@@ -49,7 +49,7 @@ public class PdfFileServiceImpl implements PdfFileService {
 
         String processedHtml = templateEngine.process(template, context);
 
-        byte[] pdfBytes = convertHtmlToPdf(processedHtml);
+        byte[] pdfBytes = convertHtmlToPdf(processedHtml).getBody();
         InputStream inputStream = new ByteArrayInputStream(pdfBytes);
         InputStreamResource resource = new InputStreamResource(inputStream);
 
@@ -66,13 +66,25 @@ public class PdfFileServiceImpl implements PdfFileService {
     }
 
     @Override
-    public byte[] convertHtmlToPdf(String htmlContent) throws IOException, DocumentException {
+    public ResponseEntity<byte[]> convertHtmlToPdf(String htmlContent) throws IOException, DocumentException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             ITextRenderer renderer = new ITextRenderer();
             renderer.setDocumentFromString(htmlContent);
             renderer.layout();
             renderer.createPDF(outputStream);
-            return outputStream.toByteArray();
+
+            byte[] pdfBytes = outputStream.toByteArray();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+            headers.add("Pragma", "no-cache");
+            headers.add("Expires", "0");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(pdfBytes.length)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(pdfBytes);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

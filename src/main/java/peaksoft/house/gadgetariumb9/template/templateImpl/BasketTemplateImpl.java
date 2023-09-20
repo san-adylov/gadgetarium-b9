@@ -121,16 +121,17 @@ public class BasketTemplateImpl implements BasketTemplate {
     public BasketInfographicResponse getInfographic() {
         User user = jwtService.getAuthenticationUser();
         String sql = """             
-                   SELECT COUNT(bsp.sub_products_id)                            AS quantity,
-                       SUM(sp.price * COALESCE(d.sale, 100)) / 100              AS sale,
-                       SUM(sp.price)                                            AS price,
-                       SUM(sp.price - (sp.price * COALESCE(d.sale, 100)) / 100) AS total_sum
-                FROM baskets b
-                         JOIN users u ON b.user_id = u.id
-                         JOIN baskets_sub_products bsp ON b.id = bsp.baskets_id
-                         JOIN sub_products sp ON bsp.sub_products_id = sp.id
-                         LEFT JOIN discounts d ON sp.id = d.sub_product_id
-                WHERE u.id = ?
+                 SELECT
+                     COUNT(bsp.sub_products_id) AS quantity,
+                     SUM(COALESCE(sp.price * d.sale, sp.price * 0)) / 100 AS sale,
+                     SUM(sp.price) AS price,
+                     SUM(sp.price - COALESCE(sp.price * d.sale, sp.price * 0) / 100) AS total_sum
+                 FROM baskets b
+                          JOIN users u ON b.user_id = u.id
+                          JOIN baskets_sub_products bsp ON b.id = bsp.baskets_id
+                          JOIN sub_products sp ON bsp.sub_products_id = sp.id
+                          LEFT JOIN discounts d ON sp.id = d.sub_product_id
+                 WHERE u.id = ?;
                 """;
         BasketInfographicResponse basketInfographicResponse = jdbcTemplate.queryForObject(
                 sql,
