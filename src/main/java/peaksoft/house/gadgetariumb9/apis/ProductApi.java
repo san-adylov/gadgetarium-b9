@@ -91,7 +91,7 @@ public class ProductApi {
         return subProductService.getSubProductCatalogs(subProductCatalogRequest, pageSize, pageNumber);
     }
 
-    @GetMapping("/get-product/{sub-product-id}")
+    @PostMapping("/get-product/{sub-product-id}")
     @Operation(summary = "Get sub product", description = "Get sub product by id id")
     @PreAuthorize("hasAuthority('USER')")
     public void getSubProductId(@PathVariable("sub-product-id") Long productId) {
