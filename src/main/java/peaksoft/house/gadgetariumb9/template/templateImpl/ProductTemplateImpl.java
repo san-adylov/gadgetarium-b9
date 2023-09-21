@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.template.templateImpl;
 
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -221,6 +222,9 @@ public class ProductTemplateImpl implements ProductTemplate {
                     p.pdf,
                     p.video_link,
                     sp.id AS sub_product_id,
+                    (SELECT string_agg(spi.images,', ')
+                    FROM sub_product_images spi
+                    WHERE spi.sub_product_id = sp.id) AS images,
                     sp.price,
                     sp.ram,
                     sp.rom,
@@ -242,7 +246,8 @@ public class ProductTemplateImpl implements ProductTemplate {
                     sw.hull_shape,
                     sw.material_bracelet,
                     c.title AS category_title,
-                    sc.title AS sub_category_title
+                    sc.title AS sub_category_title,
+                    b.name AS brand_title
                 FROM products p
                          LEFT JOIN sub_products sp ON p.id = sp.product_id
                          LEFT JOIN laptops l ON sp.id = l.sub_product_id
@@ -250,6 +255,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                          LEFT JOIN smart_watches sw ON sp.id = sw.sub_product_id
                          LEFT JOIN categories c ON p.category_id = c.id
                          LEFT JOIN sub_categories sc ON p.sub_category_id = sc.id
+                         LEFT JOIN brands b on p.brand_id = b.id
                 WHERE sp.id = ?
                 """;
         return jdbcTemplate.queryForObject(sql, (rs, i) -> AllInformationProduct
@@ -262,6 +268,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                 .productPdf(rs.getString("pdf"))
                 .productVideoLink(rs.getString("video_link"))
                 .supProductId(rs.getLong("sub_product_id"))
+                .images(Arrays.asList(rs.getString("images").split(",")))
                 .price(rs.getBigDecimal("price"))
                 .ram(rs.getInt("ram"))
                 .rom(rs.getInt("rom"))
@@ -284,6 +291,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                 .materialBracelet(rs.getString("material_bracelet"))
                 .categoryTitle(rs.getString("category_title"))
                 .subCategoryTitle(rs.getString("sub_category_title"))
+                .brandTitle(rs.getString("brand_title"))
                 .build(),
                 subProductId);
     }

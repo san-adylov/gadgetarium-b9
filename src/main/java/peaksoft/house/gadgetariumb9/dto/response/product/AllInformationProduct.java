@@ -1,8 +1,8 @@
 package peaksoft.house.gadgetariumb9.dto.response.product;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -16,6 +16,8 @@ public class AllInformationProduct {
     private Long supProductId;
 
     private String productName;
+
+    private List<String> images;
 
     private Date productDataOfIssue;
 
@@ -74,5 +76,7 @@ public class AllInformationProduct {
     private String categoryTitle;
 
     private String subCategoryTitle;
+
+    private String brandTitle;
 
 }
