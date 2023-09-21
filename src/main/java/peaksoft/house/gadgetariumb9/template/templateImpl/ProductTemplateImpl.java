@@ -14,7 +14,6 @@ import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.template.ProductTemplate;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -222,7 +221,7 @@ public class ProductTemplateImpl implements ProductTemplate {
                     p.pdf,
                     p.video_link,
                     sp.id AS sub_product_id,
-                    (SELECT string_agg(spi.images,', ')
+                    (SELECT string_agg(spi.images,',')
                     FROM sub_product_images spi
                     WHERE spi.sub_product_id = sp.id) AS images,
                     sp.price,
