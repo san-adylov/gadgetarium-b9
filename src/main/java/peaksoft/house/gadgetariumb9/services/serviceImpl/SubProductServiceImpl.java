@@ -22,6 +22,7 @@ import peaksoft.house.gadgetariumb9.repositories.*;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
 import peaksoft.house.gadgetariumb9.template.MainPageProducts;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -81,9 +82,13 @@ public class SubProductServiceImpl implements SubProductService {
 
     public void addRecentlyViewedProduct(Long productId) {
         User user = jwtService.getAuthenticationUser();
-        user.getRecentlyViewedProducts().add(productId);
-        log.info("Product added recently viewed");
+        List<Long> recentlyViewedProducts = user.getRecentlyViewedProducts();
+        if (!recentlyViewedProducts.contains(productId)) {
+            recentlyViewedProducts.add(productId);
+            log.info("Product added recently viewed");
+        }
     }
+
 
     @Override
     public List<SubProductHistoryResponse> getRecentlyViewedProduct() {
@@ -535,6 +540,6 @@ public class SubProductServiceImpl implements SubProductService {
 
     @Override
     public List<CountColorResponse> getCountColor(Long categoryId) {
-        return subProductTemplate.getCountColor( categoryId);
+        return subProductTemplate.getCountColor(categoryId);
     }
 }
