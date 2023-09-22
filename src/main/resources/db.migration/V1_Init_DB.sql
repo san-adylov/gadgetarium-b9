@@ -262,7 +262,8 @@ create table reviews
             references users,
     comment          varchar(255),
     image_link       varchar(255),
-    reply_to_comment varchar(255)
+    reply_to_comment varchar(255),
+    is_reviewed boolean
 );
 
 create table smart_watches

@@ -9,10 +9,12 @@ import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
+import peaksoft.house.gadgetariumb9.dto.response.review.AdminReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewUserResponse;
+import peaksoft.house.gadgetariumb9.dto.response.review.ReviewsRatings;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.AlreadyExistException;
 import peaksoft.house.gadgetariumb9.exceptions.BadCredentialException;
@@ -107,6 +109,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .grade(reviewRequest.getGrade())
                 .dateCreatAd(ZonedDateTime.now())
                 .imageLink(reviewRequest.getImageLink())
+                .isViewed(false)
                 .user(user)
                 .build();
 
@@ -272,5 +275,15 @@ public class ReviewServiceImpl implements ReviewService {
       log.error("Access denied. You are not the owner of this review!");
       return new ReviewUserResponse(user.getEmail(),"Access denied. You are not the owner of this review!");
     }
+  }
+
+  @Override
+  public AdminReviewPagination getAllReviewsForAdmin(String filter, int pageSize, int pageNumber) {
+    return reviewTemplate.getAllReviewsForAdmin(filter, pageSize, pageNumber);
+  }
+
+  @Override
+  public ReviewsRatings getAllRatings() {
+    return reviewTemplate.getAllRatings();
   }
 }

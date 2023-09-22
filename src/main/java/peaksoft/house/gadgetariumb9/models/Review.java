@@ -29,6 +29,8 @@ public class Review {
 
     private String imageLink;
 
+    private boolean isViewed;
+
     @ManyToOne(
             cascade = {MERGE, DETACH, REFRESH, PERSIST})
     private User user;

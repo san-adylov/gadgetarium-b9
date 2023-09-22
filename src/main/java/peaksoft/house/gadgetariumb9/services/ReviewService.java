@@ -3,10 +3,12 @@ package peaksoft.house.gadgetariumb9.services;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
+import peaksoft.house.gadgetariumb9.dto.response.review.AdminReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewUserResponse;
+import peaksoft.house.gadgetariumb9.dto.response.review.ReviewsRatings;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 
 public interface ReviewService {
@@ -29,4 +31,7 @@ public interface ReviewService {
 
     ReviewUserResponse deleteComment(Long reviewId);
 
+    AdminReviewPagination getAllReviewsForAdmin (String filter, int pageSize, int pageNumber);
+
+    ReviewsRatings getAllRatings();
 }

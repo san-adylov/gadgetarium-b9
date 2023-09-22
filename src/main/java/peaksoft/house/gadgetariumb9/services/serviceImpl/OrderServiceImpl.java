@@ -3,7 +3,7 @@ package peaksoft.house.gadgetariumb9.services.serviceImpl;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
-import java.security.SecureRandom;
+import java.math.RoundingMode;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
@@ -149,16 +149,19 @@ public class OrderServiceImpl implements OrderService {
             products.addAll(subProducts);
 
             for (SubProduct subProduct : subProducts) {
-                totalQuantity += subProduct.getQuantity();
-                BigDecimal productCost = subProduct.getPrice()
-                    .multiply(BigDecimal.valueOf(subProduct.getQuantity()));
+                int quantity = subProduct.getQuantity();
+                totalQuantity += quantity;
+                BigDecimal productCost = subProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
                 totalPrice = totalPrice.add(productCost);
 
                 if (subProduct.getDiscount() != null) {
                     int discountPercentage = subProduct.getDiscount().getSale();
-                    int discountAmount = productCost.multiply(BigDecimal.valueOf(discountPercentage))
-                        .divide(BigDecimal.valueOf(100)).intValue();
-                    totalDiscount += discountAmount;
+                    BigDecimal discountAmount = productCost.multiply(BigDecimal.valueOf(discountPercentage))
+                        .divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP)
+                        .setScale(0, RoundingMode.HALF_UP);
+
+                    int discountAmountInt = discountAmount.intValue();
+                    totalDiscount += discountAmountInt;
                 }
             }
         }
@@ -174,19 +177,14 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalDiscount(totalDiscount);
         order.setTypeDelivery(request.getTypeDelivery());
         order.setTypePayment(request.getTypePayment());
-        int art = generate();
-        while (order.getOrderNumber() != art) {
-            order.setOrderNumber(art);
-        }
+        int orderNumber = generate();
+        order.setOrderNumber(orderNumber);
+
         Status status = Status.IN_PROCESSING;
         order.setStatus(status);
         TypeDelivery typeDelivery = order.getTypeDelivery();
 
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setAddress(request.getAddress());
+        updateUserInfo(user,request);
 
         try {
             Context context = new Context();
@@ -225,8 +223,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public int generate() {
-        SecureRandom random = new SecureRandom();
-        return random.nextInt(9999999) + 1000000;
+        return (int) (System.currentTimeMillis() % 1000000);
+    }
+
+    private void updateUserInfo(User user, OrderUserRequest request) {
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPhoneNumber(request.getPhoneNumber());
+        user.setAddress(request.getAddress());
     }
 
     private MimeMessage getMimeMessage() {

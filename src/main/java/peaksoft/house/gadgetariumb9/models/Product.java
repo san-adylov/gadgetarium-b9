@@ -28,6 +28,7 @@ public class Product {
 
     private ZonedDateTime createdAt;
 
+    @Column(length = 6000)
     private String description;
 
     private String pdf;

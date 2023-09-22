@@ -168,10 +168,10 @@ VALUES (2.0, FALSE, 1, 6, 'BLUETOOTH', 'FEMALE', 'SQUARE', 'ACRYLIC', 'RUBBER'),
        (1.37, TRUE, 5, 10, 'NFC', 'UNI', 'RECTANGULAR', 'STAINLESS_STEEL', 'CERAMIC_IMITATION');
 
 
-INSERT INTO reviews (grade, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment)
-VALUES (4, '2023-07-14T12:59:00+00:00', 1, 1, 1, 'comm', NULL),
-       (2, '2023-07-14T12:59:00+00:00', 2, 2, 2, 'comm', 'ok'),
-       (1, '2023-07-14T12:59:00+00:00', 3, 3, 3, 'comm', 'ok');
+INSERT INTO reviews (grade, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment,is_viewed)
+VALUES (4, '2023-07-14T12:59:00+00:00', 1, 1, 1, 'comm', NULL, false),
+       (2, '2023-07-14T12:59:00+00:00', 2, 2, 2, 'comm', 'ok', true),
+       (1, '2023-07-14T12:59:00+00:00', 3, 3, 3, 'comm', 'ok', true);
 
 
 
