@@ -14,6 +14,10 @@ public class UserFavoritesResponse {
 
     private Long subProductId;
 
+    private Long userId;
+
+    private Long productId;
+
     private String name;
 
     private double rating;

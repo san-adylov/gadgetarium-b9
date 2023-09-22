@@ -109,6 +109,8 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
     public List<UserFavoritesResponse> getAllFavoriteByUserId(Long userId) {
         String sql = """
                 SELECT s.id,
+                       u.id             AS user_id,
+                       p.id             AS product_id,
                        p.name,
                        s.rating,
                        (SELECT COUNT(r.id) FROM reviews r WHERE r.sub_product_id = s.id)                       AS quantity,
@@ -123,6 +125,8 @@ public class FavoriteTemplateImpl implements FavoriteTemplate {
         return jdbcTemplate.query(sql, (rs, rowNum) -> UserFavoritesResponse
                         .builder()
                         .subProductId(rs.getLong("id"))
+                        .userId(rs.getLong("user_id"))
+                        .productId(rs.getLong("product_id"))
                         .name(rs.getString("name"))
                         .rating(rs.getDouble("rating"))
                         .countOfReview(rs.getInt("quantity"))

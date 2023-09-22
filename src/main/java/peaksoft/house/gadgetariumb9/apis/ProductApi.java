@@ -210,5 +210,4 @@ public class ProductApi {
     public AllInformationProduct allInformationProduct (@RequestParam Long supProductId){
         return productService.getAllProductInformation(supProductId);
     }
-
 }
