@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
+import peaksoft.house.gadgetariumb9.dto.response.review.AdminReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewRatingResponse;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewUserResponse;
+import peaksoft.house.gadgetariumb9.dto.response.review.ReviewsRatings;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.ReviewService;
 
@@ -35,9 +37,25 @@ public class ReviewApi {
     @GetMapping("/get-all")
     @Operation(summary = "All reviews", description = "Get all reviews by subProduct id")
     public ReviewPagination getAllReview(@RequestParam Long subProductId,
-                                         @RequestParam int pageSize,
-                                         @RequestParam int numberPage) {
+                                         @RequestParam(defaultValue = "5") int pageSize,
+                                         @RequestParam(defaultValue = "1") int numberPage) {
         return service.getAllReviews(subProductId, pageSize, numberPage);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/get-all-reviews")
+    @Operation(summary = "Get all reviews", description = "Get all reviews for product")
+    public AdminReviewPagination getAllReviewsForAdmin(@RequestParam(defaultValue = "Все отзывы") String filter,
+                                                       @RequestParam(defaultValue = "5") int pageSize,
+                                                       @RequestParam(defaultValue = "1") int numberPage) {
+        return service.getAllReviewsForAdmin(filter, pageSize, numberPage);
+    }
+
+    @PermitAll
+    @GetMapping("/all-ratings-info")
+    @Operation(summary = "Get all ratings", description = "Get all ratings for products")
+    public ReviewsRatings getAllRatings (){
+        return service.getAllRatings();
     }
 
     @PostMapping
