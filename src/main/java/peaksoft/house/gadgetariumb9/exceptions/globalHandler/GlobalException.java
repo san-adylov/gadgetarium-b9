@@ -103,7 +103,7 @@ public class GlobalException {
     public ExceptionResponse handleAccessDenied(AccessDeniedException e) {
         return ExceptionResponse
                 .builder()
-                .message("Required token")
+                .message(e.getMessage())
                 .status(HttpStatus.FORBIDDEN)
                 .className(e.getClass().getSimpleName())
                 .build();

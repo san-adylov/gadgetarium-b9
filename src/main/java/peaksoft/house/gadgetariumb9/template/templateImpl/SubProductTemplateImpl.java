@@ -128,8 +128,8 @@ public class SubProductTemplateImpl implements SubProductTemplate {
             params.add(subProductCatalogRequest.getRom().toArray(new Integer[0]));
         }
         if (subProductCatalogRequest.getSim().get(0) > 0) {
-            sql += " AND (p.sim = ?)";
-            params.add(subProductCatalogRequest.getSim());
+            sql += " AND (p.sim = ANY (?))";
+            params.add(subProductCatalogRequest.getSim().toArray(new Integer[0]));
         }
         if (!subProductCatalogRequest.getBatteryCapacity().get(0).equalsIgnoreCase("string")) {
             sql += " AND (p.battery_capacity = ANY (?))";
@@ -175,6 +175,11 @@ public class SubProductTemplateImpl implements SubProductTemplate {
             sql += " AND (sw.hull_shape = ANY(?))";
             params.add(subProductCatalogRequest.getHullShapes().toArray(new String[0]));
         }
+        String waterproof = subProductCatalogRequest.getWaterproof();
+        if (!"string".equalsIgnoreCase(waterproof)) {
+            sql += " AND sw.waterproof = ? ";
+            params.add("True".equalsIgnoreCase(waterproof));
+        }
         if (subProductCatalogRequest.getSorting().equalsIgnoreCase("Новинки")) {
             sql += " ORDER BY s.id DESC";
         } else if (subProductCatalogRequest.getSorting().equalsIgnoreCase("Все скидки")) {
@@ -206,13 +211,13 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         for (SubProductCatalogResponse s : subProductCatalogResponses) {
             s.setComparison(comparisons.contains(s.getSubProductId()));
         }
-       int quan = jdbcTemplate.queryForObject("""
+        int quan = jdbcTemplate.queryForObject("""
                 SELECT count(sc.id) FROM sub_products sc
                 JOIN products p ON sc.product_id = p.id
                 JOIN categories c ON p.category_id = c.id
                 WHERE c.title ILIKE ?
-                """,Integer.class ,subProductCatalogRequest.getGadgetType());
-        return new SubProductPagination(quan,subProductCatalogResponses, pageSize, pageNumber);
+                """, Integer.class, subProductCatalogRequest.getGadgetType());
+        return new SubProductPagination(quan, subProductCatalogResponses, pageSize, pageNumber);
     }
 
     @Override

@@ -36,16 +36,17 @@ public class PdfFileServiceImpl implements PdfFileService {
                     return new NotFoundException("SubProduct with id: " + id + " is not found");
                 });
 
-        context.setVariable("name", subProduct.getProduct().getName());
-        context.setVariable("brand", subProduct.getProduct().getBrand().getName());
-        context.setVariable("category", subProduct.getProduct().getCategory().getTitle());
-        context.setVariable("color", subProduct.getCodeColor());
-        context.setVariable("price", subProduct.getPrice());
-        context.setVariable("discount", subProduct.getDiscount().getSale());
-        context.setVariable("created_at", subProduct.getProduct().getCreatedAt());
+        context.setVariable("name", subProduct.getProduct() != null ? subProduct.getProduct().getName() : "N/A");
+        context.setVariable("brand", subProduct.getProduct() != null && subProduct.getProduct().getBrand() != null ? subProduct.getProduct().getBrand().getName() : "N/A");
+        context.setVariable("category", subProduct.getProduct() != null && subProduct.getProduct().getCategory() != null ? subProduct.getProduct().getCategory().getTitle() : "N/A");
+        context.setVariable("color", subProduct.getCodeColor() != null ? subProduct.getCodeColor() : "N/A");
+        context.setVariable("price", subProduct.getPrice() != null ? subProduct.getPrice() : "N/A");
+        context.setVariable("discount", subProduct.getDiscount() != null ? subProduct.getDiscount().getSale() : "N/A");
+        context.setVariable("created_at", subProduct.getProduct() != null && subProduct.getProduct().getCreatedAt() != null ? subProduct.getProduct().getCreatedAt() : "N/A");
         context.setVariable("rom", subProduct.getRom());
         context.setVariable("ram", subProduct.getRam());
-        context.setVariable("image", subProduct.getImages().stream().findAny().orElseThrow(() -> new NotFoundException("Найти изображение недействительно или не найдено!!")));
+        context.setVariable("image", subProduct.getImages() != null && !subProduct.getImages().isEmpty() ? subProduct.getImages().stream().findAny().orElse("N/A") : "N/A");
+
 
         String processedHtml = templateEngine.process(template, context);
 

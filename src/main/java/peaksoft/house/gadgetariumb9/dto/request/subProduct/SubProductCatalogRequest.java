@@ -55,4 +55,6 @@ public class SubProductCatalogRequest {
 
     private List<String> hullShapes;
 
+    private String waterproof;
+
 }

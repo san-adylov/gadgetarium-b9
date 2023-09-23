@@ -4,6 +4,8 @@ import lombok.*;
 import peaksoft.house.gadgetariumb9.enums.TypeDelivery;
 import peaksoft.house.gadgetariumb9.enums.TypePayment;
 
+import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -24,4 +26,6 @@ public class OrderUserRequest {
   private String address;
 
   private TypePayment typePayment;
+
+  private List<Long> subProductIds;
 }
