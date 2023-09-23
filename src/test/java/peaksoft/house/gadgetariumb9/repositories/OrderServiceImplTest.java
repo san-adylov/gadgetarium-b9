@@ -1,10 +1,9 @@
 package peaksoft.house.gadgetariumb9.repositories;
 
 import jakarta.mail.internet.MimeMessage;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.IContext;
@@ -20,105 +19,112 @@ import peaksoft.house.gadgetariumb9.models.SubProduct;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.services.serviceImpl.OrderServiceImpl;
 import peaksoft.house.gadgetariumb9.template.OrderTemplate;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import org.springframework.http.HttpStatus;
+
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 class OrderServiceImplTest {
 
-  private OrderServiceImpl orderService;
+    private SubProductRepository subProductRepository;
 
-  private OrderRepository orderRepository;
+    private OrderServiceImpl orderService;
 
-  private BasketRepository basketRepository;
+    private OrderRepository orderRepository;
 
-  private JwtService jwtService;
+    private BasketRepository basketRepository;
 
-  private TemplateEngine templateEngine;
+    private JwtService jwtService;
 
-  private JavaMailSender emailSender;
+    private TemplateEngine templateEngine;
 
-  private OrderTemplate orderTemplate;
+    private JavaMailSender emailSender;
 
-  private MimeMessage mimeMessage;
+    private OrderTemplate orderTemplate;
 
-  @BeforeEach
-  public void setup() {
-    orderRepository = mock(OrderRepository.class);
-    basketRepository = mock(BasketRepository.class);
-    jwtService = mock(JwtService.class);
-    templateEngine = mock(TemplateEngine.class);
-    emailSender = mock(JavaMailSender.class);
-    orderTemplate = mock(OrderTemplate.class);
-    mimeMessage = mock(MimeMessage.class);
+    private MimeMessage mimeMessage;
 
-    orderService = new OrderServiceImpl(
-        orderTemplate,
-        orderRepository,
-        emailSender,
-        templateEngine,
-        jwtService,
-        basketRepository
-    );
-  }
+    @BeforeEach
+    public void setup() {
+        orderRepository = mock(OrderRepository.class);
+        basketRepository = mock(BasketRepository.class);
+        jwtService = mock(JwtService.class);
+        templateEngine = mock(TemplateEngine.class);
+        emailSender = mock(JavaMailSender.class);
+        orderTemplate = mock(OrderTemplate.class);
+        mimeMessage = mock(MimeMessage.class);
 
-  @Test
-  void saveOrder() {
+        orderService = new OrderServiceImpl(
+                subProductRepository,
+                orderTemplate,
+                orderRepository,
+                emailSender,
+                templateEngine,
+                jwtService,
+                basketRepository
+        );
+    }
 
-    OrderUserRequest request = OrderUserRequest.builder()
-        .typeDelivery(TypeDelivery.DELIVERY)
-        .firstName("Asan")
-        .lastName("Asanov")
-        .email("asan@example.com")
-        .phoneNumber("0770060708")
-        .address("Гражданская 119")
-        .typePayment(TypePayment.CARD_ONLINE)
-        .build();
+    @Test
+    void saveOrder() {
 
-    User user = User.builder()
-        .id(1L)
-        .firstName("Asan")
-        .lastName("Asanov")
-        .email("asan@example.com")
-        .phoneNumber("0770060708")
-        .address("Гражданская 119")
-        .build();
+        OrderUserRequest request = OrderUserRequest.builder()
+                .typeDelivery(TypeDelivery.DELIVERY)
+                .firstName("Asan")
+                .lastName("Asanov")
+                .email("asan@example.com")
+                .phoneNumber("0770060708")
+                .address("Гражданская 119")
+                .typePayment(TypePayment.CARD_ONLINE)
+                .build();
 
-    List<SubProduct> subProducts = new ArrayList<>();
+        User user = User.builder()
+                .id(1L)
+                .firstName("Asan")
+                .lastName("Asanov")
+                .email("asan@example.com")
+                .phoneNumber("0770060708")
+                .address("Гражданская 119")
+                .build();
 
-    Order order = new Order();
-    order.setId(3L);
-    order.setQuantity(3);
-    order.setTotalDiscount(3);
-    order.setTotalPrice(BigDecimal.valueOf(25000));
-    order.setTypeDelivery(TypeDelivery.DELIVERY);
-    order.setTypePayment(TypePayment.CARD_ONLINE);
-    order.setDateOfOrder(ZonedDateTime.now());
-    order.setStatus(Status.IN_PROCESSING);
-    order.setSubProducts(new ArrayList<>());
-    order.setUser(user);
-    int expectedArtValue = orderService.generate();
-    order.setOrderNumber(expectedArtValue);
+        List<SubProduct> subProducts = new ArrayList<>();
 
-    Basket basket = new Basket();
-    basket.setSubProducts(subProducts);
+        Order order = new Order();
+        order.setId(3L);
+        order.setQuantity(3);
+        order.setTotalDiscount(3);
+        order.setTotalPrice(BigDecimal.valueOf(25000));
+        order.setTypeDelivery(TypeDelivery.DELIVERY);
+        order.setTypePayment(TypePayment.CARD_ONLINE);
+        order.setDateOfOrder(ZonedDateTime.now());
+        order.setStatus(Status.IN_PROCESSING);
+        order.setSubProducts(new ArrayList<>());
+        order.setUser(user);
+        int expectedArtValue = orderService.generate();
+        order.setOrderNumber(expectedArtValue);
 
-    when(jwtService.getAuthenticationUser()).thenReturn(user);
-    when(basketRepository.findByUserId(user.getId())).thenReturn(basket);
-    when(templateEngine.process(anyString(), any(IContext.class))).thenReturn("Email Text");
-    when(emailSender.createMimeMessage()).thenReturn(mimeMessage);
-    doNothing().doThrow(new RuntimeException()).when(emailSender).send(any(MimeMessage.class));
-    when(orderRepository.save(any(Order.class))).thenReturn(new Order());
+        Basket basket = new Basket();
+        basket.setSubProducts(subProducts);
 
-    OrderUserResponse response = orderService.saveOrder(request);
+        when(jwtService.getAuthenticationUser()).thenReturn(user);
+        when(basketRepository.findByUserId(user.getId())).thenReturn(basket);
+        when(templateEngine.process(anyString(), any(IContext.class))).thenReturn("Email Text");
+        when(emailSender.createMimeMessage()).thenReturn(mimeMessage);
+        doNothing().doThrow(new RuntimeException()).when(emailSender).send(any(MimeMessage.class));
+        when(orderRepository.save(any(Order.class))).thenReturn(new Order());
 
-    assertEquals(expectedArtValue, order.getOrderNumber());
-    assertEquals(HttpStatus.OK, response.getStatus());
-    assertTrue(response.getMessage().contains("Ваша заявка"));
+        OrderUserResponse response = orderService.saveOrder(request);
 
-    verify(orderRepository, times(1)).save(any(Order.class));
-    verify(emailSender, times(1)).send(any(MimeMessage.class));
-  }
+        assertEquals(expectedArtValue, order.getOrderNumber());
+        assertEquals(HttpStatus.OK, response.getStatus());
+        assertTrue(response.getMessage().contains("Ваша заявка"));
+
+        verify(orderRepository, times(1)).save(any(Order.class));
+        verify(emailSender, times(1)).send(any(MimeMessage.class));
+    }
 }
