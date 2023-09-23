@@ -195,6 +195,7 @@ public class OrderServiceImpl implements OrderService {
             quantity++;
         }
         order.setQuantity(quantity);
+        order.setTotalPrice(totalAmount);
         order.setSubProducts(subProducts);
         Status status = Status.IN_PROCESSING;
         order.setStatus(status);
