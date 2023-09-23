@@ -6,8 +6,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import peaksoft.house.gadgetariumb9.enums.Role;
+
 import java.util.Collection;
 import java.util.List;
+
 import static jakarta.persistence.CascadeType.*;
 
 @Entity
@@ -30,6 +32,7 @@ public class User implements UserDetails {
 
     private String phoneNumber;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
