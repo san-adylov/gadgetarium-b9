@@ -20,5 +20,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT NEW peaksoft.house.gadgetariumb9.dto.response.user.UserResponse (u.firstName,u.lastName,u.email,u.phoneNumber,u.address,u.image) FROM User u WHERE u.id = ?1")
     Optional<UserResponse> getUserById(Long userId);
 
-
+    User findByEmail (String email);
 }

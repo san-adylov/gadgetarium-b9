@@ -31,8 +31,6 @@ import static org.mockito.Mockito.*;
 
 class OrderServiceImplTest {
 
-    private SubProductRepository subProductRepository;
-
     private OrderServiceImpl orderService;
 
     private OrderRepository orderRepository;
@@ -49,6 +47,8 @@ class OrderServiceImplTest {
 
     private MimeMessage mimeMessage;
 
+    private UserRepository userRepository;
+
     @BeforeEach
     public void setup() {
         orderRepository = mock(OrderRepository.class);
@@ -60,13 +60,12 @@ class OrderServiceImplTest {
         mimeMessage = mock(MimeMessage.class);
 
         orderService = new OrderServiceImpl(
-                subProductRepository,
                 orderTemplate,
                 orderRepository,
                 emailSender,
                 templateEngine,
                 jwtService,
-                basketRepository
+                userRepository
         );
     }
 

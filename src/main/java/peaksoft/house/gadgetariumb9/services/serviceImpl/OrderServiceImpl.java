@@ -22,12 +22,10 @@ import peaksoft.house.gadgetariumb9.models.Basket;
 import peaksoft.house.gadgetariumb9.models.Order;
 import peaksoft.house.gadgetariumb9.models.SubProduct;
 import peaksoft.house.gadgetariumb9.models.User;
-import peaksoft.house.gadgetariumb9.repositories.BasketRepository;
 import peaksoft.house.gadgetariumb9.repositories.OrderRepository;
-import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
+import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.services.OrderService;
 import peaksoft.house.gadgetariumb9.template.OrderTemplate;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -41,9 +39,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-
-    private final SubProductRepository subProductRepository;
-
     public static final String UTF_8 = "UTF-8";
 
     private final OrderTemplate orderTemplate;
@@ -56,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final JwtService jwtService;
 
-    private final BasketRepository basketRepository;
+    private final UserRepository userRepository;
 
     @Override
     public OrderPaginationAdmin getAllOrderAdmin(String status, int pageSize, int pageNumber, LocalDate startDate, LocalDate endDate) {
@@ -138,67 +133,45 @@ public class OrderServiceImpl implements OrderService {
     public OrderUserResponse saveOrder(OrderUserRequest request) {
 
         User user = jwtService.getAuthenticationUser();
-        List<SubProduct> products = new ArrayList<>();
+        List<SubProduct> selectedProducts = getProductsFromCartByEmailAndIds(user.getEmail(), request.getSubProductIds());
 
-        int totalQuantity = 0;
+        int totalQuantity = selectedProducts.size();
         BigDecimal totalPrice = BigDecimal.ZERO;
         int totalDiscount = 0;
 
-        Basket basket = basketRepository.findByUserId(user.getId());
-        if (basket != null) {
-            List<SubProduct> subProducts = basket.getSubProducts();
-            products.addAll(subProducts);
+        for (SubProduct subProduct : selectedProducts) {
+            BigDecimal productCost = subProduct.getPrice();
+            totalPrice = totalPrice.add(productCost);
 
-            for (SubProduct subProduct : subProducts) {
-                int quantity = subProduct.getQuantity();
-                totalQuantity += quantity;
-                BigDecimal productCost = subProduct.getPrice().multiply(BigDecimal.valueOf(quantity));
-                totalPrice = totalPrice.add(productCost);
+            if (subProduct.getDiscount() != null) {
+                int discountPercentage = subProduct.getDiscount().getSale();
 
-                if (subProduct.getDiscount() != null) {
-                    int discountPercentage = subProduct.getDiscount().getSale();
-                    BigDecimal discountAmount = productCost.multiply(BigDecimal.valueOf(discountPercentage))
-                            .divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP)
-                            .setScale(0, RoundingMode.HALF_UP);
+                BigDecimal discountAmount = productCost.multiply(BigDecimal.valueOf(discountPercentage))
+                    .divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP)
+                    .setScale(0, RoundingMode.HALF_UP);
 
-                    int discountAmountInt = discountAmount.intValue();
-                    totalDiscount += discountAmountInt;
-                }
+                int discountAmountInt = discountAmount.intValue();
+                totalDiscount += discountAmountInt;
             }
         }
+
+        BigDecimal totalDiscountAmount = BigDecimal.valueOf(totalDiscount);
+        BigDecimal discountedTotalPrice = totalPrice.subtract(totalDiscountAmount);
 
         ZonedDateTime data = ZonedDateTime.now();
         LocalDate localDate = data.toLocalDate();
 
         Order order = new Order();
-        order.setSubProducts(products);
+        order.setSubProducts(selectedProducts);
         order.setDateOfOrder(data);
-        order.setTotalPrice(totalPrice);
+        order.setTotalPrice(discountedTotalPrice);
         order.setQuantity(totalQuantity);
         order.setTotalDiscount(totalDiscount);
         order.setTypeDelivery(request.getTypeDelivery());
         order.setTypePayment(request.getTypePayment());
         int orderNumber = generate();
         order.setOrderNumber(orderNumber);
-        List<SubProduct> subProducts = new ArrayList<>();
-        int quantity = 0;
-        BigDecimal totalAmount = null;
-        for (Long l : request.getSubProductIds()) {
-            SubProduct subProduct = subProductRepository.findById(l).orElseThrow(() -> {
-                log.error("Sub product id: %s not found".formatted(l));
-                return new NotFoundException("Sub product id: %s not found".formatted(l));
-            });
-            subProducts.add(subProduct);
-            if (totalAmount != null) {
-            totalAmount.add(subProduct.getPrice());
-            } else {
-                totalAmount = new BigDecimal(subProduct.getPrice().precision());
-            }
-            quantity++;
-        }
-        order.setQuantity(quantity);
-        order.setTotalPrice(totalAmount);
-        order.setSubProducts(subProducts);
+
         Status status = Status.IN_PROCESSING;
         order.setStatus(status);
         TypeDelivery typeDelivery = order.getTypeDelivery();
@@ -223,20 +196,41 @@ public class OrderServiceImpl implements OrderService {
             order.setUser(user);
             emailSender.send(message);
             return OrderUserResponse.builder()
-                    .status(HttpStatus.OK)
-                    .orderNumber(order.getOrderNumber())
-                    .message(String.format("""
+                .status(HttpStatus.OK)
+                .orderNumber(order.getOrderNumber())
+                .message(String.format("""
                                   Ваша заявка №%s от %s оформлена.\s
                             Вся актуальная информация о статусе исполнения\s
                                  заказа придет на указанный email:\s
                                                 %s
                             """, order.getOrderNumber(), localDate, request.getEmail()))
-                    .build();
-
+                .build();
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
             throw new BadCredentialException("Message not sent!");
         }
+    }
+
+    public List<SubProduct> getProductsFromCartByEmailAndIds(String userEmail, List<Long> productIds) {
+        User user = userRepository.findByEmail(userEmail);
+
+        List<Basket> baskets = user.getBaskets();
+        List<SubProduct> selectedProducts = new ArrayList<>();
+
+        for (Basket basket : baskets) {
+            List<SubProduct> productsInBasket = basket.getSubProducts();
+
+            for (Long productId : productIds) {
+                for (SubProduct subProduct : productsInBasket) {
+                    if (subProduct.getId().equals(productId)) {
+                        selectedProducts.add(subProduct);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return selectedProducts;
     }
 
     public int generate() {
