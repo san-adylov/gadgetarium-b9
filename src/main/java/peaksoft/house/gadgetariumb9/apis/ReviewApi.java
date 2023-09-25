@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
+import peaksoft.house.gadgetariumb9.dto.request.review.ViewReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.AdminReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
@@ -105,5 +106,12 @@ public class ReviewApi {
     @Operation(summary = "Delete user review", description = "Delete your review if no answer")
     public ReviewUserResponse deleteComment(@PathVariable Long reviewId) {
         return service.deleteComment(reviewId);
+    }
+
+    @PutMapping("/update-view")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Update review viewed", description = "Updating  viewed review for product")
+    public SimpleResponse updateReviewView (@RequestBody ViewReviewRequest request){
+        return service.updateView(request);
     }
 }

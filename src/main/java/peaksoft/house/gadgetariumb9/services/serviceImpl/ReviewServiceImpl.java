@@ -9,6 +9,7 @@ import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
+import peaksoft.house.gadgetariumb9.dto.request.review.ViewReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.AdminReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
@@ -285,5 +286,22 @@ public class ReviewServiceImpl implements ReviewService {
   @Override
   public ReviewsRatings getAllRatings() {
     return reviewTemplate.getAllRatings();
+  }
+
+  @Override
+  public SimpleResponse updateView(ViewReviewRequest request) {
+
+    Review review = reviewRepository.findById(request.getReviewId()).orElseThrow(() -> {
+      log.error(String.format("Review with id %s not found", request.getReviewId()));
+      return new NotFoundException(String.format("Review with id %s not found", request.getReviewId()));
+    });
+
+    review.setViewed(request.isView());
+    reviewRepository.save(review);
+
+    return SimpleResponse.builder()
+        .status(HttpStatus.OK)
+        .message("Review's view with id: "+request.getReviewId()+" successfully updated!")
+        .build();
   }
 }

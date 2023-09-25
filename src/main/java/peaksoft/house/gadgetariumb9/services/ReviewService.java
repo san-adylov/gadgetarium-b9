@@ -3,6 +3,7 @@ package peaksoft.house.gadgetariumb9.services;
 import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
+import peaksoft.house.gadgetariumb9.dto.request.review.ViewReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.response.review.AdminReviewPagination;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewGradeInfo;
 import peaksoft.house.gadgetariumb9.dto.response.review.ReviewPagination;
@@ -31,7 +32,9 @@ public interface ReviewService {
 
     ReviewUserResponse deleteComment(Long reviewId);
 
-    AdminReviewPagination getAllReviewsForAdmin (String filter, int pageSize, int pageNumber);
+    AdminReviewPagination getAllReviewsForAdmin(String filter, int pageSize, int pageNumber);
 
     ReviewsRatings getAllRatings();
+
+    SimpleResponse updateView(ViewReviewRequest request);
 }
