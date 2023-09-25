@@ -183,7 +183,7 @@ public class ProductApi {
     }
 
     @GetMapping("downloadPdf/{id}")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @PermitAll
     @Operation(summary = "Get PDF file", description = "This method is to download a pdf file to a sub-product")
     public ResponseEntity<InputStreamResource> pdfFile(@PathVariable Long id) throws IOException , DocumentException {
         return pdfFileService.pdfFile(id);

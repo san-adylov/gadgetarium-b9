@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.enums;
 
-public enum Status {
+public enum
+Status {
     PENDING("В ожидании"),
     IN_PROCESSING("В обработке"),
     READY_FOR_DELIVERY("Готов к выдаче"),

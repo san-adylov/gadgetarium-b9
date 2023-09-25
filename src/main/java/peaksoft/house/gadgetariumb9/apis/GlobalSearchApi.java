@@ -3,6 +3,8 @@ package peaksoft.house.gadgetariumb9.apis;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
+
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +25,7 @@ public class GlobalSearchApi {
     private final GlobalSearchService globalSearchService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @PermitAll
     @Operation(summary = "Search", description = "This method gets all products by searching.")
     public GlobalSearchResponse globalSearch(@RequestParam(value = "keyword", required = false) String keyword) {
         return globalSearchService.globalSearch(keyword);
