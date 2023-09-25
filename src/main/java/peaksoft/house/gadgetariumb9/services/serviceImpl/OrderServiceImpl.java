@@ -203,8 +203,6 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(status);
         TypeDelivery typeDelivery = order.getTypeDelivery();
 
-//        updateUserInfo(user, request);
-
         try {
             Context context = new Context();
             context.setVariable("orderNumber", order.getOrderNumber());
@@ -243,14 +241,6 @@ public class OrderServiceImpl implements OrderService {
 
     public int generate() {
         return (int) (System.currentTimeMillis() % 1000000);
-    }
-
-    private void updateUserInfo(User user, OrderUserRequest request) {
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setAddress(request.getAddress());
     }
 
     private MimeMessage getMimeMessage() {
