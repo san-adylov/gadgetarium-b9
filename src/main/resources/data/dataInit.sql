@@ -15,7 +15,6 @@ VALUES (false, 'ADMIN', 1, 'Asia 7', 'davran@gmail.com', 'Davran', 'img', 'Joldo
         '$2a$12$XhWrZB5uMZcfsw8n5kZ58emB5Z6nkF3Ix94D5QaYB4ikkfyimUO66', '0700020206'); --erjan2004
 
 
-
 INSERT INTO categories (id, title)
 VALUES (1, 'Phone'),
        (2, 'Laptop'),
@@ -50,15 +49,16 @@ VALUES (1, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692870335571_AP
 
 INSERT INTO products(guarantee, brand_id, created_at, data_of_issue, id, sub_category_id, description, name, pdf,
                      video_link, category_id)
-VALUES (3, 1, '2023-07-14T12:59:00+00:00', '2023-08-14T00:00:00+00:00', 1, 1, 'The beast', 'Iphone 14', 'img', 'link',
+VALUES (1, 1, '2023-07-14T12:59:00+00:00', '2023-08-14T00:00:00+00:00', 1, 1, 'The beast', 'Iphone 14', 'img', 'link',
         1),
-       (4, 2, '2023-07-29T12:59:00+00:00', '2023-08-24T00:00:00+00:00', 2, 2, 'The beast', 'ThinkPad X1 Carbon Gen 11.',
+       (14, 2, '2023-07-29T12:59:00+00:00', '2023-08-24T00:00:00+00:00', 2, 5, 'The beast',
+        'ThinkPad X1 Carbon Gen 11.',
         'img', 'link', 2),
-       (5, 3, '2023-07-27T12:59:00+00:00', '2023-08-30T00:00:00+00:00', 3, 3, 'The beast', 'Xiaomi pad 2022', 'img',
+       (5, 3, '2023-07-27T12:59:00+00:00', '2023-08-30T00:00:00+00:00', 3, 10, 'The beast', 'Mi Band 7 2022', 'img',
         'link', 3),
-       (6, 1, '2023-07-26T12:59:00+00:00', '2023-09-30T00:00:00+00:00', 4, 4, 'The beast', 'Apple watch series 8',
+       (3, 1, '2023-07-26T12:59:00+00:00', '2023-09-30T00:00:00+00:00', 4, 15, 'The beast', 'iPad',
         'img', 'link', 4),
-       (7, 1, '2023-07-27T12:59:00+00:00', '2023-09-30T00:00:00+00:00', 5, 1, 'The beast', 'Iphone 13 pro', 'img',
+       (7, 1, '2023-07-27T12:59:00+00:00', '2023-09-30T00:00:00+00:00', 5, 2, 'The beast', 'Iphone 15 pro', 'img',
         'link', 1);
 
 
@@ -72,8 +72,7 @@ VALUES (1),
 
 INSERT INTO banner_images (banner_id, images)
 VALUES (1, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692870908817_wallpaperflare.com_wallpaper.jpg'),
-       (2,
-        'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871052182_wallpaperflare.com_wallpaper%20%281%29.jpg'),
+       (2,'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871052182_wallpaperflare.com_wallpaper%20%281%29.jpg'),
        (3,
         'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871204414_wallpaperflare.com_wallpaper%20%282%29.jpg'),
        (4,
@@ -82,7 +81,7 @@ VALUES (1, 'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692870908817_wa
         'https://gadgetariumb9.s3.eu-central-1.amazonaws.com/1692871435371_wallpaperflare.com_wallpaper%20%284%29.jpg');
 
 INSERT INTO baskets (id, user_id)
-VALUES (1, 1),
+VALUES (1, 2),
        (2, 2),
        (3, 3),
        (4, 4),
@@ -91,28 +90,34 @@ VALUES (1, 1),
 
 INSERT INTO sub_products (article_number, price, quantity, ram, rom, id, product_id, additional_features, code_color,
                           screen_resolution, rating)
-VALUES (322323, 78000, 1, 8, 256, 1, 2, 'asc', '#000000', '1920x1080', 4.3),
-       (123454, 74000, 1, 16, 512, 2, 2, 'rte', '#034C73', '2560x1440', 4.8),
-       (543210, 85000, 1, 12, 256, 3, 2, 'mnbv', '#035FE4', '1920x1080', 3.9),
-       (987654, 92000, 1, 8, 512, 4, 2, 'ytrew', '#04C73', '3840x2160', 4.6),
-       (678901, 67000, 1, 16, 512, 5, 2, 'lkjh', '#0A29C0', '2560x1600', 4.2),
+VALUES (322323, 78000, 10, 8, 256, 1, 2, 'asc', '#000000', '1920x1080', 4.3),
+       (123454, 74000, 15, 16, 512, 2, 2, 'rte', '#034C73', '2560x1440', 4.8),
+       (543210, 85000, 16, 12, 256, 3, 2, 'mnbv', '#035FE4', '1920x1080', 3.9),
+       (987654, 92000, 21, 8, 512, 4, 2, 'ytrew', '#04C73', '3840x2160', 4.6),
+       (678901, 67000, 31, 16, 512, 5, 2, 'lkjh', '#0A29C0', '2560x1600', 4.2),
 
-       (987665, 79000, 1, 0, 0, 6, 3, 'bvcb', '#FF0000', NULL, 3.1),
-       (654321, 120000, 1, 0, 0, 7, 3, 'vcvb', '#FF5500', NULL, 4.5),
-       (123987, 95000, 1, 0, 0, 8, 3, 'qazx', '#FFA77F', NULL, 3.8),
-       (789456, 110000, 1, 0, 0, 9, 3, 'wsxc', '#CD8966', NULL, 4.2),
-       (456123, 83000, 1, 0, 0, 10, 3, 'edcv', '#CDAA66', NULL, 4.9),
+       (987665, 79000, 17, 0, 0, 6, 3, 'bvcb', '#FF0000', NULL, 3.1),
+       (654321, 120000, 41, 0, 0, 7, 3, 'vcvb', '#FF5500', NULL, 4.5),
+       (123987, 95000, 24, 0, 0, 8, 3, 'qazx', '#FFA77F', NULL, 3.8),
+       (789456, 110000, 29, 0, 0, 9, 3, 'wsxc', '#CD8966', NULL, 4.2),
+       (456123, 83000, 19, 0, 0, 10, 3, 'edcv', '#CDAA66', NULL, 4.9),
 
-       (234567, 60000, 1, 6, 128, 11, 1, 'bcvn', '#FFEBBE', NULL, 4.2),
-       (789012, 80000, 1, 8, 256, 12, 1, 'tyio', '#FFD37F', NULL, 3.9),
-       (345678, 68000, 1, 6, 256, 13, 1, 'qwerty', '#FFAA00', NULL, 4.7),
-       (901234, 72000, 1, 8, 128, 14, 4, 'zxcvb', '#FFFF72', NULL, 4.1),
-       (567890, 74000, 1, 8, 256, 15, 4, 'asdfg', '#E6E600', NULL, 3.6);
+       (234567, 60000, 34, 6, 128, 11, 1, 'bcvn', '#FFEBBE', NULL, 4.2),
+       (789012, 80000, 14, 8, 256, 12, 1, 'tyio', '#FFD37F', NULL, 3.9),
+       (345678, 68000, 32, 6, 256, 13, 1, 'qwerty', '#FFAA00', NULL, 4.7),
+       (901234, 72000, 42, 8, 128, 14, 4, 'zxcvb', '#FFFF72', NULL, 4.1),
+       (567890, 74000, 70, 8, 256, 15, 4, 'asdfg', '#E6E600', NULL, 3.6);
 
 INSERT INTO baskets_sub_products (baskets_id, sub_products_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3);
+VALUES
+    (1, 1),
+    (2, 2),
+    (3, 3),
+    (4, 4),
+    (4, 5),
+    (5, 1),
+    (5, 2),
+    (5, 3);
 
 
 INSERT INTO discounts (id, sale, start_date, finish_date, sub_product_id)
@@ -140,8 +145,17 @@ VALUES (1, 1, 12, 23, '2023-07-14T12:59:00+00:00', 1, 1, 'PENDING', 'PICKUP', 'C
 
 INSERT INTO orders_sub_products (orders_id, sub_products_id)
 VALUES (1, 1),
-       (2, 2),
-       (3, 3);
+       (1, 2),
+       (1, 3),
+       (1, 4),
+       (1, 5),
+       (1, 6),
+       (2, 4),
+       (2, 3),
+       (2, 7),
+       (2, 11),
+       (2, 15);
+
 
 
 INSERT INTO laptops (screen_size, video_memory, id, processor, purpose, sub_product_id)
@@ -168,7 +182,7 @@ VALUES (2.0, FALSE, 1, 6, 'BLUETOOTH', 'FEMALE', 'SQUARE', 'ACRYLIC', 'RUBBER'),
        (1.37, TRUE, 5, 10, 'NFC', 'UNI', 'RECTANGULAR', 'STAINLESS_STEEL', 'CERAMIC_IMITATION');
 
 
-INSERT INTO reviews (grade, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment,is_viewed)
+INSERT INTO reviews (grade, date_creat_ad, id, sub_product_id, user_id, comment, reply_to_comment, is_viewed)
 VALUES (4, '2023-07-14T12:59:00+00:00', 1, 1, 1, 'comm', NULL, false),
        (2, '2023-07-14T12:59:00+00:00', 2, 2, 2, 'comm', 'ok', true),
        (1, '2023-07-14T12:59:00+00:00', 3, 3, 3, 'comm', 'ok', true);
@@ -211,14 +225,14 @@ VALUES (1,
 
 
 INSERT INTO user_comparison (comparison, user_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3);
+VALUES (4, 1),
+       (4, 2),
+       (4, 3);
 
 INSERT INTO user_favorite (favorite, user_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3);
+VALUES (4, 1),
+       (4, 2),
+       (4, 3);
 
 
 

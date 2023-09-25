@@ -75,6 +75,12 @@ public class OrderTemplateImpl implements OrderTemplate {
                         SELECT o.id, concat(u.first_name,' ',u.last_name) as full_name, o.order_number,o.quantity, o.total_price,type_delivery,status
                                FROM orders o join public.users u on u.id = o.user_id where o.status= 'CANCEL'
                         """;
+            } else if (status.equalsIgnoreCase("Получен")) {
+                sql += """
+                        SELECT o.id, concat(u.first_name,' ',u.last_name) as full_name, o.order_number,o.quantity, o.total_price,type_delivery,status
+                                                       FROM orders o join public.users u on u.id = o.user_id where o.status= 'RECEIVED'
+                        """;
+
             }
         } else {
             log.error("Order status is not correct");
