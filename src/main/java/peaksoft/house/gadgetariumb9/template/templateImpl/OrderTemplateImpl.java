@@ -1,6 +1,7 @@
 package peaksoft.house.gadgetariumb9.template.templateImpl;
 
 import jakarta.transaction.Transactional;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +10,6 @@ import peaksoft.house.gadgetariumb9.dto.response.order.*;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.template.OrderTemplate;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -116,57 +116,54 @@ public class OrderTemplateImpl implements OrderTemplate {
     @Override
     public OrderInfoResponse getOrderInfo(Long orderId) {
         String sql = """
-                SELECT o.order_number,
-                       o.id,
-                       o.status,
-                       u.phone_number,
-                       u.address
-                FROM orders o
-                         LEFT JOIN users u ON u.id = o.user_id
-                WHERE o.id = ?
-                                """;
+                SELECT    o.order_number,
+                          o.id,
+                          o.status,
+                          u.phone_number,
+                          u.address  from orders o left join users u on o.user_id = u.id where o.id = ?
+                          """;
         OrderInfoResponse orderInfoResponse = jdbcTemplate.query(sql,
-                        (rs, rowNum) ->
-                                OrderInfoResponse
-                                        .builder()
-                                        .orderId(rs.getLong("id"))
-                                        .orderNumber(rs.getInt("order_number"))
-                                        .status(rs.getString("status"))
-                                        .phoneNumber(rs.getString("phone_number"))
-                                        .address(rs.getString("address")),
-                        orderId).stream()
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Order by id %s is not found.".formatted(orderId)))
-                .build();
+            (rs, rowNum) ->
+                OrderInfoResponse
+                    .builder()
+                    .orderId(rs.getLong("id"))
+                    .orderNumber(rs.getInt("order_number"))
+                    .status(rs.getString("status"))
+                    .phoneNumber(rs.getString("phone_number"))
+                    .address(rs.getString("address")), orderId).stream().findFirst().orElseThrow(() -> new NotFoundException("Order by id %s is not found.".formatted(orderId))).build();
         String sql2 = """
                     SELECT
-                        o.order_number,
-                        concat(p.name, ' ', b.name, ' ', sp.rom, ' ', sp.code_color) AS name,
-                        sp.quantity,
-                        o.total_price,
-                        o.total_discount,
-                        (o.total_discount * sp.price / 100) AS sumOfDiscount,
-                        COALESCE(SUM(sp.price * (1 - d.sale / 100.0)), 0) AS total
-                    FROM orders o
-                             JOIN orders_sub_products osp ON o.id = osp.orders_id
-                             JOIN sub_products sp ON sp.id = osp.sub_products_id
-                             JOIN products p ON p.id = sp.product_id
-                             JOIN brands b ON b.id = p.brand_id
-                             LEFT JOIN public.discounts d ON sp.id = d.sub_product_id where o.id = ?
-                    GROUP BY o.id, p.name, b.name, sp.rom, sp.code_color, sp.quantity, o.total_price, o.total_discount, sp.price
-                """;
-        List<OrderProductResponse> orderProductResponse = jdbcTemplate.query(sql2, (rs, i) ->
-                OrderProductResponse
-                        .builder()
-                        .orderNumber(rs.getInt("order_number"))
-                        .name(rs.getString("name"))
-                        .quantity(rs.getInt("quantity"))
-                        .totalAmountOfOrder(rs.getBigDecimal("total_price"))
-                        .sale(rs.getInt("total_discount"))
-                        .sumOfDiscount(rs.getBigDecimal("sumOfDiscount"))
-                        .total(rs.getBigDecimal("total")).build(), orderId
-        );
-        orderInfoResponse.setProductResponseList(orderProductResponse);
+                           o.order_number,
+                           (SELECT STRING_AGG(CONCAT(p.name, ' ', b.name, ' ', sp.rom, ' ', sp.code_color), ',')
+                            FROM orders_sub_products osp
+                            JOIN sub_products sp ON sp.id = osp.sub_products_id
+                            JOIN products p ON p.id = sp.product_id
+                            WHERE osp.orders_id = o.id) AS names,
+                           o.quantity,
+                           o.total_price,
+                           o.total_discount,
+                           (o.total_price - SUM(CAST(COALESCE(sp.price * (1 - CAST(d.sale AS DECIMAL) / 100), 0) AS DECIMAL))) AS sum_of_discount,
+                           SUM(CAST(COALESCE(sp.price * (1 - CAST(d.sale AS DECIMAL) / 100), 0) AS DECIMAL)) AS total
+                           FROM orders o
+                                JOIN orders_sub_products osp ON o.id = osp.orders_id
+                                JOIN sub_products sp ON sp.id = osp.sub_products_id
+                                JOIN products p ON p.id = sp.product_id
+                                JOIN brands b ON b.id = p.brand_id
+                                JOIN discounts d ON sp.id = d.sub_product_id
+                           WHERE o.id = ?
+                           GROUP BY o.id, o.order_number, o.quantity, o.total_price, o.total_discount, b.name
+                    """;
+        OrderProductResponse response = jdbcTemplate.queryForObject(sql2, (rs, rowNum) -> OrderProductResponse.builder()
+            .orderNumber(rs.getInt("order_number"))
+            .names(Arrays.asList(rs.getString("names").split(",")))
+            .quantity(rs.getInt("quantity"))
+            .allPrice(rs.getBigDecimal("total_price"))
+            .sale(rs.getInt("total_discount"))
+            .sumOfDiscount(rs.getBigDecimal("sum_of_discount"))
+            .totalPrice(rs.getBigDecimal("total"))
+            .build(), orderId);
+
+        orderInfoResponse.setProductResponseList(response);
         return orderInfoResponse;
     }
 

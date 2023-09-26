@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
-import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ViewReviewRequest;
@@ -169,14 +168,14 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public SimpleResponse replyToComment(AnswerRequest answerRequest) {
-        Review review = reviewRepository.findById(answerRequest.getReviewId()).orElseThrow(() -> {
-            log.error(String.format("Review with id: %s not found!", answerRequest.getReviewId()));
+    public SimpleResponse replyToComment(Long reviewId, String answer) {
+        Review review = reviewRepository.findById(reviewId).orElseThrow(() -> {
+            log.error(String.format("Review with id: %s not found!", reviewId));
             return new NotFoundException(
-                    String.format("Review with id: %s not found!", answerRequest.getReviewId()));
+                    String.format("Review with id: %s not found!", reviewId));
         });
 
-        review.setReplyToComment(answerRequest.getReplyToComment());
+        review.setReplyToComment(answer);
         reviewRepository.save(review);
         log.info("Reply to comment successfully save!");
         return SimpleResponse.builder()

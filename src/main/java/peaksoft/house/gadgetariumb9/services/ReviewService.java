@@ -1,6 +1,5 @@
 package peaksoft.house.gadgetariumb9.services;
 
-import peaksoft.house.gadgetariumb9.dto.request.review.AnswerRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ReviewUserRequest;
 import peaksoft.house.gadgetariumb9.dto.request.review.ViewReviewRequest;
@@ -22,7 +21,7 @@ public interface ReviewService {
 
     SimpleResponse deleteReview(Long reviewId);
 
-    SimpleResponse replyToComment(AnswerRequest answerRequest);
+    SimpleResponse replyToComment(Long reviewId, String answer);
 
     SimpleResponse updateAnswer(Long reviewId, String text);
 
