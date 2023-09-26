@@ -165,9 +165,10 @@
           <scope>test</scope>
       </dependency>
     <dependency>
-      <groupId>org.xhtmlrenderer</groupId>
-      <artifactId>flying-saucer-pdf</artifactId>
-      <version>9.1.22</version>
+      <groupId>com.itextpdf</groupId>
+      <artifactId>itext7-core</artifactId>
+      <version>7.2.3</version>
+      <type>pom</type>
     </dependency>
   </dependencies>
     <build>

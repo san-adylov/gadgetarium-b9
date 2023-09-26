@@ -1,14 +1,11 @@
 package peaksoft.house.gadgetariumb9.apis;
 
-import com.lowagie.text.DocumentException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
-import java.util.Map;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.product.ProductRequest;
@@ -23,9 +20,11 @@ import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.PdfFileService;
 import peaksoft.house.gadgetariumb9.services.ProductService;
 import peaksoft.house.gadgetariumb9.services.SubProductService;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -182,11 +181,11 @@ public class ProductApi {
         return subProductService.clearUserCompare(subProductIds);
     }
 
-    @GetMapping("downloadPdf/{id}")
+    @GetMapping("downloadPdf/{sub-product-id}")
     @PermitAll
     @Operation(summary = "Get PDF file", description = "This method is to download a pdf file to a sub-product")
-    public ResponseEntity<InputStreamResource> pdfFile(@PathVariable Long id) throws IOException , DocumentException {
-        return pdfFileService.pdfFile(id);
+    public void pdfFile(@PathVariable("sub-product-id") Long subProductId, HttpServletResponse response) throws IOException  {
+        pdfFileService.generatePdf(subProductId,response);
     }
 
     @GetMapping("/get-latest-comparison")

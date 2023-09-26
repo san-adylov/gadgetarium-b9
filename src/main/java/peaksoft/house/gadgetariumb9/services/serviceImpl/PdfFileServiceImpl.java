@@ -1,21 +1,27 @@
 package peaksoft.house.gadgetariumb9.services.serviceImpl;
 
-import com.lowagie.text.DocumentException;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Div;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Text;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.SubProduct;
 import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
 import peaksoft.house.gadgetariumb9.services.PdfFileService;
-import java.io.*;
+
+import java.io.IOException;
+import java.net.URL;
 
 @Service
 @RequiredArgsConstructor
@@ -23,72 +29,101 @@ import java.io.*;
 public class PdfFileServiceImpl implements PdfFileService {
 
     private final SubProductRepository subProductRepository;
-    private final TemplateEngine templateEngine;
 
     @Override
-    public ResponseEntity<InputStreamResource> pdfFile(Long id) throws IOException, DocumentException {
-        String template = "templates/pdf-file-template.html";
-        Context context = new Context();
-
-        SubProduct subProduct = subProductRepository.findById(id)
+    public void generatePdf(Long subProductId, HttpServletResponse response)
+            throws IOException {
+        SubProduct subProduct = subProductRepository.findById(subProductId)
                 .orElseThrow(() -> {
-                    log.error("SubProduct with id: " + id + " is not found");
-                    return new NotFoundException("SubProduct with id: " + id + " is not found");
+                    log.error("SubProduct with id: " + subProductId + " is not found");
+                    return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
                 });
 
-        context.setVariable("name", subProduct.getProduct() != null ? subProduct.getProduct().getName() : "N/A");
-        context.setVariable("brand", subProduct.getProduct() != null && subProduct.getProduct().getBrand() != null ? subProduct.getProduct().getBrand().getName() : "N/A");
-        context.setVariable("category", subProduct.getProduct() != null && subProduct.getProduct().getCategory() != null ? subProduct.getProduct().getCategory().getTitle() : "N/A");
-        context.setVariable("color", subProduct.getCodeColor() != null ? subProduct.getCodeColor() : "N/A");
-        context.setVariable("price", subProduct.getPrice() != null ? subProduct.getPrice() : "N/A");
-        context.setVariable("discount", subProduct.getDiscount() != null ? subProduct.getDiscount().getSale() : "N/A");
-        context.setVariable("created_at", subProduct.getProduct() != null && subProduct.getProduct().getCreatedAt() != null ? subProduct.getProduct().getCreatedAt() : "N/A");
-        context.setVariable("rom", subProduct.getRom());
-        context.setVariable("ram", subProduct.getRam());
-        context.setVariable("image", subProduct.getImages() != null && !subProduct.getImages().isEmpty() ? subProduct.getImages().stream().findAny().orElse("N/A") : "N/A");
+        response.setHeader("Content-Disposition", "attachment; filename=example.pdf");
+        response.setContentType("application/pdf");
 
+        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(response.getOutputStream()));
 
-        String processedHtml = templateEngine.process(template, context);
+        try (Document document = new Document(pdfDoc)) {
+            String imageUrl = subProduct.getImages().get(0);
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Image image = new Image(ImageDataFactory.create(new URL(imageUrl)));
+                image.scaleToFit(300, 300);
+                document.add(image);
+                document.add(new Paragraph("\n"));
+            }
 
-        byte[] pdfBytes = convertHtmlToPdf(processedHtml).getBody();
-        InputStream inputStream = new ByteArrayInputStream(pdfBytes);
-        InputStreamResource resource = new InputStreamResource(inputStream);
+            PdfFont normalFont = PdfFontFactory.createFont("Helvetica");
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
+            Text titleText = new Text(subProduct.getProduct().getName())
+                    .setFont(normalFont)
+                    .setFontSize(18)
+                    .setFontColor(new DeviceRgb(0, 0, 0));
 
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(pdfBytes.length)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
-    }
+            Div brandDiv = new Div()
+                    .add(new Paragraph("Brand: " + subProduct.getProduct().getBrand().getName())
+                            .setFont(normalFont)
+                            .setFontSize(14)
+                            .setFontColor(new DeviceRgb(0, 0, 0))
+                            .setBold());
 
-    @Override
-    public ResponseEntity<byte[]> convertHtmlToPdf(String htmlContent) throws IOException, DocumentException {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            ITextRenderer renderer = new ITextRenderer();
-            renderer.setDocumentFromString(htmlContent);
-            renderer.layout();
-            renderer.createPDF(outputStream);
+            Div categoryDiv = new Div()
+                    .add(new Paragraph("Category: " + subProduct.getProduct().getCategory().getTitle())
+                            .setFont(normalFont)
+                            .setFontSize(14)
+                            .setFontColor(new DeviceRgb(0, 0, 0))
+                            .setBold());
 
-            byte[] pdfBytes = outputStream.toByteArray();
+            Div colorDiv = new Div()
+                    .add(new Paragraph("Color: " + subProduct.getCodeColor())
+                            .setFont(normalFont)
+                            .setFontSize(14)
+                            .setFontColor(new DeviceRgb(0, 0, 0))
+                            .setBold());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-            headers.add("Pragma", "no-cache");
-            headers.add("Expires", "0");
+            Div priceDiv = new Div()
+                    .add(new Paragraph("Price: " + subProduct.getPrice() + " KGS")
+                            .setFont(normalFont)
+                            .setFontSize(14)
+                            .setFontColor(new DeviceRgb(0, 0, 0))
+                            .setBold());
 
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .contentLength(pdfBytes.length)
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(pdfBytes);
+            document.add(new Paragraph().add(titleText));
+            document.add(brandDiv);
+            document.add(categoryDiv);
+            document.add(colorDiv);
+            document.add(priceDiv);
+
+            if (subProduct.getDiscount() != null) {
+                Div saleDiv = new Div()
+                        .add(new Paragraph("Sale: " + subProduct.getDiscount().getSale() + "%")
+                                .setFont(normalFont)
+                                .setFontSize(14)
+                                .setFontColor(new DeviceRgb(0, 0, 0))
+                                .setBold());
+
+                document.add(saleDiv);
+            }
+
+            Div romDiv = new Div()
+                    .add(new Paragraph("ROM: " + subProduct.getRom() + " GB")
+                            .setFont(normalFont)
+                            .setFontSize(14)
+                            .setFontColor(new DeviceRgb(0, 0, 0))
+                            .setBold());
+
+            Div ramDiv = new Div()
+                    .add(new Paragraph("RAM: " + subProduct.getRam() + " GB")
+                            .setFont(normalFont)
+                            .setFontSize(14)
+                            .setFontColor(new DeviceRgb(0, 0, 0))
+                            .setBold());
+
+            document.add(romDiv);
+            document.add(ramDiv);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
+            log.error("Error adding content to PDF: " + e.getMessage());
         }
     }
+
 }

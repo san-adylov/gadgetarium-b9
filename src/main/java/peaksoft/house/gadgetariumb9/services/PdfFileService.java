@@ -1,13 +1,11 @@
 package peaksoft.house.gadgetariumb9.services;
 
-import com.lowagie.text.DocumentException;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
+
 public interface PdfFileService {
 
-    ResponseEntity<InputStreamResource> pdfFile(Long id) throws IOException, DocumentException;
-
-    ResponseEntity<byte[]> convertHtmlToPdf(String htmlContent) throws IOException, DocumentException;
+    void generatePdf(Long subProductId, HttpServletResponse response) throws IOException;
 
 }

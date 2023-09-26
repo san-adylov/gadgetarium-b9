@@ -116,21 +116,28 @@ public class OrderTemplateImpl implements OrderTemplate {
     @Override
     public OrderInfoResponse getOrderInfo(Long orderId) {
         String sql = """
-                SELECT    o.order_number,
-                          o.id,
-                          o.status,
-                          u.phone_number,
-                          u.address  from orders o join user_favorite uf on o.user_id = uf.user_id join users u on u.id = o.user_id where o.id =? and o.status = 'DELIVERED'
-                """;
+                SELECT o.order_number,
+                       o.id,
+                       o.status,
+                       u.phone_number,
+                       u.address
+                FROM orders o
+                         LEFT JOIN users u ON u.id = o.user_id
+                WHERE o.id = ?
+                                """;
         OrderInfoResponse orderInfoResponse = jdbcTemplate.query(sql,
-                (rs, rowNum) ->
-                        OrderInfoResponse
-                                .builder()
-                                .orderId(rs.getLong("id"))
-                                .orderNumber(rs.getInt("order_number"))
-                                .status(rs.getString("status"))
-                                .phoneNumber(rs.getString("phone_number"))
-                                .address(rs.getString("address")), orderId).stream().findFirst().orElseThrow(() -> new NotFoundException("Order by id %s is not found.".formatted(orderId))).build();
+                        (rs, rowNum) ->
+                                OrderInfoResponse
+                                        .builder()
+                                        .orderId(rs.getLong("id"))
+                                        .orderNumber(rs.getInt("order_number"))
+                                        .status(rs.getString("status"))
+                                        .phoneNumber(rs.getString("phone_number"))
+                                        .address(rs.getString("address")),
+                        orderId).stream()
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Order by id %s is not found.".formatted(orderId)))
+                .build();
         String sql2 = """
                     SELECT
                         o.order_number,
