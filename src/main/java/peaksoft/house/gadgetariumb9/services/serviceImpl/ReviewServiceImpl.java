@@ -176,21 +176,13 @@ public class ReviewServiceImpl implements ReviewService {
                     String.format("Review with id: %s not found!", answerRequest.getReviewId()));
         });
 
-        if (review.getReplyToComment() == null) {
-            review.setReplyToComment(answerRequest.getReplyToComment());
-            reviewRepository.save(review);
-            log.info("Reply to comment successfully save!");
-            return SimpleResponse.builder()
-                    .status(HttpStatus.OK)
-                    .message("Reply to comment successfully saved!")
-                    .build();
-        } else {
-            log.info("Review with id: " + answerRequest.getReviewId() + " has already been answered!");
-            return SimpleResponse.builder()
-                    .status(HttpStatus.FOUND)
-                    .message("The review has already been answered!")
-                    .build();
-        }
+        review.setReplyToComment(answerRequest.getReplyToComment());
+        reviewRepository.save(review);
+        log.info("Reply to comment successfully save!");
+        return SimpleResponse.builder()
+            .status(HttpStatus.OK)
+            .message("Reply to comment successfully saved!")
+            .build();
     }
 
     @Override
@@ -216,7 +208,7 @@ public class ReviewServiceImpl implements ReviewService {
         } else {
             return SimpleResponse.builder()
                     .status(HttpStatus.BAD_REQUEST)
-                    .message("Сomment has no response!")
+                    .message("Comment has no response!")
                     .build();
         }
     }
