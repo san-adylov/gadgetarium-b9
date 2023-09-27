@@ -244,4 +244,10 @@ public class OrderServiceImpl implements OrderService {
         });
         return orderTemplate.getOrderByUser(orderId, userId);
     }
+
+    @Override
+    public OrderSearchPagination getOrderSearch(String keyword, String sortType,
+        LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
+        return orderTemplate.orderSearch(keyword,sortType, startDate, endDate, pageSize, pageNumber);
+    }
 }

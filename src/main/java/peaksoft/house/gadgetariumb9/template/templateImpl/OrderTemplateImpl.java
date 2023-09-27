@@ -1,6 +1,8 @@
 package peaksoft.house.gadgetariumb9.template.templateImpl;
 
 import jakarta.transaction.Transactional;
+import java.sql.Types;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -277,5 +279,113 @@ public class OrderTemplateImpl implements OrderTemplate {
 
         info.setProductsInfoResponses(products);
         return info;
+    }
+
+    private String getSortClause(String sort) {
+        return switch (sort) {
+            case "В ожидании" -> " o.status = 'PENDING' AND ";
+            case "В обработке" -> " o.status = 'IN_PROCESSING' AND ";
+            case "Курьер в пути" -> " o.status = 'COURIER_ON_THE_WAY' AND ";
+            case "Доставлены" -> " o.status = 'DELIVERED' AND ";
+            case "Отменены" -> " o.status = 'CANCEL' AND ";
+            default -> null;
+        };
+    }
+
+    @Override
+    public OrderSearchPagination orderSearch(String keyword, String sortType,
+        LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber) {
+
+        String sort = "";
+
+        if (sortType != null) {
+            sort = getSortClause(sortType);
+        }
+
+        if (endDate == null) {
+            endDate = LocalDate.now();
+        }
+
+        String sql = """
+                SELECT
+                    o.id                                        AS order_id,
+                    CONCAT(u.first_name,' ',u.last_name)        AS full_name,
+                    o.order_number                              AS order_number,
+                    o.quantity                                  AS quantity,
+                    o.total_price                               AS total_price,
+                    o.type_delivery                             AS type_delivery,
+                    o.status                                    AS status
+                FROM orders o
+                JOIN users u ON o.user_id = u.id
+                JOIN orders_sub_products osp ON o.id = osp.orders_id
+                JOIN sub_products sp ON sp.id = osp.sub_products_id
+                JOIN products p on p.id = sp.product_id
+                WHERE o.date_of_order BETWEEN ? AND ? AND (CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(o.order_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(u.first_name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(u.last_name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(o.total_price AS TEXT) ILIKE (concat('%' || ? || '%')))
+                ORDER BY o.id
+                """;
+
+        if (sort != null) {
+            sql = sql.replace("o.date_of_order BETWEEN ? AND ?", sort + "o.date_of_order BETWEEN ? AND ? ");
+        }
+
+        int offset = (pageNumber - 1) * pageSize;
+        sql += " LIMIT ? OFFSET ?";
+
+        List<AdminOrderSearch> adminOrderSearches = jdbcTemplate.query(sql,
+            (rs, rowNum) ->
+                AdminOrderSearch.builder()
+                    .orderId(rs.getLong("order_id"))
+                    .userFullName(rs.getString("full_name"))
+                    .orderNumber(rs.getInt("order_number"))
+                    .quantity(rs.getInt("quantity"))
+                    .totalPrice(rs.getBigDecimal("total_price"))
+                    .typeDelivery(rs.getString("type_delivery"))
+                    .status(rs.getString("status"))
+                    .build(),
+            startDate, endDate,
+            keyword, keyword, keyword, keyword, keyword, keyword,
+            pageSize, offset
+        );
+
+        String countSQL = """
+          SELECT COUNT(*) FROM (
+              SELECT o.id
+              FROM orders o
+                JOIN users u ON o.user_id = u.id
+                JOIN orders_sub_products osp ON o.id = osp.orders_id
+                JOIN sub_products sp ON sp.id = osp.sub_products_id
+                JOIN products p on p.id = sp.product_id
+                WHERE o.date_of_order BETWEEN ? AND ? AND (CAST(sp.article_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(p.name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(o.order_number AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(u.first_name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(u.last_name AS TEXT) ILIKE (concat('%' || ? || '%'))
+                                                        OR CAST(o.total_price AS TEXT) ILIKE (concat('%' || ? || '%')))
+          ) AS filtered_products
+          """;
+
+        if (sort != null) {
+            countSQL = countSQL.replace("o.date_of_order BETWEEN ? AND ?", sort + "o.date_of_order BETWEEN ? AND ? ");
+        }
+
+        Integer count = jdbcTemplate.queryForObject(
+            countSQL,
+            new Object[]{startDate, endDate, keyword, keyword, keyword, keyword, keyword, keyword},
+            new int[]{Types.DATE, Types.DATE, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR,
+                Types.VARCHAR, Types.VARCHAR, Types.VARCHAR},
+            Integer.class
+        );
+
+        if (count == null) {
+            log.info("Product quantity not available");
+            throw new NullPointerException("Product quantity not available");
+        }
+        log.info("Successfully!");
+        return new OrderSearchPagination(adminOrderSearches, pageSize, pageNumber, count);
     }
 }

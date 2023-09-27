@@ -3,11 +3,13 @@ package peaksoft.house.gadgetariumb9.apis;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.house.gadgetariumb9.dto.request.order.OrderUserRequest;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderPaginationAdmin;
+import peaksoft.house.gadgetariumb9.dto.response.order.OrderSearchPagination;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderUserResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.services.OrderService;
@@ -65,5 +67,17 @@ public class OrderApi {
     @PreAuthorize("hasAuthority('USER')")
     public OrderUserResponse saveOrder(@RequestBody OrderUserRequest request) {
         return orderService.saveOrder(request);
+    }
+
+    @GetMapping("/order-admin-search")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(summary = "Order search", description = "Search for an admin by article, etc.")
+    public OrderSearchPagination orderSearch (@RequestParam(value = "keyword", defaultValue = "", required = false)String keyword,
+                                              @RequestParam(name = "sort", required = false) String sortType,
+                                              @RequestParam(name = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                              @RequestParam(name = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+                                              @RequestParam(defaultValue = "6") int pageSize,
+                                              @RequestParam(defaultValue = "1") int pageNumber){
+        return orderService.getOrderSearch(keyword, sortType, startDate, endDate, pageSize, pageNumber);
     }
 }

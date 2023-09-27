@@ -5,6 +5,7 @@ import peaksoft.house.gadgetariumb9.dto.response.order.OrderHistoryResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoByUserResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderInfoResponse;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderPaginationAdmin;
+import peaksoft.house.gadgetariumb9.dto.response.order.OrderSearchPagination;
 import peaksoft.house.gadgetariumb9.dto.response.order.OrderUserResponse;
 import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import java.time.LocalDate;
@@ -28,4 +29,5 @@ public interface OrderService {
 
     OrderInfoByUserResponse getOrderByUser (Long orderId,Long userId);
 
+    OrderSearchPagination getOrderSearch (String keyword, String sortType, LocalDate startDate, LocalDate endDate, int pageSize, int pageNumber);
 }
