@@ -23,7 +23,6 @@ import peaksoft.house.gadgetariumb9.services.ReviewService;
 @RequiredArgsConstructor
 @RequestMapping("/api/reviews")
 @Tag(name = "Review API", description = "Endpoints for managing and retrieving reviews for products.")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class ReviewApi {
 
     private final ReviewService service;

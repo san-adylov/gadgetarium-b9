@@ -121,7 +121,8 @@ public class ReviewServiceImpl implements ReviewService {
             log.error("You must buy this product if you want to leave a review");
             throw new BadCredentialException("You must buy this product if you want to leave a review");
         }
-
+        subProduct.setRating(countReviewsRating(reviewRequest.getSubProductId()).getRating());
+        subProductRepository.save(subProduct);
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Review successfully save !")
