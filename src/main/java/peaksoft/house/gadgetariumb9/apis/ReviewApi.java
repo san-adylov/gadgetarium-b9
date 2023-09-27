@@ -84,7 +84,7 @@ public class ReviewApi {
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Reply to comment", description = "Admin answer to a comment left on this product")
     public SimpleResponse replyToComment(@RequestBody AnswerRequest answerRequest) {
-        return service.replyToComment(answerRequest);
+        return service.replyToComment(answerRequest.getReviewId(), answerRequest.getReplyToComment());
     }
 
     @PermitAll

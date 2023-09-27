@@ -27,7 +27,6 @@ import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.services.OrderService;
 import peaksoft.house.gadgetariumb9.template.OrderTemplate;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -145,18 +144,10 @@ public class OrderServiceImpl implements OrderService {
 
             if (subProduct.getDiscount() != null) {
                 int discountPercentage = subProduct.getDiscount().getSale();
-
-                BigDecimal discountAmount = productCost.multiply(BigDecimal.valueOf(discountPercentage))
-                    .divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP)
-                    .setScale(0, RoundingMode.HALF_UP);
-
-                int discountAmountInt = discountAmount.intValue();
-                totalDiscount += discountAmountInt;
+                totalDiscount += discountPercentage;
             }
         }
 
-        BigDecimal totalDiscountAmount = BigDecimal.valueOf(totalDiscount);
-        BigDecimal discountedTotalPrice = totalPrice.subtract(totalDiscountAmount);
 
         ZonedDateTime data = ZonedDateTime.now();
         LocalDate localDate = data.toLocalDate();
@@ -164,7 +155,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setSubProducts(selectedProducts);
         order.setDateOfOrder(data);
-        order.setTotalPrice(discountedTotalPrice);
+        order.setTotalPrice(totalPrice);
         order.setQuantity(totalQuantity);
         order.setTotalDiscount(totalDiscount);
         order.setTypeDelivery(request.getTypeDelivery());
