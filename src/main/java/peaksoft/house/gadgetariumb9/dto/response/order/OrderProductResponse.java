@@ -1,7 +1,7 @@
 package peaksoft.house.gadgetariumb9.dto.response.order;
 
-import java.util.List;
 import lombok.*;
+
 import java.math.BigDecimal;
 
 @Setter
@@ -13,7 +13,7 @@ public class OrderProductResponse {
 
     private int orderNumber;
 
-    private List<String> names;
+    private String names;
 
     private int quantity;
 

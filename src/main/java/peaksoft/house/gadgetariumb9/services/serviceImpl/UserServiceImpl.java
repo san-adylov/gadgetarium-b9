@@ -58,9 +58,12 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userUpdateRequest.getEmail() == null || userUpdateRequest.getEmail().isBlank() || user.getEmail().equals(userUpdateRequest.getEmail()) ? user.getEmail() : userUpdateRequest.getEmail());
         user.setPhoneNumber(userUpdateRequest.getPhoneNumber() == null || userUpdateRequest.getPhoneNumber().isBlank() || user.getPhoneNumber().equals(userUpdateRequest.getPhoneNumber()) ? user.getPhoneNumber() : userUpdateRequest.getPhoneNumber());
         user.setAddress(userUpdateRequest.getAddress() == null || userUpdateRequest.getAddress().isBlank() || user.getAddress().equals(userUpdateRequest.getAddress()) ? user.getAddress() : userUpdateRequest.getAddress());
-        if (!passwordEncoder.matches(userUpdateRequest.getNewPassword(), user.getPassword())) {
-            user.setPassword(passwordEncoder.encode(userUpdateRequest.getNewPassword()));
+        if (userUpdateRequest.getNewPassword() != null && !userUpdateRequest.getNewPassword().isBlank()){
+            if (!passwordEncoder.matches(userUpdateRequest.getNewPassword(), user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(userUpdateRequest.getNewPassword()));
+            }
         }
+
         user.setImage(userUpdateRequest.getImageLink() == null || userUpdateRequest.getImageLink().isBlank() || user.getImage().equalsIgnoreCase(userUpdateRequest.getImageLink()) ? user.getImage() : userUpdateRequest.getImageLink());
         userRepository.save(user);
         log.info("User successfully updated");
