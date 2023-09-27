@@ -1,7 +1,6 @@
 package peaksoft.house.gadgetariumb9.template.templateImpl;
 
 import jakarta.transaction.Transactional;
-import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +9,7 @@ import peaksoft.house.gadgetariumb9.dto.response.order.*;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.template.OrderTemplate;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -134,11 +134,11 @@ public class OrderTemplateImpl implements OrderTemplate {
         String sql2 = """
                     SELECT
                            o.order_number,
-                           (SELECT STRING_AGG(CONCAT(p.name, ' ', b.name, ' ', sp.rom, ' ', sp.code_color), ',')
+                           (SELECT CONCAT(p.name, ' ', b.name, ' ', sp.rom, ' ', sp.code_color)
                             FROM orders_sub_products osp
                             JOIN sub_products sp ON sp.id = osp.sub_products_id
                             JOIN products p ON p.id = sp.product_id
-                            WHERE osp.orders_id = o.id) AS names,
+                            WHERE osp.orders_id = o.id LIMIT 1) AS names,
                            o.quantity,
                            o.total_price,
                            o.total_discount,
@@ -155,7 +155,7 @@ public class OrderTemplateImpl implements OrderTemplate {
                     """;
         OrderProductResponse response = jdbcTemplate.queryForObject(sql2, (rs, rowNum) -> OrderProductResponse.builder()
             .orderNumber(rs.getInt("order_number"))
-            .names(Arrays.asList(rs.getString("names").split(",")))
+            .names(rs.getString("names"))
             .quantity(rs.getInt("quantity"))
             .allPrice(rs.getBigDecimal("total_price"))
             .sale(rs.getInt("total_discount"))
