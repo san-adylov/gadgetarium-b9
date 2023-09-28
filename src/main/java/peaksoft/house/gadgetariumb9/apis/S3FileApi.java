@@ -16,7 +16,7 @@ import peaksoft.house.gadgetariumb9.services.serviceImpl.S3FileService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/files")
-@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasAnyAuthority('ADMIN','USER')")
 @Tag(name = "File API", description = "Endpoints for uploading, downloading, and deleting files")
 public class S3FileApi {
 

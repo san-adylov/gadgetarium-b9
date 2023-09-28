@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.InvalidMimeTypeException;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,26 +32,22 @@ public class S3FileService {
     private final AmazonS3 s3Client;
 
 
-
     public String uploadFile(MultipartFile file) {
         File fileObj = convertMultiPartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
-        String url = s3Client.getUrl(bucketName, fileName).toString();
-        return url;
+        return s3Client.getUrl(bucketName, fileName).toString();
     }
-
 
     public boolean deleteFile(String fileName) {
         try {
             s3Client.deleteObject("gadgetariumb9", fileName);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error deleting file " + fileName, e);
             return false;
         }
     }
-
 
     public byte[] downloadFile(String fileName) {
         S3Object s3Object = s3Client.getObject(bucketName, fileName);

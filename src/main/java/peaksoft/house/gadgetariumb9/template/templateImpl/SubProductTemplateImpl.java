@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import peaksoft.house.gadgetariumb9.config.security.JwtService;
 import peaksoft.house.gadgetariumb9.dto.request.subProduct.SubProductCatalogRequest;
@@ -15,14 +14,13 @@ import peaksoft.house.gadgetariumb9.enums.Purpose;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.User;
-import peaksoft.house.gadgetariumb9.repositories.UserRepository;
+import peaksoft.house.gadgetariumb9.services.UtilitiesService;
 import peaksoft.house.gadgetariumb9.template.SubProductTemplate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -30,11 +28,12 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class SubProductTemplateImpl implements SubProductTemplate {
-    private final UserRepository userRepository;
 
     private final JdbcTemplate jdbcTemplate;
 
     private final JwtService jwtService;
+
+    private final UtilitiesService utilitiesService;
 
 
     private List<Integer> pageSizeAndOffset(int pageNumber, int pageSize) {
@@ -42,40 +41,10 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         return Arrays.asList(pageSize, offset);
     }
 
-    private String email() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
-    public List<Long> getFavorites() {
-        List<Long> favorites = Collections.emptyList();
-        if (!email().equalsIgnoreCase("anonymousUser")) {
-            User user = userRepository.getUserByEmail(email())
-                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
-            favorites = jdbcTemplate.queryForList(
-                    "SELECT uf.favorite FROM user_favorite uf WHERE uf.user_id = ?",
-                    Long.class,
-                    user.getId());
-        }
-        return favorites;
-    }
-
-    public List<Long> getComparison() {
-        List<Long> comparisons = Collections.emptyList();
-        if (!email().equalsIgnoreCase("anonymousUser")) {
-            User user = userRepository.getUserByEmail(email())
-                    .orElseThrow(() -> new NotFoundException("User with email: %s not found".formatted(email())));
-            comparisons = jdbcTemplate.queryForList(
-                    "SELECT uc.comparison FROM user_comparison uc WHERE uc.user_id = ?",
-                    Long.class,
-                    user.getId());
-        }
-        return comparisons;
-    }
-
     @Override
     public SubProductPagination getProductFilter(SubProductCatalogRequest subProductCatalogRequest, int pageSize, int pageNumber) {
         String sql = """
-                SELECT p.id      AS product_id,
+                SELECT p2.id      AS product_id,
                        s.id      AS sub_product_id,
                        d.sale,
                        (SELECT spi.images
@@ -198,25 +167,39 @@ public class SubProductTemplateImpl implements SubProductTemplate {
         sql += " LIMIT ? OFFSET ?";
         params.add(pageSizeAndOffset(pageNumber, pageSize).get(0));
         params.add(pageSizeAndOffset(pageNumber, pageSize).get(1));
-        List<SubProductCatalogResponse> subProductCatalogResponses = jdbcTemplate.query(sql, (rs, rowNum) -> new SubProductCatalogResponse(rs.getLong("sub_product_id"), rs.getLong("product_id"), rs.getInt("sale"), rs.getString("image"), rs.getInt("quantity"), rs.getString("name"), rs.getBigDecimal("price")), params.toArray());
+        List<SubProductCatalogResponse> subProductCatalogResponses = jdbcTemplate.query(sql, (rs, rowNum) ->
+                        new SubProductCatalogResponse(
+                                rs.getLong("sub_product_id"),
+                                rs.getLong("product_id"),
+                                rs.getInt("sale"),
+                                rs.getString("image"),
+                                rs.getInt("quantity"),
+                                rs.getString("name"),
+                                rs.getBigDecimal("price")),
+                params.toArray());
         log.info("Filtering completed successfully");
-        List<Long> favorites = getFavorites();
+        List<Long> favorites = utilitiesService.getFavorites();
 
         for (SubProductCatalogResponse s : subProductCatalogResponses) {
             s.setFavorite(favorites.contains(s.getSubProductId()));
         }
 
-        List<Long> comparisons = getComparison();
+        List<Long> comparisons = utilitiesService.getComparison();
 
         for (SubProductCatalogResponse s : subProductCatalogResponses) {
             s.setComparison(comparisons.contains(s.getSubProductId()));
         }
-        int quan = jdbcTemplate.queryForObject("""
-                SELECT count(sc.id) FROM sub_products sc
-                JOIN products p ON sc.product_id = p.id
-                JOIN categories c ON p.category_id = c.id
-                WHERE c.title ILIKE ?
-                """, Integer.class, subProductCatalogRequest.getGadgetType());
+        Integer quan = jdbcTemplate.queryForObject("""
+                        SELECT count(sc.id) FROM sub_products sc
+                        JOIN products p ON sc.product_id = p.id
+                        JOIN categories c ON p.category_id = c.id
+                        WHERE c.title ILIKE ?
+                        """,
+                Integer.class,
+                subProductCatalogRequest.getGadgetType());
+        if (quan == null) {
+            throw new NullPointerException("");
+        }
         return new SubProductPagination(quan, subProductCatalogResponses, pageSize, pageNumber);
     }
 

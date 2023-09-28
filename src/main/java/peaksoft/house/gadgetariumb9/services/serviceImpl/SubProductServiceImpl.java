@@ -16,6 +16,7 @@ import peaksoft.house.gadgetariumb9.dto.simple.SimpleResponse;
 import peaksoft.house.gadgetariumb9.exceptions.BadRequestException;
 import peaksoft.house.gadgetariumb9.exceptions.NotFoundException;
 import peaksoft.house.gadgetariumb9.models.Category;
+import peaksoft.house.gadgetariumb9.models.Review;
 import peaksoft.house.gadgetariumb9.models.SubProduct;
 import peaksoft.house.gadgetariumb9.models.User;
 import peaksoft.house.gadgetariumb9.repositories.*;
@@ -52,6 +53,8 @@ public class SubProductServiceImpl implements SubProductService {
     private final CategoryRepository categoryRepository;
 
     private final MainPageProducts mainPageProducts;
+
+    private final UtilitiesServiceImpl utilitiesService;
 
     @Override
     public SubProductPagination getSubProductCatalogs(
@@ -102,18 +105,43 @@ public class SubProductServiceImpl implements SubProductService {
     }
 
     @Override
-    @Transactional
     public SimpleResponse singleDelete(Long subProductId) {
-        SubProduct subProduct = subProductRepository.findById(subProductId)
-                .orElseThrow(() -> {
-                    log.error("SubProduct with id: " + subProductId + " is not found");
-                    return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
-                });
+        SubProduct subProduct = utilitiesService.getSubProduct(subProductId);
+        deleteSubProduct(subProduct);
 
+        return SimpleResponse.builder()
+                .status(HttpStatus.OK)
+                .message(String.format("SubProduct with id: %d is deleted", subProductId))
+                .build();
+    }
+
+    @Override
+    public SimpleResponse multiDelete(List<Long> subProductIds) {
+        for (Long id : subProductIds) {
+            SubProduct subProduct = subProductRepository.findById(id)
+                    .orElseThrow(() -> {
+                        log.error("SubProduct with id: " + id + " is not found");
+                        return new NotFoundException("SubProduct with id: " + id + " is not found");
+                    });
+
+            deleteSubProduct(subProduct);
+        }
+
+        return SimpleResponse.builder()
+                .status(HttpStatus.OK)
+                .message("SubProducts with given IDs are deleted")
+                .build();
+    }
+
+    private void deleteSubProduct(SubProduct subProduct) {
         subProduct.getBaskets().forEach(basket -> basket.getSubProducts().remove(subProduct));
         subProduct.getOrders().forEach(order -> order.getSubProducts().remove(subProduct));
-        subProduct.getReviews().remove(subProduct);
 
+        List<Review> reviews = subProduct.getReviews();
+        for (Review review : reviews) {
+            review.setSubProduct(null);
+        }
+        reviews.clear();
         if (subProduct.getDiscount() != null) {
             discountRepository.delete(subProduct.getDiscount());
         }
@@ -135,55 +163,8 @@ public class SubProductServiceImpl implements SubProductService {
         });
 
         subProductRepository.delete(subProduct);
-
-        return SimpleResponse.builder()
-                .status(HttpStatus.OK)
-                .message(String.format("SubProduct with id: %d is deleted", subProductId))
-                .build();
     }
 
-    @Override
-    @Transactional
-    public SimpleResponse multiDelete(List<Long> subProductIds) {
-        for (Long id : subProductIds) {
-            SubProduct subProduct = subProductRepository.findById(id)
-                    .orElseThrow(() -> {
-                        log.error("SubProduct with id: " + id + " is not found");
-                        return new NotFoundException("SubProduct with id: " + id + " is not found");
-                    });
-
-            subProduct.getBaskets().forEach(basket -> basket.getSubProducts().remove(subProduct));
-            subProduct.getOrders().forEach(order -> order.getSubProducts().remove(subProduct));
-            subProduct.getReviews().remove(subProduct);
-
-            if (subProduct.getDiscount() != null) {
-                discountRepository.delete(subProduct.getDiscount());
-            }
-            if (subProduct.getLaptop() != null) {
-                laptopRepository.delete(subProduct.getLaptop());
-            }
-            if (subProduct.getPhone() != null) {
-                phoneRepository.delete(subProduct.getPhone());
-            }
-            if (subProduct.getSmartWatch() != null) {
-                smartWatchRepository.delete(subProduct.getSmartWatch());
-            }
-
-            userRepository.findAll().forEach(user -> {
-                List<Long> favorites = user.getFavorite();
-                if (favorites != null) {
-                    favorites.remove(subProduct.getId());
-                }
-            });
-
-            subProductRepository.deleteById(subProduct.getId());
-        }
-
-        return SimpleResponse.builder()
-                .status(HttpStatus.OK)
-                .message("SubProducts with given IDs are deleted")
-                .build();
-    }
 
     @Override
     public SimpleResponse updateSubProduct(Long subProductId, ProductRequest productRequest) {
@@ -501,7 +482,6 @@ public class SubProductServiceImpl implements SubProductService {
     }
 
     @Override
-    @Transactional
     public SimpleResponse comparisonAddOrDelete(Long id, boolean addOrDelete) {
         SubProduct subProduct = subProductRepository.findById(id).orElseThrow(() -> new NotFoundException("This product ID: " + id + " not found!"));
         User user = jwtService.getAuthenticationUser();
