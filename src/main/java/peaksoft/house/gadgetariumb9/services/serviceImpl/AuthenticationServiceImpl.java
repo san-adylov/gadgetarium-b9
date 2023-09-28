@@ -55,6 +55,11 @@ public class  AuthenticationServiceImpl implements AuthenticationService {
             throw new AlreadyExistException(
                     "User with email: %s already exist".formatted(signUpRequest.getEmail()));
         }
+        if (userRepository.existsByPhoneNumber(signUpRequest.getPhoneNumber())){
+            log.error("User with phone number: %s already exist".formatted(signUpRequest.getPhoneNumber()));
+            throw new AlreadyExistException(
+                "User with phone number: %s already exist".formatted(signUpRequest.getPhoneNumber()));
+        }
         User user = User
                 .builder()
                 .firstName(signUpRequest.getFirstName())
