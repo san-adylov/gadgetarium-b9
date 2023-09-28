@@ -53,11 +53,6 @@ public class UserServiceImpl implements UserService {
                 throw new BadCredentialException("Wrong password!");
             }
         }
-        if (userRepository.existsByPhoneNumber(userUpdateRequest.getPhoneNumber())){
-            log.error("User with phone number: %s already exist".formatted(userUpdateRequest.getPhoneNumber()));
-            throw new AlreadyExistException(
-                "User with phone number: %s already exist".formatted(userUpdateRequest.getPhoneNumber()));
-        }
         user.setFirstName(userUpdateRequest.getFirstName() == null || userUpdateRequest.getFirstName().isBlank() || user.getFirstName().equals(userUpdateRequest.getFirstName()) ? user.getFirstName() : userUpdateRequest.getFirstName());
         user.setLastName(userUpdateRequest.getLastName() == null || userUpdateRequest.getLastName().isBlank() || user.getLastName().equals(userUpdateRequest.getLastName()) ? user.getLastName() : userUpdateRequest.getLastName());
         user.setEmail(userUpdateRequest.getEmail() == null || userUpdateRequest.getEmail().isBlank() || user.getEmail().equals(userUpdateRequest.getEmail()) ? user.getEmail() : userUpdateRequest.getEmail());
