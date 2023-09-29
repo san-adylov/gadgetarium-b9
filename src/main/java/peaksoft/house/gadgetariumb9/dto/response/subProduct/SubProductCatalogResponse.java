@@ -32,6 +32,8 @@ public class SubProductCatalogResponse {
 
     private boolean isComparison;
 
+    private boolean isBasket;
+
     @Builder
     public SubProductCatalogResponse(Long id, Long productId, int discount, String image, int quantity, String name,
                                      BigDecimal price) {

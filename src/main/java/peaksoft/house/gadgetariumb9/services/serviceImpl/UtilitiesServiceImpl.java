@@ -12,6 +12,7 @@ import peaksoft.house.gadgetariumb9.repositories.SubProductRepository;
 import peaksoft.house.gadgetariumb9.repositories.UserRepository;
 import peaksoft.house.gadgetariumb9.services.UtilitiesService;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,11 +60,32 @@ public class UtilitiesServiceImpl implements UtilitiesService {
     }
 
     @Override
-    public SubProduct getSubProduct (Long subProductId) {
+    public SubProduct getSubProduct(Long subProductId) {
         return subProductRepository.findById(subProductId)
                 .orElseThrow(() -> {
                     log.error("SubProduct with id: " + subProductId + " is not found");
                     return new NotFoundException("SubProduct with id: " + subProductId + " is not found");
                 });
+    }
+
+    @Override
+    public List<Long> getBasket() {
+        User user;
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (!email.equalsIgnoreCase("anonymousUser")) {
+            user = userRepository.getUserByEmail(email)
+                    .orElseThrow(() -> {
+                        log.error("User with email: " + email + " is not found");
+                        return new NotFoundException("User with email: " + email + " is not found");
+                    });
+        } else {
+            user = null;
+        }
+        if (user != null) {
+            String subProductIdsInBasketSql = "SELECT sub_products_id FROM baskets_sub_products JOIN baskets b on b.id = baskets_sub_products.baskets_id WHERE b.user_id = ?";
+           return  jdbcTemplate.queryForList(subProductIdsInBasketSql, Long.class, user.getId());
+        }
+     return new ArrayList<>();
     }
 }

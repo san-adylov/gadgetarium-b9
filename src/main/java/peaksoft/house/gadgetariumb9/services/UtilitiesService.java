@@ -10,4 +10,6 @@ public interface UtilitiesService {
     List<Long> getComparison();
 
     SubProduct getSubProduct (Long subProductId);
+
+    List<Long> getBasket();
 }

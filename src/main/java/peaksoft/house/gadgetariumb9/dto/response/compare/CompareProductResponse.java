@@ -1,12 +1,14 @@
 package peaksoft.house.gadgetariumb9.dto.response.compare;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import java.math.BigDecimal;
 
 @SuperBuilder
 @Getter
 @NoArgsConstructor
+@Setter
 public class CompareProductResponse {
 
     private Long subProductId;
@@ -25,13 +27,13 @@ public class CompareProductResponse {
 
     private int rom;
 
-    private String operationalSystems;
-
     private String catTitle;
 
     private String subCatTitle;
 
     private String image;
+
+    private boolean in_basket;
 
     public CompareProductResponse(Long subProductId, Long prId, String brandName, String prodName,
                                   BigDecimal price, String color, String screen, int rom,
