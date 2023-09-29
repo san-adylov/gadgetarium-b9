@@ -35,20 +35,4 @@ public class CompareProductResponse {
 
     private boolean in_basket;
 
-    public CompareProductResponse(Long subProductId, Long prId, String brandName, String prodName,
-                                  BigDecimal price, String color, String screen, int rom,
-                                  String catTitle,
-                                  String subCatTitle, String image) {
-        this.subProductId= subProductId;
-        this.prId = prId;
-        this.brandName = brandName;
-        this.prodName = prodName;
-        this.price = price;
-        this.color = color;
-        this.screen = screen;
-        this.rom = rom;
-        this.catTitle = catTitle;
-        this.subCatTitle = subCatTitle;
-        this.image = image;
-    }
 }
