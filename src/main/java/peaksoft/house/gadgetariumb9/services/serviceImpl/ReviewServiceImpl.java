@@ -48,7 +48,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewRatingResponse countReviewsRating(Long subProductId) {
-        reviewRepository.findById(subProductId).orElseThrow(() -> {
+        subProductRepository.findById(subProductId).orElseThrow(() -> {
             log.error("SubProductId not found");
             return new NotFoundException("Review with subProductId: " + subProductId + " not found");
         });
@@ -121,7 +121,7 @@ public class ReviewServiceImpl implements ReviewService {
             log.error("You must buy this product if you want to leave a review");
             throw new BadCredentialException("You must buy this product if you want to leave a review");
         }
-        subProduct.setRating(countReviewsRating(reviewRequest.getSubProductId()).getRating());
+        subProduct.setRating(countReviewsRating(subProduct.getId()).getRating());
         subProductRepository.save(subProduct);
         return SimpleResponse.builder()
                 .status(HttpStatus.OK)
