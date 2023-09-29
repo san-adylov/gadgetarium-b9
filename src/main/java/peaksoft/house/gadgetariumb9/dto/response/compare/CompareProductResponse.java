@@ -37,7 +37,7 @@ public class CompareProductResponse {
 
     public CompareProductResponse(Long subProductId, Long prId, String brandName, String prodName,
                                   BigDecimal price, String color, String screen, int rom,
-                                  String operationalSystems, String catTitle,
+                                  String catTitle,
                                   String subCatTitle, String image) {
         this.subProductId= subProductId;
         this.prId = prId;
@@ -47,7 +47,6 @@ public class CompareProductResponse {
         this.color = color;
         this.screen = screen;
         this.rom = rom;
-        this.operationalSystems = operationalSystems;
         this.catTitle = catTitle;
         this.subCatTitle = subCatTitle;
         this.image = image;
